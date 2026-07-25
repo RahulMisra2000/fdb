@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger &mdash; Portfolio Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c10;
+    --panel:#12151b;
+    --panel-2:#171b22;
+    --border:#242a33;
+    --border-soft:#1b1f27;
+    --text:#e8ecf1;
+    --muted:#8a93a6;
+    --muted-2:#5c6473;
+    --gold:#e8b347;
+    --gold-dim:#8a6a2a;
+    --green:#3ddc84;
+    --red:#ff5c5c;
+    --blue:#5b8def;
+    --radius:10px;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+    --disp: 'Bricolage Grotesque', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html,body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--gold);}
+
+  /* ---------- Ticker tape ---------- */
+  .tape-wrap{
+    background:#000;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+    white-space:nowrap;
+    position:relative;
+    height:38px;
+  }
+  .tape-wrap::before, .tape-wrap::after{
+    content:"";
+    position:absolute; top:0; bottom:0; width:40px; z-index:2;
+  }
+  .tape-wrap::before{ left:0; background:linear-gradient(90deg,#000,transparent); }
+  .tape-wrap::after{ right:0; background:linear-gradient(270deg,#000,transparent); }
+  .tape-track{
+    display:inline-flex;
+    align-items:center;
+    height:38px;
+    animation:scroll-tape 40s linear infinite;
+    will-change:transform;
+  }
+  .tape-wrap:hover .tape-track{ animation-play-state:paused; }
+  @keyframes scroll-tape{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+  .tape-item{
+    font-family:var(--mono);
+    font-size:12.5px;
+    padding:0 22px;
+    color:var(--muted);
+    border-right:1px solid #1c1f26;
+  }
+  .tape-item b{ color:var(--text); margin-right:8px; font-weight:600;}
+  .tape-up{ color:var(--green); }
+  .tape-down{ color:var(--red); }
+
+  /* ---------- Header ---------- */
+  header.top{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 28px 14px 28px;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .brand{ display:flex; align-items:baseline; gap:12px; }
+  .brand h1{
+    font-family:var(--disp);
+    font-weight:700;
+    font-size:26px;
+    letter-spacing:0.2px;
+    margin:0;
+  }
+  .brand h1 span{ color:var(--gold); }
+  .brand .sub{ color:var(--muted-2); font-size:12.5px; font-family:var(--mono); }
+  .status-line{ display:flex; align-items:center; gap:18px; font-size:12px; color:var(--muted); font-family:var(--mono);}
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--muted-2); display:inline-block; margin-right:6px;}
+  .dot.live{ background:var(--green); box-shadow:0 0 0 3px rgba(61,220,132,.15); }
+  .dot.finnhub{ background:var(--blue); box-shadow:0 0 0 3px rgba(91,141,239,.15); }
+  .dot.gap{ background:var(--red); box-shadow:0 0 0 3px rgba(255,92,92,.2); }
+  .data-gap-banner{
+    display:none;
+    margin:0 28px 18px 28px;
+    padding:12px 16px;
+    background:rgba(255,92,92,.08);
+    border:1px solid rgba(255,92,92,.35);
+    border-radius:8px;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--text);
+  }
+  .dot.demo{ background:var(--gold); box-shadow:0 0 0 3px rgba(232,179,71,.15); }
+  .src-badge{
+    font-family:var(--mono); font-size:9.5px; font-weight:700; padding:1px 4px;
+    border-radius:4px; margin-left:6px; vertical-align:middle; letter-spacing:.02em;
+  }
+  .src-badge.yahoo{ background:rgba(91,141,239,.14); color:var(--blue); }
+  .src-badge.finnhub{ background:rgba(232,179,71,.14); color:var(--gold); }
+  .src-badge.demo{ background:rgba(138,147,166,.14); color:var(--muted); }
+  .src-badge.cash{ background:rgba(232,179,71,.10); color:var(--muted); border:1px solid var(--border); }
+  .src-badge.gap{ background:rgba(255,92,92,.14); color:var(--red); font-weight:700; }
+  .src-badge.manual{ background:rgba(232,179,71,.14); color:var(--gold); font-style:italic; }
+  .price-link{ font-size:10.5px; color:var(--gold); margin-left:7px; cursor:pointer; text-decoration:underline; text-decoration-style:dotted; }
+  .price-link:hover{ color:#f0c05f; }
+  tr.gap-row td{ background:rgba(255,92,92,.04); }
+  tr.cash-row td.sym, tr.cash-row td.name{ color:var(--muted); }
+
+  .toolbar{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    padding:0 28px 20px 28px;
+  }
+  button, select, input{
+    font-family:var(--sans);
+    font-size:13px;
+  }
+  .btn{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:border-color .15s, transform .1s;
+    font-weight:500;
+  }
+  .btn:hover{ border-color:var(--gold-dim); }
+  .btn:active{ transform:translateY(1px); }
+  .btn.primary{
+    background:linear-gradient(180deg,#f0c05f,var(--gold));
+    color:#1a1400;
+    border:none;
+    font-weight:600;
+  }
+  .btn.primary:hover{ filter:brightness(1.05); }
+  .btn.ghost{ background:transparent; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .spacer{ flex:1; }
+  select, .input{
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:9px 12px;
+    border-radius:8px;
+  }
+  .countdown{ font-family:var(--mono); color:var(--muted-2); font-size:12px; }
+
+  /* ---------- Summary cards ---------- */
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+    padding:0 28px 22px 28px;
+  }
+  @media(max-width:1100px){ .cards{ grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:700px){ .cards{ grid-template-columns:repeat(2,1fr);} }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:var(--gold-dim);
+  }
+  .card .label{ font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .card .value{ font-family:var(--mono); font-size:24px; font-weight:600; margin-top:6px; }
+  .card .sub{ font-size:12px; margin-top:5px; color:var(--muted-2); font-family:var(--mono);}
+  .up{ color:var(--green); } .down{ color:var(--red); }
+
+  /* ---------- Table ---------- */
+  .panel{
+    margin:0 28px 28px 28px;
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  table{ width:100%; border-collapse:collapse; }
+  .table-scroll{ overflow-x:auto; }
+  thead th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--muted-2);
+    padding:12px 14px;
+    border-bottom:1px solid var(--border-soft);
+    font-weight:600;
+    white-space:nowrap;
+  }
+  thead th.sortable-th{ cursor:pointer; user-select:none; transition:color .1s; }
+  thead th.sortable-th:hover{ color:var(--text); }
+  .sort-arrow{ display:inline-block; margin-left:5px; font-size:9px; color:var(--gold); width:8px; }
+  tbody tr.row{
+    border-bottom:1px solid var(--border-soft);
+    cursor:pointer;
+    transition:background .1s;
+  }
+  tbody tr.row:hover{ background:var(--panel-2); }
+  tbody td{ padding:13px 14px; font-size:13.5px; white-space:nowrap; }
+  td.sym{ font-family:var(--mono); font-weight:700; letter-spacing:.02em; }
+  td.name{ color:var(--muted); max-width:180px; overflow:hidden; text-overflow:ellipsis; }
+  td.num{ font-family:var(--mono); text-align:right; }
+  th.num{ text-align:right; }
+  .chip{
+    display:inline-block; font-size:10.5px; padding:2px 7px; border-radius:5px;
+    font-family:var(--mono); border:1px solid var(--border);
+  }
+  .chip.div-yes{ color:var(--gold); border-color:var(--gold-dim); }
+  .chip.div-no{ color:var(--muted-2); }
+  .caret{ color:var(--muted-2); display:inline-block; transition:transform .15s; margin-right:6px; }
+  .row.expanded .caret{ transform:rotate(90deg); }
+  .remove-x{ color:var(--muted-2); cursor:pointer; padding:2px 6px; }
+  .remove-x:hover{ color:var(--red); }
+  tr.subtotal-row td{
+    background:var(--panel-2);
+    border-bottom:1px solid var(--border);
+    border-top:1px solid var(--border);
+    padding:9px 14px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--text);
+  }
+
+  tr.detail-row td{
+    background:var(--panel-2);
+    padding:0;
+  }
+  .detail-inner{
+    padding:18px 24px 22px 24px;
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:26px;
+  }
+  @media(max-width:900px){ .detail-inner{ grid-template-columns:1fr; } }
+  .detail-inner h4{
+    font-family:var(--disp); font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--muted); margin:0 0 10px 0; font-weight:600;
+  }
+  .news-item{ margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border-soft); }
+  .news-item:last-child{ border-bottom:none; }
+  .news-item a{ color:var(--text); font-size:13px; text-decoration:none; font-weight:500; }
+  .news-item a:hover{ color:var(--gold); }
+  .news-meta{ font-size:11px; color:var(--muted-2); font-family:var(--mono); margin-top:3px; }
+  .signal-box{
+    border:1px solid var(--border); border-radius:8px; padding:12px 14px; font-size:13px;
+    line-height:1.5;
+  }
+  .signal-tag{
+    display:inline-block; font-family:var(--mono); font-size:11px; font-weight:700;
+    padding:3px 9px; border-radius:5px; margin-bottom:8px; letter-spacing:.03em;
+  }
+  .signal-tag.bull{ background:rgba(61,220,132,.12); color:var(--green); }
+  .signal-tag.bear{ background:rgba(255,92,92,.12); color:var(--red); }
+  .signal-tag.neutral{ background:rgba(138,147,166,.12); color:var(--muted); }
+  .disclaimer{
+    font-size:11px; color:var(--muted-2); margin-top:10px; line-height:1.5; font-style:italic;
+  }
+
+  /* ---------- Add holding + settings ---------- */
+  .add-row{
+    display:flex; gap:8px; padding:16px; border-bottom:1px solid var(--border-soft);
+    background:var(--panel-2); flex-wrap:wrap; align-items:center;
+  }
+  .add-row input{ width:100px; }
+  .add-row input.qty{ width:80px; }
+
+  dialog#settingsDialog, dialog#csvDialog{
+    background:var(--panel); color:var(--text); border:1px solid var(--border);
+    border-radius:12px; width:480px; max-width:92vw; padding:0;
+  }
+  dialog#settingsDialog::backdrop, dialog#csvDialog::backdrop{ background:rgba(0,0,0,.6); }
+  .dlg-head{ padding:18px 20px; border-bottom:1px solid var(--border-soft); font-family:var(--disp); font-weight:600; font-size:17px; }
+  .dlg-body{ padding:18px 20px; display:flex; flex-direction:column; gap:14px; }
+  .field label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .field input, .field select{ width:100%; }
+  .dlg-foot{ padding:14px 20px; border-top:1px solid var(--border-soft); display:flex; justify-content:flex-end; gap:10px; }
+  .help{ font-size:11.5px; color:var(--muted-2); line-height:1.5; }
+  .help a{ color:var(--blue); }
+
+  footer.foot{
+    padding:22px 28px 40px 28px; color:var(--muted-2); font-size:11.5px; line-height:1.6;
+  }
+  .toast{
+    position:fixed; bottom:22px; right:22px; background:var(--panel-2); border:1px solid var(--border);
+    padding:12px 16px; border-radius:8px; font-size:13px; z-index:50; opacity:0; transform:translateY(8px);
+    transition:opacity .2s, transform .2s; pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform:translateY(0); }
+
+  /* ---------- Kill switch / traffic light ---------- */
+  .signal-pill{
+    display:inline-flex; gap:6px; align-items:center;
+    background:#000; border:1px solid var(--border);
+    padding:5px 9px; border-radius:20px;
+  }
+  .signal-light{ width:8px; height:8px; border-radius:50%; transition:background .15s, box-shadow .15s; }
+  .signal-light.red{ background:#3a1414; }
+  .signal-light.yellow{ background:#3a2f14; }
+  .signal-light.green{ background:#123a1f; }
+  .signal-light.on.red{ background:var(--red); box-shadow:0 0 7px rgba(255,92,92,.85); }
+  .signal-light.on.yellow{ background:var(--gold); box-shadow:0 0 7px rgba(232,179,71,.85); }
+  .signal-light.on.green{ background:var(--green); box-shadow:0 0 7px rgba(61,220,132,.85); }
+  .btn.btn-stopped{ background:rgba(255,92,92,.12); border-color:var(--red); color:#ffb3b3; }
+  .btn.btn-stopped:hover{ border-color:var(--red); }
+</style>
+</head>
+<body>
+
+  <div class="tape-wrap"><div class="tape-track" id="tapeTrack"></div></div>
+
+  <header class="top">
+    <div class="brand">
+      <h1>LEDGER<span>.</span></h1>
+      <div class="sub">PORTFOLIO TERMINAL · build 18</div>
+    </div>
+    <div class="status-line">
+      <div class="signal-pill" title="External access status: red = stopped, yellow = fetching, green = idle/live">
+        <span class="signal-light red" id="lightRed"></span>
+        <span class="signal-light yellow" id="lightYellow"></span>
+        <span class="signal-light green" id="lightGreen"></span>
+      </div>
+      <span id="modeDot"><span class="dot demo"></span>Demo data</span>
+      <span id="lastUpdated">Not yet updated</span>
+      <span class="countdown" id="countdown"></span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn primary" id="btnFullRefresh">&#8635; Full refresh (prices + news + analysis)</button>
+    <button class="btn" id="btnPriceRefresh">&#9889; Refresh prices &amp; totals</button>
+    <button class="btn" id="btnPauseToggle">&#9209; Stop all external access</button>
+    <select id="sortSelect">
+      <option value="symbol-asc">Sort: Symbol A&ndash;Z</option>
+      <option value="name-asc">Sort: Name A&ndash;Z</option>
+      <option value="price-desc">Sort: Price (high&rarr;low)</option>
+      <option value="daychange-desc">Sort: Day % (high&rarr;low)</option>
+      <option value="daychange-asc">Sort: Day % (low&rarr;high)</option>
+      <option value="ytd-desc">Sort: YTD % (high&rarr;low)</option>
+      <option value="ytd-asc">Sort: YTD % (low&rarr;high)</option>
+      <option value="value-desc">Sort: Market value (high&rarr;low)</option>
+      <option value="divyield-desc">Sort: Dividend yield (high&rarr;low)</option>
+      <option value="unrealized-desc">Sort: Unrealized G/L % (high&rarr;low)</option>
+      <option value="unrealized-asc">Sort: Unrealized G/L % (low&rarr;high)</option>
+      <option value="avgcost-desc">Sort: Avg cost (high&rarr;low)</option>
+      <option value="account-asc">Sort: Account (grouped, with subtotals)</option>
+      <option value="numrec-desc">Sort: Numerical Recommendation (Buy&rarr;Sell)</option>
+      <option value="sourcefile-asc">Sort: Source File</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn ghost" id="btnSettings">&#9881; Settings</button>
+  </div>
+
+  <div class="data-gap-banner" id="dataGapBanner"></div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">Total Market Value</div>
+      <div class="value" id="cardTotalValue">$0.00</div>
+      <div class="sub" id="cardDayChange">Day: &mdash;</div>
+    </div>
+    <div class="card">
+      <div class="label">Unrealized Gain/Loss</div>
+      <div class="value" id="cardUnrealized">&mdash;</div>
+      <div class="sub" id="cardUnrealizedNote">Vs. cost basis</div>
+    </div>
+    <div class="card">
+      <div class="label">Portfolio YTD</div>
+      <div class="value" id="cardYTD">&mdash;</div>
+      <div class="sub" id="cardYTDDollar">&mdash;</div>
+    </div>
+    <div class="card">
+      <div class="label">S&amp;P 500 (SPY) YTD</div>
+      <div class="value" id="cardSPY">&mdash;</div>
+      <div class="sub">Benchmark proxy: SPY ETF</div>
+    </div>
+    <div class="card">
+      <div class="label">Vs. Benchmark</div>
+      <div class="value" id="cardVsBenchmark">&mdash;</div>
+      <div class="sub" id="cardVsBenchmarkNote">Your YTD minus SPY YTD</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="add-row">
+      <input class="input" id="newSymbol" placeholder="Ticker e.g. AAPL" style="text-transform:uppercase; width:120px;">
+      <input class="input qty" id="newQty" placeholder="Shares" type="number" min="0" step="any">
+      <button class="btn" id="btnAddHolding">+ Add holding</button>
+      <button class="btn" id="btnUploadCsv">&#8593; Upload CSV</button>
+      <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+      <div class="spacer"></div>
+      <span class="help" id="holdingsCount">0 holdings tracked</span>
+    </div>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="sortable-th" data-sort-key="symbol">Symbol<span class="sort-arrow"></span></th>
+          <th class="sortable-th" data-sort-key="numrec">Numerical Recommendation<span class="sort-arrow"></span></th>
+          <th class="sortable-th" data-sort-key="name">Name<span class="sort-arrow"></span></th>
+          <th class="sortable-th" data-sort-key="account">Account<span class="sort-arrow"></span></th>
+          <th class="sortable-th" data-sort-key="divyield">Dividend<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="price">Price<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="daychange">Day %<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="ytd">YTD %<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="shares">Shares<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="avgcost">Avg Cost<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="value">Market Value<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="costbasis">Total Cost Basis<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="unrealized">Unrealized G/L<span class="sort-arrow"></span></th>
+          <th class="num sortable-th" data-sort-key="weight">Weight<span class="sort-arrow"></span></th>
+          <th class="sortable-th" data-sort-key="sourcefile">Source File<span class="sort-arrow"></span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <footer class="foot">
+    Prices and news are pulled first from Yahoo Finance's unofficial data feed (routed through a public CORS proxy, since Yahoo has no official API), falling back to Finnhub if you've added a key and Yahoo is unreachable. If neither can price a real holding, it's shown as missing (a red "NO DATA" tag and a banner up top) rather than guessed — you can also enter a price manually for anything no free source will cover (e.g. mutual funds). The only automatic placeholder values are for the four illustrative demo tickers (AAPL/MSFT/NVDA/SPY) used when no data source is configured at all. The small badge next to each price (Y / F / D / M / CASH) shows which source served that row. Because the Yahoo path is unofficial and proxy-dependent, treat it as best-effort rather than guaranteed uptime.
+    CSV import reads Symbol, Quantity, Description, and Cost Basis from a brokerage position export — tested against Fidelity's and Schwab's formats (different column names and account layouts are handled automatically); other brokers with similarly-shaped exports will likely work too. Money-market/cash-sweep rows and positions split across multiple accounts for the same symbol are combined into one row. Today's/Total gain-loss columns from the file are snapshots at export time, so they aren't imported as-is — instead, Unrealized Gain/Loss is recomputed live from your cost basis against the current fetched price every refresh.
+    The "signal" shown per holding is a rules-based read of momentum and 52-week range &mdash; it is generated automatically, is not investment advice, and is not a prediction of future performance. Always confirm figures with your broker or a licensed advisor before acting.
+  </footer>
+
+  <dialog id="settingsDialog">
+    <div class="dlg-head">Settings</div>
+    <div class="dlg-body">
+      <div class="field">
+        <label>Preferred CORS proxy (routes browser requests to Yahoo Finance)</label>
+        <input class="input" id="proxyInput" placeholder="https://api.allorigins.win/raw?url=">
+        <div class="help">Yahoo Finance has no official API and doesn't allow direct browser requests, so this unofficial data path goes through a public CORS proxy. This one is tried first; if it fails, the dashboard automatically tries a couple of other public proxies before giving up on Yahoo. None of these are officially supported &mdash; any of them can rate-limit, go down, or change without notice, which is why there's more than one.</div>
+      </div>
+      <div class="field">
+        <label>Finnhub API key (2nd source, used if every Yahoo proxy fails)</label>
+        <input class="input" id="apiKeyInput" placeholder="Paste your Finnhub API key">
+        <div class="help">Get a free key (no card) at <a href="https://finnhub.io/register" target="_blank" rel="noopener">finnhub.io/register</a>. Stored only in this browser &mdash; never sent anywhere but Finnhub. Covers stocks/ETFs well; doesn't cover mutual funds on the free tier.</div>
+      </div>
+      <div class="field">
+        <label>Auto-refresh interval for prices &amp; totals (seconds)</label>
+        <input class="input" id="intervalInput" type="number" min="15" step="1">
+        <div class="help">30&ndash;60s is a safe default. Shorter intervals mean more load on the free proxy/API.</div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" id="btnSettingsCancel">Cancel</button>
+      <button class="btn primary" id="btnSettingsSave">Save</button>
+    </div>
+  </dialog>
+
+  <dialog id="csvDialog">
+    <div class="dlg-head">Import positions</div>
+    <div class="dlg-body">
+      <div class="help" id="csvPreviewSummary">Parsing file…</div>
+      <div class="field">
+        <label>How should these be added?</label>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn" id="btnCsvReplace" style="justify-content:flex-start;">&#128465; Replace all existing positions with this file</button>
+          <button class="btn" id="btnCsvMerge" style="justify-content:flex-start;">&#8853; Add to my existing positions</button>
+        </div>
+        <div class="help" style="margin-top:8px;">Replace clears everything currently tracked first. Merge adds quantities and cost basis on top of any symbol you already hold, and adds new rows for anything not already tracked.</div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" id="btnCsvCancel">Cancel</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   LEDGER PORTFOLIO TERMINAL — v1 scaffold
+   Data provider: Finnhub (https://finnhub.io) — free tier covers
+   /quote, /stock/profile2, /stock/metric, /company-news.
+   No key set → runs on demo data so the UI can be judged as-is.
+   ============================================================ */
+
+const LS_KEYS = {
+  holdings: 'ledger_holdings_v1',
+  apiKey: 'ledger_finnhub_key_v1',
+  corsProxy: 'ledger_cors_proxy_v1',
+  interval: 'ledger_refresh_interval_v1',
+  yearStart: 'ledger_year_start_prices_v1', // cached/manual YTD baseline per symbol, {price, year}
+  manualPrices: 'ledger_manual_prices_v1',  // user-entered price for symbols no free API can serve, {price, setAt}
+  paused: 'ledger_paused_v1'
+};
+
+const DEFAULT_PROXY = 'https://api.allorigins.win/raw?url=';
+const BENCHMARK_SYMBOL = 'SPY';
+
+const DEMO_HOLDINGS = [
+  { symbol: 'AAPL', shares: 12 },
+  { symbol: 'MSFT', shares: 8 },
+  { symbol: 'NVDA', shares: 5 }
+];
+
+let state = {
+  holdings: loadHoldings(),
+  apiKey: localStorage.getItem(LS_KEYS.apiKey) || '',           // Finnhub — optional, fallback only
+  corsProxy: localStorage.getItem(LS_KEYS.corsProxy) || DEFAULT_PROXY,
+  interval: parseInt(localStorage.getItem(LS_KEYS.interval) || '45', 10),
+  data: {},          // symbol -> {price, prevClose, name, dividendYield, ytdPct, high52, low52, news:[], signal:{}, source}
+  dataSourceMode: 'unknown', // 'yahoo' | 'finnhub' | 'demo' | 'mixed' | 'gap'
+  dataGap: [], // real symbols neither Yahoo nor Finnhub could price this refresh
+  gapReasons: {}, // symbol -> 'unsupported' (structural, e.g. 403) | 'failed' (other)
+  paused: localStorage.getItem(LS_KEYS.paused) === '1',
+  expanded: new Set(),
+  sort: 'symbol-asc',
+  countdownTimer: null,
+  refreshTimer: null,
+  secondsLeft: 0
+};
+
+function allSymbols(){
+  const syms = [...new Set(state.holdings.filter(h=>!h.isCash).map(h=>h.symbol))];
+  if(!syms.includes(BENCHMARK_SYMBOL)) syms.push(BENCHMARK_SYMBOL);
+  return syms;
+}
+
+function holdingValue(h){
+  if(h.isCash) return h.cashValue || 0;
+  const d = state.data[h.symbol];
+  if(!d || d.source === 'unavailable') return 0;
+  return (d.price||0) * (h.shares||0);
+}
+
+function loadHoldings(){
+  try{
+    const raw = localStorage.getItem(LS_KEYS.holdings);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return DEMO_HOLDINGS.slice();
+}
+function saveHoldings(){
+  localStorage.setItem(LS_KEYS.holdings, JSON.stringify(state.holdings));
+}
+
+/* ---------------- CSV import (brokerage position export) ----------------
+   Expects a header row with at least: Symbol, Quantity, Cost basis total
+   (Fidelity's "Portfolio Positions" export format; other brokers that use
+   similar column names will mostly work too). Money-market / cash-sweep
+   rows (symbol ending in "**", no share quantity) are skipped — those
+   aren't tradable positions this dashboard can price.
+------------------------------------------------------------------------- */
+
+let pendingCsvRows = null; // aggregated rows waiting on the replace/merge choice
+
+// A small hand-rolled CSV parser — deliberately NOT dependent on any CDN/external
+// script, since reading a locally-selected file should never require network access.
+// Handles quoted fields, embedded commas/quotes, and a leading BOM.
+function parseCSV(text){
+  if(text.charCodeAt(0) === 0xFEFF) text = text.slice(1); // strip BOM
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for(let i=0; i<text.length; i++){
+    const c = text[i];
+    if(inQuotes){
+      if(c === '"'){
+        if(text[i+1] === '"'){ field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else {
+      if(c === '"') inQuotes = true;
+      else if(c === ',' ){ row.push(field); field=''; }
+      else if(c === '\r'){ /* ignore, \n handles the break */ }
+      else if(c === '\n'){ row.push(field); field=''; rows.push(row); row=[]; }
+      else field += c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  if(!rows.length) return { data: [], preamble: '' };
+
+  // The real header row isn't always line 1 — some brokers (e.g. Schwab) put a
+  // free-text title/account line first. Find whichever row actually contains
+  // a "Symbol" cell and treat everything before it as preamble metadata.
+  let headerIdx = rows.findIndex(r => r.some(cell => cell.trim().toLowerCase() === 'symbol'));
+  if(headerIdx === -1) headerIdx = 0;
+  const preamble = rows.slice(0, headerIdx).map(r => r.join(' ')).join('\n');
+  const header = rows[headerIdx];
+  const data = rows.slice(headerIdx + 1)
+    .filter(r => !(r.length===1 && r[0].trim()==='')) // drop blank lines
+    .map(r=>{
+      const obj = {};
+      header.forEach((h,idx)=>{ obj[h.trim()] = r[idx] !== undefined ? r[idx] : ''; });
+      return obj;
+    });
+  return { data, preamble };
+}
+
+function parseCurrency(str){
+  if(str==null) return null;
+  const s = String(str).replace(/[^0-9.\-]/g,'');
+  if(s===''||s==='-'||s==='.') return null;
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
+function getField(row, ...candidates){
+  for(const c of candidates){
+    if(row[c] !== undefined && row[c] !== '') return row[c];
+  }
+  return '';
+}
+
+function aggregateCsvRows(rows, fallbackAccount, sourceFile){
+  const map = {};
+  let skipped = 0;
+  rows.forEach(row=>{
+    const symbolRaw = getField(row, 'Symbol').trim();
+    if(!symbolRaw || /^(positions total|account total|total)$/i.test(symbolRaw)){ skipped++; return; } // summary/total row, not a real position
+    const symbol = symbolRaw.toUpperCase();
+    const description = getField(row, 'Description').trim();
+    const account = getField(row, 'Account name').trim() || fallbackAccount || '';
+    const accountNumber = getField(row, 'Account number').trim();
+    const acctType = getField(row, 'Type', 'Asset Type').trim();
+    const key = symbol + '|' + (accountNumber || account); // same symbol in a different account is a different row
+
+    const qtyRaw = getField(row, 'Quantity', 'Qty (Quantity)');
+    const qty = parseCurrency(qtyRaw); // strips commas too (Schwab uses "2,798.357")
+    const isCashRow = symbolRaw.endsWith('**') || (!qty && /cash/i.test(symbolRaw));
+
+    if(isCashRow){
+      // Money-market / cash-sweep line — a straight dollar value from the file,
+      // never looked up against any pricing API.
+      const cashValue = parseCurrency(getField(row, 'Current value', 'Mkt Val (Market Value)'));
+      if(cashValue == null){ skipped++; return; }
+      if(!map[key]) map[key] = { symbol, isCash:true, cashValue:0, description, account, accountNumber, acctType, sourceFile };
+      map[key].cashValue += cashValue;
+      return;
+    }
+
+    if(!qty){ skipped++; return; }
+    const costBasisTotal = parseCurrency(getField(row, 'Cost basis total', 'Cost Basis'));
+    if(!map[key]){
+      map[key] = { symbol, shares:0, costBasisTotal:0, hasCostBasis:false, description, account, accountNumber, acctType, sourceFile };
+    }
+    const agg = map[key];
+    agg.shares += qty; // only combines if the exact same symbol+account appears twice in the file
+    if(costBasisTotal!=null){ agg.costBasisTotal += costBasisTotal; agg.hasCostBasis = true; }
+  });
+  return { rows: Object.values(map), skipped };
+}
+
+function applyCsvHoldings(aggregatedRows, mode){
+  if(mode==='replace'){
+    state.holdings = [];
+  }
+  aggregatedRows.forEach(row=>{
+    const rowKey = row.accountNumber || row.account || '';
+    const existing = state.holdings.find(h=>h.symbol===row.symbol && (h.accountNumber||h.account||'')===rowKey);
+    if(existing){
+      // Same symbol in the same account, re-imported — combine. A different account never matches here.
+      if(row.isCash){
+        existing.isCash = true;
+        existing.cashValue = (existing.cashValue||0) + row.cashValue;
+      } else {
+        existing.shares = (existing.shares||0) + row.shares;
+        if(row.hasCostBasis){
+          existing.costBasisTotal = (existing.costBasisTotal||0) + row.costBasisTotal;
+        }
+      }
+      if(!existing.csvDescription && row.description) existing.csvDescription = row.description;
+      existing.sourceFile = row.sourceFile || existing.sourceFile; // most recent import wins
+    } else if(row.isCash){
+      state.holdings.push({
+        symbol: row.symbol,
+        isCash: true,
+        cashValue: row.cashValue,
+        account: row.account || null,
+        accountNumber: row.accountNumber || null,
+        acctType: row.acctType || null,
+        csvDescription: row.description || null,
+        sourceFile: row.sourceFile || null
+      });
+    } else {
+      state.holdings.push({
+        symbol: row.symbol,
+        shares: row.shares,
+        costBasisTotal: row.hasCostBasis ? row.costBasisTotal : null,
+        account: row.account || null,
+        accountNumber: row.accountNumber || null,
+        acctType: row.acctType || null,
+        csvDescription: row.description || null,
+        sourceFile: row.sourceFile || null
+      });
+    }
+  });
+  saveHoldings();
+}
+
+function openCsvDialog(aggregatedRows, skipped){
+  pendingCsvRows = aggregatedRows;
+  const totalPositions = aggregatedRows.length;
+  const cashCount = aggregatedRows.filter(r=>r.isCash).length;
+  const tradableCount = totalPositions - cashCount;
+  const accountSet = new Set(aggregatedRows.map(r => r.account || 'Unknown account'));
+  let summary = 'Found ' + tradableCount + ' priced position' + (tradableCount===1?'':'s') +
+    (cashCount ? ' and ' + cashCount + ' cash/money-market line' + (cashCount===1?'':'s') + ' (tracked at their CSV value, no price lookup)' : '') +
+    ' across ' + accountSet.size + ' account' + (accountSet.size===1?'':'s') + '. Positions in different accounts stay as separate rows — nothing is combined across accounts.';
+  if(skipped) summary += ' Skipped ' + skipped + ' row' + (skipped===1?'':'s') + ' with no usable symbol, quantity, or value.';
+  document.getElementById('csvPreviewSummary').textContent = summary;
+  document.getElementById('csvDialog').showModal();
+}
+
+document.getElementById('btnUploadCsv').addEventListener('click', ()=>{
+  document.getElementById('csvFileInput').click();
+});
+document.getElementById('csvFileInput').addEventListener('change', (e)=>{
+  const file = e.target.files && e.target.files[0];
+  e.target.value = ''; // allow re-selecting the same file later
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const text = ev.target.result;
+      const { data, preamble } = parseCSV(text);
+      // Some brokers (Schwab) put the account name in a free-text title line
+      // instead of a per-row column, e.g. "Positions for account Rollover IRA
+      // ...059 as of ...". Pull it out to use as a fallback account name.
+      const acctMatch = preamble && preamble.match(/for account\s+(.+?)\s+as of/i);
+      const fallbackAccount = acctMatch ? acctMatch[1].trim() : null;
+      const { rows, skipped } = aggregateCsvRows(data, fallbackAccount, file.name);
+      if(!rows.length){
+        showToast('No usable positions found in that file — check it has Symbol and Quantity columns.');
+        return;
+      }
+      openCsvDialog(rows, skipped);
+    }catch(err){
+      console.error('CSV import failed:', err);
+      showToast('Could not parse that CSV — see console for details.');
+    }
+  };
+  reader.onerror = ()=> showToast('Could not read that file.');
+  reader.readAsText(file);
+});
+document.getElementById('btnCsvCancel').addEventListener('click', ()=>{
+  pendingCsvRows = null;
+  document.getElementById('csvDialog').close();
+});
+document.getElementById('btnCsvReplace').addEventListener('click', ()=>{
+  if(!pendingCsvRows) return;
+  const n = pendingCsvRows.length;
+  applyCsvHoldings(pendingCsvRows, 'replace');
+  pendingCsvRows = null;
+  document.getElementById('csvDialog').close();
+  renderAll();
+  if(state.paused){
+    showToast('Replaced with ' + n + ' imported holding' + (n===1?'':'s') + ' — resume external access to fetch prices.');
+  } else {
+    showToast('Replaced positions with ' + n + ' imported holding' + (n===1?'':'s') + ' — fetching data…');
+    fullRefresh();
+  }
+});
+document.getElementById('btnCsvMerge').addEventListener('click', ()=>{
+  if(!pendingCsvRows) return;
+  const n = pendingCsvRows.length;
+  applyCsvHoldings(pendingCsvRows, 'merge');
+  pendingCsvRows = null;
+  document.getElementById('csvDialog').close();
+  renderAll();
+  if(state.paused){
+    showToast('Merged ' + n + ' imported holding' + (n===1?'':'s') + ' — resume external access to fetch prices.');
+  } else {
+    showToast('Merged ' + n + ' imported holding' + (n===1?'':'s') + ' — fetching data…');
+    fullRefresh();
+  }
+});
+
+
+function loadYearStartMap(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEYS.yearStart) || '{}'); }catch(e){ return {}; }
+}
+function saveYearStartMap(map){
+  localStorage.setItem(LS_KEYS.yearStart, JSON.stringify(map));
+}
+
+function loadManualPrices(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEYS.manualPrices) || '{}'); }catch(e){ return {}; }
+}
+function saveManualPrices(map){
+  localStorage.setItem(LS_KEYS.manualPrices, JSON.stringify(map));
+}
+function setManualPrice(symbol, price){
+  const map = loadManualPrices();
+  map[symbol] = { price, setAt: Date.now() };
+  saveManualPrices(map);
+}
+function clearManualPrice(symbol){
+  const map = loadManualPrices();
+  delete map[symbol];
+  saveManualPrices(map);
+}
+
+function setSignalLight(mode){ // 'stopped' | 'busy' | 'idle'
+  const red = document.getElementById('lightRed');
+  const yellow = document.getElementById('lightYellow');
+  const green = document.getElementById('lightGreen');
+  red.classList.toggle('on', mode==='stopped');
+  yellow.classList.toggle('on', mode==='busy');
+  green.classList.toggle('on', mode==='idle');
+}
+
+function applyPausedUI(){
+  const btn = document.getElementById('btnPauseToggle');
+  const fullBtn = document.getElementById('btnFullRefresh');
+  const priceBtn = document.getElementById('btnPriceRefresh');
+  if(state.paused){
+    btn.innerHTML = '&#9654; Resume external access';
+    btn.classList.add('btn-stopped');
+    fullBtn.disabled = true;
+    priceBtn.disabled = true;
+    setSignalLight('stopped');
+    document.getElementById('countdown').textContent = 'stopped';
+  } else {
+    btn.innerHTML = '&#9209; Stop all external access';
+    btn.classList.remove('btn-stopped');
+    fullBtn.disabled = false;
+    priceBtn.disabled = false;
+    setSignalLight('idle');
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+
+function fmtMoney(n){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  return '$' + n.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtPct(n, withSign=true){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  const s = (withSign && n>0)?'+':'';
+  return s + n.toFixed(2) + '%';
+}
+function pctClass(n){
+  if(n===null||n===undefined||isNaN(n)) return '';
+  return n>0?'up':(n<0?'down':'');
+}
+
+/* ---------------- Data fetching ----------------
+   Priority chain per refresh: Yahoo Finance (unofficial, via CORS proxy, no key needed)
+   → Finnhub free tier (needs a key, used only if Yahoo fails)
+   → demo data (last resort, clearly labeled in the UI)
+------------------------------------------------- */
+
+const BUILTIN_PROXIES = [
+  'https://api.allorigins.win/raw?url=',
+  'https://corsproxy.io/?url=',
+  'https://api.codetabs.com/v1/proxy?quest='
+];
+
+function proxyCandidates(){
+  const list = [];
+  if(state.corsProxy) list.push(state.corsProxy);
+  BUILTIN_PROXIES.forEach(p=>{ if(!list.includes(p)) list.push(p); });
+  return list;
+}
+
+const FETCH_TIMEOUT_MS = 8000;
+
+// Every network call goes through this — a hung proxy or API fails fast
+// instead of leaving the UI (and the refresh buttons) stuck waiting.
+async function fetchWithTimeout(url, ms=FETCH_TIMEOUT_MS){
+  const controller = new AbortController();
+  const timer = setTimeout(()=> controller.abort(), ms);
+  try{
+    return await fetch(url, { signal: controller.signal });
+  }catch(e){
+    if(e.name === 'AbortError') throw new Error('Timed out after ' + (ms/1000) + 's: ' + url);
+    throw e;
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+// Tries each candidate proxy in turn — a single flaky/rate-limited/down proxy
+// no longer takes the whole Yahoo path with it.
+async function fetchViaProxies(targetUrl){
+  let lastErr;
+  for(const proxyBase of proxyCandidates()){
+    try{
+      const res = await fetchWithTimeout(proxyBase + encodeURIComponent(targetUrl));
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return res;
+    }catch(e){
+      lastErr = e;
+      console.warn('Proxy failed (' + proxyBase + '):', e.message);
+    }
+  }
+  throw lastErr || new Error('All CORS proxies failed');
+}
+
+// --- Yahoo Finance (unofficial endpoints) ---
+
+async function yahooBatchQuote(symbols){
+  const mapped = symbols.map(marketSymbol);
+  const target = 'https://query1.finance.yahoo.com/v7/finance/quote?symbols=' + mapped.join(',');
+  const res = await fetchViaProxies(target);
+  const json = await res.json();
+  const rows = json && json.quoteResponse && json.quoteResponse.result;
+  if(!rows || !rows.length) throw new Error('Yahoo quote: empty result (endpoint may be blocking proxy traffic)');
+  console.log('Yahoo raw response — symbols returned:', rows.map(r=>r.symbol).join(', '));
+  const byMarketSymbol = {};
+  rows.forEach(r=>{ byMarketSymbol[r.symbol] = r; });
+  const map = {};
+  symbols.forEach((origSym, idx)=>{
+    const r = byMarketSymbol[mapped[idx]];
+    if(!r){
+      console.warn('Yahoo diagnostic — ' + origSym + ' (requested as ' + mapped[idx] + '): absent from the response entirely — Yahoo did not return a row for it at all.');
+      return;
+    }
+    if(r.regularMarketPrice == null){
+      console.warn('Yahoo diagnostic — ' + origSym + ' (requested as ' + mapped[idx] + '): row WAS returned but regularMarketPrice is null. Full row:', r);
+      return;
+    }
+    map[origSym] = {
+      price: r.regularMarketPrice ?? null,
+      prevClose: r.regularMarketPreviousClose ?? null,
+      dayChangePct: r.regularMarketChangePercent ?? null,
+      name: r.longName || r.shortName || r.symbol,
+      dividendYield: (r.trailingAnnualDividendYield!=null) ? r.trailingAnnualDividendYield*100 : null,
+      high52: r.fiftyTwoWeekHigh ?? null,
+      low52: r.fiftyTwoWeekLow ?? null
+    };
+  });
+  return map;
+}
+
+async function yahooChartYTDBaseline(symbol){
+  const target = 'https://query1.finance.yahoo.com/v8/finance/chart/' + marketSymbol(symbol) + '?range=ytd&interval=1d';
+  const res = await fetchViaProxies(target);
+  const json = await res.json();
+  const result = json && json.chart && json.chart.result && json.chart.result[0];
+  const closes = result && result.indicators && result.indicators.quote && result.indicators.quote[0] && result.indicators.quote[0].close;
+  if(!closes) throw new Error('Yahoo chart: no close series');
+  const firstClose = closes.find(c => c!=null);
+  if(firstClose==null) throw new Error('Yahoo chart: no valid closes');
+  return firstClose;
+}
+
+async function yahooNews(symbol){
+  const target = 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=' + marketSymbol(symbol) + '&region=US&lang=en-US';
+  const res = await fetchViaProxies(target);
+  const text = await res.text();
+  const xml = new DOMParser().parseFromString(text, 'text/xml');
+  const items = Array.from(xml.querySelectorAll('item')).slice(0,4);
+  if(!items.length) throw new Error('Yahoo RSS: no items');
+  return items.map(it=>{
+    const pub = it.querySelector('pubDate')?.textContent;
+    return {
+      headline: it.querySelector('title')?.textContent || (symbol + ' news'),
+      url: it.querySelector('link')?.textContent || '#',
+      source: 'Yahoo Finance',
+      datetime: pub ? (new Date(pub).getTime()/1000) : null
+    };
+  });
+}
+
+
+
+// --- Finnhub (fallback only) ---
+
+let lastFinnhubCallAt = 0;
+const FINNHUB_MIN_INTERVAL_MS = 1100; // ~55/min — safely under the 60/min free-tier cap with margin
+
+async function finnhub(path, params){
+  const waitMs = Math.max(0, lastFinnhubCallAt + FINNHUB_MIN_INTERVAL_MS - Date.now());
+  if(waitMs > 0) await new Promise(r => setTimeout(r, waitMs));
+  lastFinnhubCallAt = Date.now();
+  const url = new URL('https://finnhub.io/api/v1' + path);
+  Object.entries(params||{}).forEach(([k,v])=> url.searchParams.set(k,v));
+  url.searchParams.set('token', state.apiKey);
+  const res = await fetchWithTimeout(url.toString());
+  if(res.status === 403) throw new Error('Finnhub 403 on ' + path + ' — this plan does not have access to this endpoint/asset type (e.g. mutual funds aren\'t covered on the free tier). Retrying will not help.');
+  if(res.status === 429) throw new Error('Finnhub 429 on ' + path + ' — rate limited despite throttling; likely too many symbols falling back at once.');
+  if(!res.ok) throw new Error('Finnhub error ' + res.status + ' on ' + path);
+  return res.json();
+}
+async function finnhubQuote(symbol){ return finnhub('/quote', { symbol: marketSymbol(symbol) }); }
+async function finnhubProfile(symbol){ return finnhub('/stock/profile2', { symbol: marketSymbol(symbol) }); }
+async function finnhubMetric(symbol){ return finnhub('/stock/metric', { symbol: marketSymbol(symbol), metric:'all' }); }
+async function finnhubNews(symbol){
+  const to = new Date();
+  const from = new Date(Date.now() - 7*24*60*60*1000);
+  const fmt = d => d.toISOString().slice(0,10);
+  const items = await finnhub('/company-news', { symbol: marketSymbol(symbol), from: fmt(from), to: fmt(to) });
+  return (items||[]).slice(0,4).map(n=>({ headline:n.headline, url:n.url, source:n.source, datetime:n.datetime }));
+}
+
+
+// --- YTD baseline cache (year-aware; shared across Yahoo/Finnhub/manual) ---
+
+async function ensureYearStartBaseline(symbol){
+  const map = loadYearStartMap();
+  const nowYear = new Date().getFullYear();
+  const cached = map[symbol];
+  if(cached && cached.year === nowYear) return cached.price;
+  try{
+    const price = await yahooChartYTDBaseline(symbol);
+    map[symbol] = { price, year: nowYear };
+    saveYearStartMap(map);
+    return price;
+  }catch(e){
+    return cached ? cached.price : null; // stale-but-usable beats nothing
+  }
+}
+
+function computeSignal(sym, d, spy){
+  // Rules-based, informational-only read — NOT a prediction or recommendation.
+  let score = 0;
+  const reasons = [];
+  if(d.dayChangePct!=null){
+    if(d.dayChangePct > 1){ score += 1; reasons.push('up ' + d.dayChangePct.toFixed(1) + '% today'); }
+    else if(d.dayChangePct < -1){ score -= 1; reasons.push('down ' + Math.abs(d.dayChangePct).toFixed(1) + '% today'); }
+  }
+  if(d.high52 && d.low52 && d.price){
+    const range = d.high52 - d.low52;
+    if(range > 0){
+      const pos = (d.price - d.low52) / range; // 0 = at 52w low, 1 = at 52w high
+      if(pos > 0.85){ score += 1; reasons.push('trading near its 52-week high'); }
+      else if(pos < 0.15){ score -= 1; reasons.push('trading near its 52-week low'); }
+    }
+  }
+  if(d.ytdPct!=null && spy && spy.ytdPct!=null){
+    const rel = d.ytdPct - spy.ytdPct;
+    if(rel > 5){ score += 1; reasons.push('outpacing the S&P 500 YTD by ' + rel.toFixed(1) + ' pts'); }
+    else if(rel < -5){ score -= 1; reasons.push('trailing the S&P 500 YTD by ' + Math.abs(rel).toFixed(1) + ' pts'); }
+  }
+  let tag = 'neutral', label = 'Neutral / mixed';
+  if(score >= 2){ tag='bull'; label='Constructive near-term bias'; }
+  else if(score <= -2){ tag='bear'; label='Cautious near-term bias'; }
+  const rationale = reasons.length ? ('Basis: ' + reasons.join('; ') + '.') : 'Not enough signal in the fetched data to lean either way.';
+  return { tag, label, rationale, score };
+}
+
+/* ---------------- Demo data (used when no API key set) ---------------- */
+
+function demoDataFor(symbol){
+  const table = {
+    AAPL:{ name:'Apple Inc.', price:227.45, prevClose:224.90, dividendYield:0.44, ytdPct:12.3, high52:237.23, low52:164.08 },
+    MSFT:{ name:'Microsoft Corporation', price:441.10, prevClose:438.20, dividendYield:0.72, ytdPct:9.8, high52:468.35, low52:362.90 },
+    NVDA:{ name:'NVIDIA Corporation', price:118.22, prevClose:121.05, dividendYield:0.03, ytdPct:28.6, high52:153.13, low52:75.61 },
+    SPY:{ name:'SPDR S&P 500 ETF Trust', price:552.30, prevClose:549.80, dividendYield:1.25, ytdPct:14.1, high52:560.10, low52:452.30 }
+  };
+  return table[symbol] || null; // no fabricated price for real symbols we don't recognize
+}
+
+function demoNewsFor(symbol, name){
+  return [
+    { headline: symbol + ' extends move as sector rotation continues', source:'Demo Wire', datetime: Date.now()/1000, url:'#' },
+    { headline: 'Analysts weigh in on ' + (name||symbol) + ' after latest guidance', source:'Demo Financial', datetime: Date.now()/1000 - 3600, url:'#' }
+  ];
+}
+
+/* ---------------- Refresh orchestration ----------------
+   1) Try one batched Yahoo quote call for every symbol (no key needed).
+   2) If that fails (proxy down, endpoint blocked, bad response), fall back
+      to Finnhub per-symbol calls — only if a Finnhub key is configured.
+   3) If both fail, degrade to clearly-labeled demo data.
+   YTD baseline and news are fetched separately so the lightweight price/
+   totals refresh never has to re-pull them.
+-------------------------------------------------------- */
+
+// Brokerage exports often strip the separator from share-class tickers
+// (Fidelity's "BRKB") while market-data APIs expect the exchange's actual
+// symbol ("BRK-B"). This maps the ones we know about; the portfolio itself
+// keeps using the original symbol as its key throughout.
+const SYMBOL_ALIASES = {
+  'BRKB': 'BRK-B', 'BRKA': 'BRK-A',
+  'BFB': 'BF-B', 'BFA': 'BF-A'
+};
+function marketSymbol(sym){ return SYMBOL_ALIASES[sym] || sym; }
+
+async function refreshCorePrices(symbols){
+  state.gapReasons = {};
+  let yahooMap = {};
+  let yahooReached = false;
+  try{
+    yahooMap = await yahooBatchQuote(symbols);
+    yahooReached = true;
+  }catch(err){
+    console.warn('Yahoo batch quote failed entirely:', err.message);
+  }
+
+  const missing = [];
+  symbols.forEach(sym=>{
+    const row = yahooMap[sym];
+    if(row && row.price!=null){
+      const d = state.data[sym] || {};
+      Object.assign(d, row, { source:'yahoo' });
+      state.data[sym] = d;
+    } else {
+      missing.push(sym);
+    }
+  });
+
+  if(!missing.length){
+    state.dataSourceMode = 'yahoo';
+    return;
+  }
+  if(yahooReached){
+    console.warn('Yahoo had no usable row for:', missing.join(', '), '— trying Finnhub for just those.');
+  }
+
+  // Stage 2: Finnhub, per-symbol, for whatever Yahoo didn't cover.
+  let afterFinnhub = [];
+  if(state.apiKey){
+    for(const sym of missing){
+      try{
+        const q = await finnhubQuote(sym);
+        if(q.c == null || (q.c === 0 && q.pc === 0)){
+          throw new Error('Finnhub returned no usable quote (unsupported symbol/asset type, bad key, or rate limit) — raw: ' + JSON.stringify(q));
+        }
+        const d = state.data[sym] || {};
+        d.price = q.c; d.prevClose = q.pc;
+        d.dayChangePct = q.pc ? ((q.c - q.pc)/q.pc*100) : null;
+        if(!d.name){
+          try{ const p = await finnhubProfile(sym); d.name = p.name || sym; }
+          catch(e){ d.name = d.name || sym; }
+        }
+        if(!d.metricFetched){
+          try{
+            const m = await finnhubMetric(sym);
+            const mm = m.metric || {};
+            d.dividendYield = mm.dividendYieldIndicatedAnnual ?? mm.currentDividendYieldTTM ?? d.dividendYield ?? null;
+            d.high52 = mm['52WeekHigh'] ?? d.high52 ?? null;
+            d.low52 = mm['52WeekLow'] ?? d.low52 ?? null;
+            d.metricFetched = true;
+          }catch(e){ /* metric endpoint restricted on some plans — degrade gracefully, retry next refresh */ }
+        }
+        d.source = 'finnhub';
+        state.data[sym] = d;
+      }catch(err){
+        console.warn('Finnhub fetch failed for ' + sym + ':', err.message);
+        afterFinnhub.push(sym);
+        state.gapReasons[sym] = err.message.includes('403') ? 'unsupported' : 'failed';
+      }
+    }
+  } else {
+    afterFinnhub.push(...missing);
+  }
+
+  // Stage 3: a user-supplied manual price (for things like mutual funds that
+  // no free automated source will ever cover), then illustrative demo
+  // tickers, then an honest "no data" gap for anything still left.
+  state.dataGap = [];
+  const manualPrices = loadManualPrices();
+  if(afterFinnhub.length){
+    const filled = [];
+    afterFinnhub.forEach(sym=>{
+      const manual = manualPrices[sym];
+      const demo = demoDataFor(sym);
+      const d = state.data[sym] || {};
+      if(manual){
+        d.price = manual.price;
+        d.prevClose = d.prevClose ?? manual.price;
+        d.dayChangePct = null; // a manually-entered price has no meaningful day change
+        d.name = d.name || sym;
+        d.source = 'manual';
+        filled.push(sym + ' (manual)');
+      } else if(demo){
+        // A known illustrative preview ticker — fine to show a stable placeholder.
+        d.price = demo.price;
+        d.prevClose = demo.prevClose;
+        d.name = d.name || demo.name;
+        d.dividendYield = d.dividendYield ?? demo.dividendYield;
+        d.dayChangePct = ((d.price - d.prevClose)/d.prevClose*100);
+        d.high52 = d.high52 ?? demo.high52; d.low52 = d.low52 ?? demo.low52;
+        d.source = 'demo';
+        if(d.ytdPct==null) d.ytdPct = demo.ytdPct;
+        filled.push(sym);
+      } else {
+        // A real symbol nothing could serve — never invent a number for it.
+        d.source = 'unavailable';
+        state.dataGap.push(sym);
+      }
+      state.data[sym] = d;
+    });
+    if(filled.length) showToast('Showing non-live values for: ' + filled.join(', ') + '.');
+  }
+
+  // Headline status dot: show the least-reliable source actually in use, so a
+  // partial degrade never gets hidden behind a reassuring all-green light.
+  const sourcesUsed = new Set(symbols.map(sym => state.data[sym]?.source).filter(Boolean));
+  if(sourcesUsed.has('unavailable')) state.dataSourceMode = 'gap';
+  else if(sourcesUsed.has('demo') || sourcesUsed.has('manual')) state.dataSourceMode = sourcesUsed.size>1 ? 'mixed' : (sourcesUsed.has('manual') ? 'manual' : 'demo');
+  else if(sourcesUsed.has('finnhub')) state.dataSourceMode = sourcesUsed.size>1 ? 'mixed' : 'finnhub';
+  else state.dataSourceMode = 'yahoo';
+}
+
+async function refreshYTD(symbols){
+  for(const sym of symbols){
+    const d = state.data[sym];
+    if(!d || d.price==null) continue;
+    if(state.dataSourceMode === 'demo'){ continue; } // demo ytdPct already seeded
+    const baseline = await ensureYearStartBaseline(sym);
+    d.ytdPct = baseline ? ((d.price - baseline)/baseline*100) : (d.ytdPct ?? null);
+  }
+}
+
+async function refreshNews(symbols){
+  for(const sym of symbols){
+    const d = state.data[sym] || {};
+    try{
+      d.news = await yahooNews(sym);
+      d.newsSource = 'Yahoo Finance';
+    }catch(e){
+      if(state.apiKey){
+        try{ d.news = await finnhubNews(sym); d.newsSource = 'Finnhub'; }
+        catch(e2){ d.news = d.news || []; }
+      } else if(state.dataSourceMode === 'demo'){
+        d.news = demoNewsFor(sym, d.name);
+        d.newsSource = 'Demo';
+      } else {
+        d.news = d.news || [];
+      }
+    }
+    state.data[sym] = d;
+  }
+}
+
+function recomputeSignals(symbols){
+  const spy = state.data[BENCHMARK_SYMBOL];
+  symbols.forEach(sym=>{
+    const d = state.data[sym];
+    if(!d) return;
+    d.signal = computeSignal(sym, d, spy);
+  });
+}
+
+async function fullRefresh(){
+  if(state.paused){ showToast('External access is stopped — press Resume first.'); return; }
+  setBusy(true, 'Running full refresh…');
+  try{
+    const symbols = allSymbols();
+    await refreshCorePrices(symbols);
+    await refreshYTD(symbols);
+    await refreshNews(symbols);
+    recomputeSignals(symbols);
+  }catch(err){
+    console.error('Full refresh hit an unexpected error:', err);
+    showToast('Refresh hit an unexpected error — see console.');
+  }finally{
+    renderAll();
+    markUpdated();
+    setBusy(false);
+    restartCountdown();
+  }
+}
+
+async function priceOnlyRefresh(){
+  if(state.paused){ return; } // auto-timer tick while stopped — silent no-op, no toast spam
+  setBusy(true, 'Refreshing prices…');
+  try{
+    const symbols = allSymbols();
+    await refreshCorePrices(symbols);
+    await refreshYTD(symbols);
+    recomputeSignals(symbols);
+  }catch(err){
+    console.error('Price refresh hit an unexpected error:', err);
+    showToast('Refresh hit an unexpected error — see console.');
+  }finally{
+    renderAll();
+    markUpdated();
+    setBusy(false);
+  }
+}
+
+function setBusy(b, msg){
+  document.getElementById('btnFullRefresh').disabled = b || state.paused;
+  document.getElementById('btnPriceRefresh').disabled = b || state.paused;
+  if(b && msg) showToast(msg);
+  if(!state.paused) setSignalLight(b ? 'busy' : 'idle');
+}
+function markUpdated(){
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent = 'Updated ' + now.toLocaleTimeString();
+  const dot = document.getElementById('modeDot');
+  const labels = {
+    yahoo: '<span class="dot live"></span>Live (Yahoo Finance)',
+    finnhub: '<span class="dot finnhub"></span>Live (Finnhub fallback)',
+    mixed: '<span class="dot finnhub"></span>Live (mixed sources — check row badges)',
+    demo: '<span class="dot demo"></span>Demo data',
+    manual: '<span class="dot demo"></span>Manual price(s) in use',
+    gap: '<span class="dot gap"></span>Missing data — see banner below',
+    unknown: '<span class="dot demo"></span>Starting…'
+  };
+  dot.innerHTML = labels[state.dataSourceMode] || labels.unknown;
+  renderDataGapBanner();
+}
+
+function renderDataGapBanner(){
+  const el = document.getElementById('dataGapBanner');
+  if(state.dataGap && state.dataGap.length){
+    el.style.display = 'block';
+    const unsupported = state.dataGap.filter(s => state.gapReasons?.[s] === 'unsupported');
+    const other = state.dataGap.filter(s => state.gapReasons?.[s] !== 'unsupported');
+    let html = '⚠ No real price could be fetched for: <b>' + state.dataGap.join(', ') + '</b> (tried Yahoo and Finnhub). ';
+    if(unsupported.length){
+      html += 'For <b>' + unsupported.join(', ') + '</b>, at least one source explicitly denied the request (likely an asset type — e.g. mutual funds — not covered on the free plan); retrying won\'t help. ';
+    }
+    if(other.length){
+      html += (unsupported.length ? 'For the rest' : 'These') + ', it may be transient (rate limiting, a proxy hiccup) — worth trying again. ';
+    }
+    html += 'You can click "Set price" next to any of these to enter a value manually until a real source picks it up. Totals below are understated by an unknown amount until this resolves.';
+    el.innerHTML = html;
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+/* ---------------- Rendering ---------------- */
+
+function computeTotals(){
+  const yearStartMap = loadYearStartMap();
+  let totalValue=0, totalPrevValue=0, totalYearStartValue=0, anyYearStart=false;
+  let totalCostBasis=0, anyCostBasis=false;
+  for(const h of state.holdings){
+    if(h.isCash){
+      const v = h.cashValue||0;
+      totalValue += v;
+      totalPrevValue += v;      // cash doesn't day-change
+      totalYearStartValue += v; // and contributes no YTD gain/loss
+      continue;
+    }
+    const d = state.data[h.symbol];
+    if(!d) continue;
+    totalValue += (d.price||0) * h.shares;
+    totalPrevValue += (d.prevClose||d.price||0) * h.shares;
+    const baseline = yearStartMap[h.symbol] && yearStartMap[h.symbol].price;
+    if(baseline){ totalYearStartValue += baseline * h.shares; anyYearStart = true; }
+    else if(d.ytdPct!=null){
+      // derive an implied baseline from ytdPct if we don't have an explicit one
+      const implied = d.price / (1 + d.ytdPct/100);
+      totalYearStartValue += implied * h.shares;
+      anyYearStart = true;
+    }
+    if(h.costBasisTotal!=null){ totalCostBasis += h.costBasisTotal; anyCostBasis = true; }
+  }
+  const dayChangeDollar = totalValue - totalPrevValue;
+  const dayChangePct = totalPrevValue ? (dayChangeDollar/totalPrevValue*100) : null;
+  const ytdDollar = anyYearStart ? (totalValue - totalYearStartValue) : null;
+  const ytdPct = (anyYearStart && totalYearStartValue) ? (ytdDollar/totalYearStartValue*100) : null;
+  const unrealizedDollar = anyCostBasis ? (totalValue - totalCostBasis) : null;
+  const unrealizedPct = (anyCostBasis && totalCostBasis) ? (unrealizedDollar/totalCostBasis*100) : null;
+  return { totalValue, dayChangeDollar, dayChangePct, ytdDollar, ytdPct, totalCostBasis, unrealizedDollar, unrealizedPct, anyCostBasis };
+}
+
+function renderCards(){
+  const t = computeTotals();
+  document.getElementById('cardTotalValue').textContent = fmtMoney(t.totalValue);
+  const dc = document.getElementById('cardDayChange');
+  dc.textContent = 'Day: ' + fmtMoney(t.dayChangeDollar) + ' (' + fmtPct(t.dayChangePct) + ')';
+  dc.className = 'sub ' + pctClass(t.dayChangePct);
+
+  const unrEl = document.getElementById('cardUnrealized');
+  const unrNote = document.getElementById('cardUnrealizedNote');
+  if(t.anyCostBasis){
+    unrEl.textContent = fmtMoney(t.unrealizedDollar);
+    unrEl.className = 'value ' + pctClass(t.unrealizedDollar);
+    unrNote.textContent = fmtPct(t.unrealizedPct) + ' vs. ' + fmtMoney(t.totalCostBasis) + ' cost basis';
+    unrNote.className = 'sub ' + pctClass(t.unrealizedPct);
+  } else {
+    unrEl.textContent = '—';
+    unrEl.className = 'value';
+    unrNote.textContent = 'Import a CSV with cost basis to enable';
+    unrNote.className = 'sub';
+  }
+
+  const ytdEl = document.getElementById('cardYTD');
+  ytdEl.textContent = fmtPct(t.ytdPct);
+  ytdEl.className = 'value ' + pctClass(t.ytdPct);
+  document.getElementById('cardYTDDollar').textContent = t.ytdDollar!=null ? fmtMoney(t.ytdDollar) + ' since Jan 1' : 'Add a year-start price to enable';
+
+  const spy = state.data[BENCHMARK_SYMBOL];
+  const spyEl = document.getElementById('cardSPY');
+  spyEl.textContent = fmtPct(spy?.ytdPct);
+  spyEl.className = 'value ' + pctClass(spy?.ytdPct);
+
+  const vs = (t.ytdPct!=null && spy?.ytdPct!=null) ? (t.ytdPct - spy.ytdPct) : null;
+  const vsEl = document.getElementById('cardVsBenchmark');
+  vsEl.textContent = vs!=null ? (fmtPct(vs)) : '—';
+  vsEl.className = 'value ' + pctClass(vs);
+  document.getElementById('cardVsBenchmarkNote').textContent = vs!=null ? (vs>=0 ? 'Ahead of the S&P 500' : 'Behind the S&P 500') : 'Your YTD minus SPY YTD';
+}
+
+function sortedHoldings(){
+  const arr = state.holdings.slice();
+  const d = sym => state.data[sym] || {};
+  const [key, dir] = state.sort.split('-');
+  const mult = dir==='asc' ? 1 : -1;
+  arr.sort((a,b)=>{
+    let av, bv;
+    switch(key){
+      case 'symbol': av=a.symbol; bv=b.symbol; return mult*av.localeCompare(bv);
+      case 'name': av=(d(a.symbol).name||a.symbol); bv=(d(b.symbol).name||b.symbol); return mult*av.localeCompare(bv);
+      case 'price': av=d(a.symbol).price||0; bv=d(b.symbol).price||0; break;
+      case 'daychange': av=d(a.symbol).dayChangePct||0; bv=d(b.symbol).dayChangePct||0; break;
+      case 'ytd': av=d(a.symbol).ytdPct||-9999; bv=d(b.symbol).ytdPct||-9999; break;
+      case 'value': av=holdingValue(a); bv=holdingValue(b); break;
+      case 'costbasis': av=(a.costBasisTotal!=null?a.costBasisTotal:-1); bv=(b.costBasisTotal!=null?b.costBasisTotal:-1); break;
+      case 'weight': av=holdingValue(a); bv=holdingValue(b); break; // monotonic with value — same order
+      case 'shares': av=a.shares||0; bv=b.shares||0; break;
+      case 'divyield': av=d(a.symbol).dividendYield||0; bv=d(b.symbol).dividendYield||0; break;
+      case 'unrealized': {
+        const av2 = a.costBasisTotal ? ((holdingValue(a) - a.costBasisTotal)/a.costBasisTotal*100) : -9999;
+        const bv2 = b.costBasisTotal ? ((holdingValue(b) - b.costBasisTotal)/b.costBasisTotal*100) : -9999;
+        av=av2; bv=bv2; break;
+      }
+      case 'avgcost': av=(a.costBasisTotal&&a.shares)?a.costBasisTotal/a.shares:-1; bv=(b.costBasisTotal&&b.shares)?b.costBasisTotal/b.shares:-1; break;
+      case 'numrec': av=(d(a.symbol).signal?.score ?? -99); bv=(d(b.symbol).signal?.score ?? -99); break;
+      case 'sourcefile': av=(a.sourceFile||'').toLowerCase(); bv=(b.sourceFile||'').toLowerCase(); { const cmp=av.localeCompare(bv); return mult*(cmp!==0?cmp:a.symbol.localeCompare(b.symbol)); }
+      case 'account': {
+        const aAcc=(a.account||'').toLowerCase(), bAcc=(b.account||'').toLowerCase();
+        const cmp = aAcc.localeCompare(bAcc);
+        return mult*(cmp!==0 ? cmp : a.symbol.localeCompare(b.symbol));
+      }
+      default: av=a.symbol; bv=b.symbol; return mult*av.localeCompare(bv);
+    }
+    return mult*(av-bv);
+  });
+  return arr;
+}
+
+function rowKey(h){
+  return h.symbol + '|' + (h.accountNumber || h.account || '');
+}
+
+function renderTable(){
+  const totals = computeTotals();
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  const list = sortedHoldings();
+  document.getElementById('holdingsCount').textContent = list.length + ' position' + (list.length===1?'':'s') + ' tracked';
+
+  const grouped = state.sort.startsWith('account');
+  let currentGroupKey, groupAgg;
+
+  function flushGroup(){
+    if(!grouped || !groupAgg) return;
+    const unrDollar = groupAgg.hasCostBasis ? (groupAgg.value - groupAgg.costBasisTotal) : null;
+    const unrPct = (unrDollar!=null && groupAgg.costBasisTotal) ? (unrDollar/groupAgg.costBasisTotal*100) : null;
+    const tr = document.createElement('tr');
+    tr.className = 'subtotal-row';
+    tr.innerHTML = `
+      <td></td>
+      <td colspan="9" style="font-weight:700;">${groupAgg.label} — subtotal (${groupAgg.count} position${groupAgg.count===1?'':'s'})</td>
+      <td></td>
+      <td class="num" style="font-weight:700;">${fmtMoney(groupAgg.value)}</td>
+      <td class="num" style="font-weight:700;">${groupAgg.hasCostBasis ? fmtMoney(groupAgg.costBasisTotal) : '—'}</td>
+      <td class="num ${pctClass(unrDollar)}" style="font-weight:700;">${unrDollar!=null ? (fmtMoney(unrDollar) + ' (' + fmtPct(unrPct) + ')') : '—'}</td>
+      <td class="num" style="font-weight:700;">${groupAgg.weight.toFixed(1)}%</td>
+      <td></td>
+      <td></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  list.forEach(h => {
+    const key = rowKey(h);
+    const isCash = !!h.isCash;
+    const d = isCash ? {} : (state.data[h.symbol] || {});
+    const isGap = !isCash && d.source === 'unavailable';
+    const value = holdingValue(h);
+    const weight = totals.totalValue ? (value/totals.totalValue*100) : 0;
+    const expanded = !isCash && state.expanded.has(key);
+    const avgCost = (!isCash && h.costBasisTotal!=null && h.shares) ? (h.costBasisTotal/h.shares) : null;
+    const unrDollar = (!isCash && h.costBasisTotal!=null) ? (value - h.costBasisTotal) : null;
+    const unrPct = (unrDollar!=null && h.costBasisTotal) ? (unrDollar/h.costBasisTotal*100) : null;
+
+    if(grouped){
+      const groupKey = h.account || '';
+      if(groupKey !== currentGroupKey){
+        flushGroup();
+        currentGroupKey = groupKey;
+        groupAgg = { label: h.account || 'No account', value:0, costBasisTotal:0, hasCostBasis:false, weight:0, count:0 };
+      }
+      groupAgg.value += value;
+      groupAgg.weight += weight;
+      groupAgg.count += 1;
+      if(h.costBasisTotal!=null){ groupAgg.costBasisTotal += h.costBasisTotal; groupAgg.hasCostBasis = true; }
+    }
+
+    const tr = document.createElement('tr');
+    tr.className = 'row' + (expanded ? ' expanded' : '') + (isCash ? ' cash-row' : '') + (isGap ? ' gap-row' : '');
+    const acctTitle = [h.accountNumber, h.acctType].filter(Boolean).join(' · ');
+    tr.innerHTML = `
+      <td>${isCash ? '' : '<span class="caret">&#9656;</span>'}</td>
+      <td class="sym">${h.symbol}${isCash ? `<span class="src-badge cash" title="Cash position — value taken directly from the CSV, no price lookup">CASH</span>` : ''}${isGap ? `<span class="src-badge gap" title="${state.gapReasons?.[h.symbol]==='unsupported' ? 'Finnhub explicitly denied this (likely unsupported asset type on the free plan) — Yahoo returned no usable row either' : 'No real price available this refresh — not guessed, not zero'}">NO DATA</span><span class="price-link" data-symbol="${h.symbol}" title="Enter a price manually">&#9998; Set price</span>` : ''}${!isCash && !isGap && d.source==='manual' ? `<span class="price-link" data-symbol="${h.symbol}" title="Edit or clear this manual price">&#9998; edit manual</span>` : ''}</td>
+      <td>${(isCash || isGap || !d.signal) ? '—' : `<span class="signal-tag ${d.signal.tag}" title="Rules-based from today's move, 52-week position, and YTD vs. S&amp;P 500 — not investment advice. See the expanded row for the reasoning.">${d.signal.tag==='bull'?'Buy':d.signal.tag==='bear'?'Sell':'Hold'}</span>`}</td>
+      <td class="name">${isCash ? (h.csvDescription || 'Cash') : (d.name || h.csvDescription || '—')}</td>
+      <td class="name" ${acctTitle ? `title="${acctTitle}"` : ''}>${h.account || '—'}</td>
+      <td>${isCash ? '<span class="chip div-no">—</span>' : (d.dividendYield ? `<span class="chip div-yes">${d.dividendYield.toFixed(2)}%</span>` : `<span class="chip div-no">None</span>`)}</td>
+      <td class="num">${isCash || isGap ? '—' : (fmtMoney(d.price) + (d.source ? `<span class="src-badge ${d.source}" title="Priced via ${d.source}">${d.source[0].toUpperCase()}</span>` : ''))}</td>
+      <td class="num ${isCash ? '' : pctClass(d.dayChangePct)}">${isCash || isGap ? '—' : fmtPct(d.dayChangePct)}</td>
+      <td class="num ${isCash ? '' : pctClass(d.ytdPct)}">${isCash || isGap ? '—' : fmtPct(d.ytdPct)}</td>
+      <td class="num">${isCash ? '—' : h.shares}</td>
+      <td class="num">${avgCost!=null ? fmtMoney(avgCost) : '—'}</td>
+      <td class="num">${isGap ? '—' : fmtMoney(value)}</td>
+      <td class="num">${h.costBasisTotal!=null ? fmtMoney(h.costBasisTotal) : '—'}</td>
+      <td class="num ${pctClass(unrDollar)}">${!isGap && unrDollar!=null ? (fmtMoney(unrDollar) + ' (' + fmtPct(unrPct) + ')') : '—'}</td>
+      <td class="num">${isGap ? '—' : weight.toFixed(1) + '%'}</td>
+      <td class="name" title="${h.sourceFile || ''}">${h.sourceFile || '—'}</td>
+      <td><span class="remove-x" data-key="${key}" title="Remove position">&times;</span></td>
+    `;
+    tr.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('remove-x') || isCash) return;
+      toggleExpand(key);
+    });
+    tbody.appendChild(tr);
+
+    if(expanded){
+      const detailTr = document.createElement('tr');
+      detailTr.className = 'detail-row';
+      const news = d.news || [];
+      const sig = d.signal || {tag:'neutral', label:'No data yet', rationale:''};
+      detailTr.innerHTML = `
+        <td colspan="17">
+          <div class="detail-inner">
+            <div>
+              <h4>Latest headlines</h4>
+              ${news.length ? news.map(n => `
+                <div class="news-item">
+                  <a href="${n.url||'#'}" target="_blank" rel="noopener">${n.headline}</a>
+                  <div class="news-meta">${n.source || ''} &middot; ${n.datetime ? new Date(n.datetime*1000).toLocaleDateString() : ''}</div>
+                </div>
+              `).join('') : `<div class="help">No news fetched yet — run a full refresh.</div>`}
+            </div>
+            <div>
+              <h4>Technical read (informational only)</h4>
+              <div class="signal-box">
+                <span class="signal-tag ${sig.tag}">${sig.label}</span>
+                <div>${sig.rationale}</div>
+                <div class="disclaimer">Generated automatically from price momentum and 52-week range. Not a forecast, recommendation, or substitute for your own research.</div>
+              </div>
+              ${h.account ? `<div class="help" style="margin-top:10px;">${h.account}${h.accountNumber ? ' · ' + h.accountNumber : ''}${h.acctType ? ' · ' + h.acctType : ''}</div>` : ''}
+            </div>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(detailTr);
+    }
+  });
+  flushGroup();
+
+  tbody.querySelectorAll('.remove-x').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const key = el.getAttribute('data-key');
+      state.holdings = state.holdings.filter(h=>rowKey(h)!==key);
+      state.expanded.delete(key);
+      saveHoldings();
+      renderAll();
+    });
+  });
+
+  tbody.querySelectorAll('.price-link').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const sym = el.getAttribute('data-symbol');
+      const current = loadManualPrices()[sym];
+      const input = prompt(
+        'Manual price for ' + sym + (current ? ' (currently ' + fmtMoney(current.price) + ')' : '') +
+        '\n\nEnter a dollar amount, or leave blank and press OK to clear it.',
+        current ? String(current.price) : ''
+      );
+      if(input === null) return; // cancelled
+      const trimmed = input.trim();
+      if(trimmed === ''){
+        clearManualPrice(sym);
+        showToast('Cleared manual price for ' + sym + '.');
+      } else {
+        const val = parseFloat(trimmed.replace(/[^0-9.\-]/g,''));
+        if(isNaN(val) || val <= 0){ showToast('Enter a valid positive number.'); return; }
+        setManualPrice(sym, val);
+        showToast('Manual price set for ' + sym + ': ' + fmtMoney(val) + '. This will be used until a real source can price it.');
+      }
+      if(state.paused){ renderAll(); } else { fullRefresh(); }
+    });
+  });
+}
+
+function toggleExpand(key){
+  if(state.expanded.has(key)) state.expanded.delete(key);
+  else state.expanded.add(key);
+  renderTable();
+}
+
+function renderTape(){
+  const track = document.getElementById('tapeTrack');
+  const items = state.holdings.map(h=>{
+    const d = state.data[h.symbol] || {};
+    const cls = pctClass(d.dayChangePct) === 'up' ? 'tape-up' : (pctClass(d.dayChangePct)==='down' ? 'tape-down' : '');
+    return `<span class="tape-item"><b>${h.symbol}</b>${fmtMoney(d.price)} <span class="${cls}">${fmtPct(d.dayChangePct)}</span></span>`;
+  }).join('');
+  // duplicate content so the loop scrolls seamlessly
+  track.innerHTML = items + items;
+}
+
+function renderAll(){
+  renderCards();
+  renderTable();
+  renderTape();
+}
+
+/* ---------------- Countdown / auto-refresh ---------------- */
+
+function restartCountdown(){
+  clearInterval(state.countdownTimer);
+  clearInterval(state.refreshTimer);
+  state.secondsLeft = state.interval;
+  updateCountdownLabel();
+  state.countdownTimer = setInterval(()=>{
+    state.secondsLeft--;
+    if(state.secondsLeft <= 0) state.secondsLeft = state.interval;
+    updateCountdownLabel();
+  }, 1000);
+  state.refreshTimer = setInterval(()=>{
+    priceOnlyRefresh();
+  }, state.interval*1000);
+}
+function updateCountdownLabel(){
+  document.getElementById('countdown').textContent = 'next price pull in ' + state.secondsLeft + 's';
+}
+
+/* ---------------- Controls wiring ---------------- */
+
+document.getElementById('btnFullRefresh').addEventListener('click', fullRefresh);
+document.getElementById('btnPriceRefresh').addEventListener('click', priceOnlyRefresh);
+document.getElementById('sortSelect').addEventListener('change', (e)=>{ state.sort = e.target.value; syncSortUI(); renderTable(); });
+
+const SORT_DEFAULT_DIR = {
+  symbol:'asc', name:'asc', account:'asc', divyield:'desc', price:'desc',
+  daychange:'desc', ytd:'desc', shares:'desc', avgcost:'desc', value:'desc', costbasis:'desc',
+  unrealized:'desc', weight:'desc', numrec:'desc', sourcefile:'asc'
+};
+
+function setSort(sortKey){
+  const [curKey, curDir] = state.sort.split('-');
+  state.sort = (curKey===sortKey) ? (sortKey + '-' + (curDir==='asc'?'desc':'asc')) : (sortKey + '-' + (SORT_DEFAULT_DIR[sortKey]||'desc'));
+  syncSortUI();
+  renderTable();
+}
+
+function syncSortUI(){
+  const sel = document.getElementById('sortSelect');
+  sel.value = state.sort; // no-op (blank selection) if this exact combo has no matching <option>
+  const [activeKey, activeDir] = state.sort.split('-');
+  document.querySelectorAll('.sortable-th').forEach(th=>{
+    const arrow = th.querySelector('.sort-arrow');
+    arrow.textContent = (th.getAttribute('data-sort-key')===activeKey) ? (activeDir==='asc' ? '▲' : '▼') : '';
+  });
+}
+
+document.querySelectorAll('.sortable-th').forEach(th=>{
+  th.addEventListener('click', ()=> setSort(th.getAttribute('data-sort-key')));
+});
+syncSortUI();
+
+document.getElementById('btnAddHolding').addEventListener('click', ()=>{
+  const symEl = document.getElementById('newSymbol');
+  const qtyEl = document.getElementById('newQty');
+  const symbol = symEl.value.trim().toUpperCase();
+  const qty = parseFloat(qtyEl.value);
+  if(!symbol || !qty || qty<=0){ showToast('Enter a ticker and a positive share count.'); return; }
+  if(state.holdings.find(h=>h.symbol===symbol)){ showToast(symbol + ' is already tracked.'); return; }
+  state.holdings.push({ symbol, shares: qty });
+  saveHoldings();
+  symEl.value=''; qtyEl.value='';
+  if(state.paused){ renderAll(); return; }
+  (async ()=>{
+    await refreshCorePrices([symbol]);
+    await refreshYTD([symbol]);
+    await refreshNews([symbol]);
+    recomputeSignals([symbol]);
+    renderAll();
+  })();
+});
+
+document.getElementById('btnPauseToggle').addEventListener('click', ()=>{
+  state.paused = !state.paused;
+  localStorage.setItem(LS_KEYS.paused, state.paused ? '1' : '0');
+  applyPausedUI();
+  if(state.paused){
+    clearInterval(state.countdownTimer);
+    clearInterval(state.refreshTimer);
+    showToast('All external access stopped — no more calls to Yahoo, Finnhub, or the proxy until you resume.');
+  } else {
+    showToast('External access resumed — refreshing…');
+    fullRefresh();
+  }
+});
+
+const dialog = document.getElementById('settingsDialog');
+document.getElementById('btnSettings').addEventListener('click', ()=>{
+  document.getElementById('proxyInput').value = state.corsProxy;
+  document.getElementById('apiKeyInput').value = state.apiKey;
+  document.getElementById('intervalInput').value = state.interval;
+  dialog.showModal();
+});
+document.getElementById('btnSettingsCancel').addEventListener('click', ()=> dialog.close());
+document.getElementById('btnSettingsSave').addEventListener('click', ()=>{
+  state.corsProxy = document.getElementById('proxyInput').value.trim() || DEFAULT_PROXY;
+  state.apiKey = document.getElementById('apiKeyInput').value.trim();
+  state.interval = Math.max(15, parseInt(document.getElementById('intervalInput').value,10) || 45);
+  localStorage.setItem(LS_KEYS.corsProxy, state.corsProxy);
+  localStorage.setItem(LS_KEYS.apiKey, state.apiKey);
+  localStorage.setItem(LS_KEYS.interval, state.interval);
+  dialog.close();
+  showToast('Settings saved — refreshing…');
+  fullRefresh();
+});
+
+/* ---------------- Init ---------------- */
+(async function init(){
+  applyPausedUI();
+  if(state.paused){
+    document.getElementById('lastUpdated').textContent = 'External access stopped';
+    renderAll();
+  } else {
+    await fullRefresh();
+  }
+})();
+</script>
+</body>
+</html>
