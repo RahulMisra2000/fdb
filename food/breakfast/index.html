@@ -3,492 +3,696 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rahul's Morning Meal Plan</title>
+<title>Morning Meal Plan · Rahul</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F6F8F5; --surface:#FFFFFF; --ink:#1E2722; --muted:#56635B;
-  --kale:#2E5B45; --kale-soft:#E3ECE6; --berry:#5A3868; --berry-soft:#EEE6F1;
-  --turmeric:#9A6B12; --turmeric-soft:#F6EDD9; --rule:#D5DDD7; --warn:#8A3B2E; --warn-soft:#F5E4E0;
-  --serif:"Newsreader", Georgia, "Times New Roman", serif;
-  --sans:"Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#16222D; --muted:#5A6774; --line:#DCE2E8;
+  --head:#17324D; --head-ink:#FFFFFF; --head-muted:#B9C8D8;
+  --good:#1E7B4F; --good-soft:#E2F3E9;
+  --low:#C2410C; --low-soft:#FDEBE2;
+  --ing:#7A3E9D; --ing-soft:#F2E8F9;
+  --syn:#0E7490; --syn-soft:#DFF1F5;
+  --ayur:#9A6A07; --ayur-soft:#FBF2D9;
+  --warn:#B42318; --warn-soft:#FCE8E6;
+  --serif:"Literata", Georgia, serif;
+  --sans:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#141A17; --surface:#1B2320; --ink:#E4EBE6; --muted:#A3B0A8;
-    --kale:#7FBF9C; --kale-soft:#21342A; --berry:#C7A3D6; --berry-soft:#2D2333;
-    --turmeric:#E0B656; --turmeric-soft:#33291A; --rule:#2F3A34; --warn:#E9A193; --warn-soft:#3A2420;
+    --bg:#10161C; --surface:#18212A; --ink:#E6ECF1; --muted:#A2AFBB; --line:#2B3742;
+    --head:#0F2236; --head-ink:#FFFFFF; --head-muted:#9FB3C8;
+    --good:#5CC892; --good-soft:#163326; --low:#F59A6B; --low-soft:#3A2218;
+    --ing:#CDA2E6; --ing-soft:#2C2036; --syn:#5CC3DA; --syn-soft:#14313A;
+    --ayur:#E5B84E; --ayur-soft:#352B14; --warn:#F2958A; --warn-soft:#3A1F1C;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#141A17; --surface:#1B2320; --ink:#E4EBE6; --muted:#A3B0A8;
-  --kale:#7FBF9C; --kale-soft:#21342A; --berry:#C7A3D6; --berry-soft:#2D2333;
-  --turmeric:#E0B656; --turmeric-soft:#33291A; --rule:#2F3A34; --warn:#E9A193; --warn-soft:#3A2420;
+  --bg:#10161C; --surface:#18212A; --ink:#E6ECF1; --muted:#A2AFBB; --line:#2B3742;
+  --head:#0F2236; --head-ink:#FFFFFF; --head-muted:#9FB3C8;
+  --good:#5CC892; --good-soft:#163326; --low:#F59A6B; --low-soft:#3A2218;
+  --ing:#CDA2E6; --ing-soft:#2C2036; --syn:#5CC3DA; --syn-soft:#14313A;
+  --ayur:#E5B84E; --ayur-soft:#352B14; --warn:#F2958A; --warn-soft:#3A1F1C;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-behavior:smooth; scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px)}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
-body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:1.08rem; line-height:1.62}
-a{color:var(--kale)}
-a:focus-visible, summary:focus-visible{outline:3px solid var(--berry); outline-offset:2px; border-radius:3px}
-.layout{display:grid; grid-template-columns:260px minmax(0,1fr); gap:48px; max-width:1180px; margin:0 auto; padding:40px 28px 80px}
-nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 24px); align-self:start; font-family:var(--sans); font-size:.9rem; max-height:calc(100vh - 48px); overflow:auto}
-nav.toc h2{font-family:var(--sans); font-size:.95rem; font-weight:700; margin:0 0 12px; color:var(--muted)}
-nav.toc ol{list-style:none; margin:0; padding:0; counter-reset:toc}
-nav.toc li{counter-increment:toc; margin:0}
-nav.toc a{display:flex; gap:10px; padding:7px 10px; border-radius:6px; text-decoration:none; color:var(--ink); line-height:1.35}
-nav.toc a::before{content:counter(toc); color:var(--kale); font-weight:700; min-width:1.2em}
-nav.toc a:hover{background:var(--kale-soft)}
-details.toc-mobile{display:none}
-main{min-width:0; max-width:760px}
-header.doc{border-bottom:2px solid var(--kale); padding-bottom:24px; margin-bottom:8px}
-header.doc p.kicker{font-family:var(--sans); font-size:.9rem; color:var(--muted); margin:0 0 8px}
-header.doc h1{font-family:var(--serif); font-weight:500; font-size:clamp(2.1rem,5vw,3.1rem); line-height:1.08; margin:0 0 14px; letter-spacing:-.01em}
-header.doc .lede{font-size:1.15rem; color:var(--muted); margin:0}
-section{padding-top:36px; margin-top:12px; border-top:1px solid var(--rule)}
-section:first-of-type{border-top:0}
-h2{font-family:var(--serif); font-weight:500; font-size:1.75rem; line-height:1.2; margin:0 0 14px}
-h2 .n{font-family:var(--sans); font-size:1rem; font-weight:700; color:var(--kale); margin-right:10px; vertical-align:middle}
-h3{font-family:var(--sans); font-size:1.02rem; font-weight:700; margin:26px 0 8px}
-p{margin:0 0 14px}
-ul,ol{margin:0 0 14px; padding-left:1.3em}
-li{margin:4px 0}
-.note{font-family:var(--sans); font-size:.92rem; background:var(--kale-soft); border-left:4px solid var(--kale); padding:12px 16px; border-radius:0 6px 6px 0; margin:16px 0}
-.note.ayur{background:var(--turmeric-soft); border-color:var(--turmeric)}
-.note.warn{background:var(--warn-soft); border-color:var(--warn)}
-.note.berry{background:var(--berry-soft); border-color:var(--berry)}
-.note p:last-child,.note ul:last-child{margin-bottom:0}
-.table-wrap{overflow-x:auto; margin:14px 0 18px; border:1px solid var(--rule); border-radius:8px; background:var(--surface)}
-table{border-collapse:collapse; width:100%; font-family:var(--sans); font-size:.9rem; line-height:1.45}
-th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--rule); vertical-align:top}
-th{background:var(--kale-soft); font-weight:600; white-space:nowrap}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:1.06rem; line-height:1.6}
+a{color:var(--syn)}
+:focus-visible{outline:3px solid var(--syn); outline-offset:2px; border-radius:4px}
+
+/* Header */
+header.hero{background:var(--head); color:var(--head-ink); padding:40px 24px 30px}
+.wrap{max-width:1040px; margin:0 auto}
+.hero p.for{margin:0 0 6px; color:var(--head-muted); font-size:.95rem}
+.hero h1{font-family:var(--serif); font-weight:600; font-size:clamp(2rem,5vw,2.9rem); line-height:1.1; margin:0 0 10px}
+.hero p.sub{margin:0 0 24px; color:var(--head-muted); max-width:640px; font-size:1.08rem}
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.stat{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:14px 16px}
+.stat b{display:block; font-family:var(--serif); font-size:1.6rem; font-weight:600; line-height:1.1}
+.stat span{font-size:.88rem; color:var(--head-muted)}
+.stat.alert b{color:#FFB38A}
+
+/* Sticky tab nav */
+nav.tabs{position:sticky; top:0; z-index:5; background:var(--surface); border-bottom:1px solid var(--line); padding-top:env(safe-area-inset-top,0px)}
+nav.tabs .wrap{display:flex; gap:6px; overflow-x:auto; padding:10px 16px; scrollbar-width:thin}
+nav.tabs a{flex:0 0 auto; text-decoration:none; color:var(--muted); font-weight:600; font-size:.92rem; padding:7px 13px; border-radius:20px; border:1px solid transparent; white-space:nowrap}
+nav.tabs a .k{color:var(--muted); opacity:.7; margin-right:5px; font-weight:700}
+nav.tabs a:hover{background:var(--bg)}
+nav.tabs a[aria-current="true"]{background:var(--head); color:#fff; border-color:var(--head)}
+nav.tabs a[aria-current="true"] .k{color:#fff}
+
+main{padding:28px 16px 70px}
+.panel{display:none}
+.panel.active{display:block}
+.panel > h2{font-family:var(--serif); font-weight:600; font-size:clamp(1.6rem,3.5vw,2.05rem); line-height:1.2; margin:4px 0 8px}
+.panel > p.intro{color:var(--muted); font-size:1.08rem; max-width:720px; margin:0 0 22px}
+h3{font-family:var(--serif); font-weight:600; font-size:1.2rem; margin:26px 0 10px}
+p{margin:0 0 12px}
+ul{margin:0 0 12px; padding-left:1.25em}
+li{margin:5px 0}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px}
+.grid{display:grid; gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* Ingredient chips */
+.ing{display:inline-block; background:var(--ing-soft); color:var(--ing); font-weight:600; border-radius:6px; padding:1px 8px; margin:2px 2px; line-height:1.5}
+.qty{font-weight:700}
+
+/* Badges */
+.badge{display:inline-block; font-size:.8rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap}
+.b-good{background:var(--good-soft); color:var(--good)}
+.b-low{background:var(--low-soft); color:var(--low)}
+.b-ayur{background:var(--ayur-soft); color:var(--ayur)}
+.b-warn{background:var(--warn-soft); color:var(--warn)}
+.b-syn{background:var(--syn-soft); color:var(--syn)}
+.b-ing{background:var(--ing-soft); color:var(--ing)}
+
+.legend{display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 20px}
+
+/* Callouts */
+.call{border-radius:10px; padding:14px 18px; margin:16px 0; border-left:5px solid}
+.call p:last-child,.call ul:last-child{margin-bottom:0}
+.c-syn{background:var(--syn-soft); border-color:var(--syn)}
+.c-ayur{background:var(--ayur-soft); border-color:var(--ayur)}
+.c-warn{background:var(--warn-soft); border-color:var(--warn)}
+.c-low{background:var(--low-soft); border-color:var(--low)}
+.c-good{background:var(--good-soft); border-color:var(--good)}
+
+/* Timeline */
+.steps{list-style:none; padding:0; margin:10px 0}
+.step{display:grid; grid-template-columns:92px 1fr; gap:18px; margin-bottom:16px}
+.step .when{text-align:right; padding-top:16px}
+.step .when b{display:block; font-family:var(--serif); font-size:1.25rem; color:var(--head)}
+.step .when span{font-size:.85rem; color:var(--muted)}
+.step .card{border-left:5px solid var(--head)}
+.step .card h3{margin:0 0 8px; font-size:1.15rem}
+.step.s2 .card{border-left-color:var(--good)}
+.step.s3 .card{border-left-color:var(--ing)}
+.step.s4 .card{border-left-color:var(--syn)}
+.step.s5 .card{border-left-color:var(--ayur)}
+:root[data-theme="dark"] .step .when b{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .step .when b{color:var(--syn)}}
+
+/* Tables */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin:12px 0 18px}
+table{border-collapse:collapse; width:100%; font-size:.97rem}
+th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-weight:700; font-size:.88rem; color:var(--muted); background:var(--bg); white-space:nowrap}
 tr:last-child td{border-bottom:0}
-td.num{white-space:nowrap; font-variant-numeric:tabular-nums}
-.pct{font-weight:700}
-.low{color:var(--warn)}
-.good{color:var(--kale)}
-/* Morning timeline: the one bold element */
-.timeline{position:relative; margin:22px 0 10px; padding-left:0; list-style:none}
-.timeline::before{content:""; position:absolute; left:56px; top:6px; bottom:6px; width:3px; background:linear-gradient(var(--kale),var(--berry)); border-radius:2px}
-.timeline > li{position:relative; display:grid; grid-template-columns:56px 1fr; gap:26px; margin:0 0 26px}
-.timeline .t{font-family:var(--sans); font-size:.82rem; font-weight:700; color:var(--kale); text-align:right; padding-top:4px; line-height:1.25}
-.timeline .card{position:relative; background:var(--surface); border:1px solid var(--rule); border-radius:10px; padding:16px 18px}
-.timeline .card::before{content:""; position:absolute; left:-33px; top:14px; width:15px; height:15px; border-radius:50%; background:var(--surface); border:3px solid var(--kale)}
-.timeline .card h3{margin:0 0 6px; font-size:1.05rem}
-.timeline .card p, .timeline .card ul{font-size:1rem}
-.timeline .card ul{margin-bottom:6px}
-.tag{display:inline-block; font-family:var(--sans); font-size:.78rem; font-weight:600; padding:2px 8px; border-radius:20px; background:var(--kale-soft); color:var(--kale); margin:2px 4px 2px 0}
-.tag.keep{background:var(--kale-soft); color:var(--kale)}
-.tag.discard{background:var(--warn-soft); color:var(--warn)}
-.tag.ayur{background:var(--turmeric-soft); color:var(--turmeric)}
-footer{margin-top:48px; padding-top:20px; border-top:2px solid var(--kale); font-family:var(--sans); font-size:.85rem; color:var(--muted)}
-.refs li{font-family:var(--sans); font-size:.88rem; margin:6px 0}
-.back{font-family:var(--sans); font-size:.82rem; display:inline-block; margin-top:6px}
-@media (max-width: 900px){
-  .layout{grid-template-columns:1fr; gap:0; padding:20px 18px 60px}
-  nav.toc{display:none}
-  details.toc-mobile{display:block; font-family:var(--sans); background:var(--surface); border:1px solid var(--rule); border-radius:10px; margin:18px 0 6px}
-  details.toc-mobile summary{padding:12px 16px; font-weight:600; cursor:pointer}
-  details.toc-mobile ol{margin:0; padding:0 16px 14px 34px}
-  details.toc-mobile li{margin:6px 0}
-  details.toc-mobile a{color:var(--ink)}
-  .timeline::before{left:10px}
-  .timeline > li{grid-template-columns:1fr; gap:4px; padding-left:34px}
-  .timeline .t{text-align:left}
-  .timeline .card::before{left:-31px; top:14px}
+td.n{white-space:nowrap; font-variant-numeric:tabular-nums}
+
+/* Nutrient meters */
+.meter{display:flex; align-items:center; gap:10px; min-width:190px}
+.bar{flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden}
+.bar i{display:block; height:100%; border-radius:6px}
+.lowrow .bar i{background:var(--low)}
+.goodrow .bar i{background:var(--good)}
+.pct{font-weight:700; min-width:58px; text-align:right; font-variant-numeric:tabular-nums}
+.lowrow .pct{color:var(--low)}
+.goodrow .pct{color:var(--good)}
+.lowrow td:first-child{box-shadow:inset 4px 0 0 var(--low)}
+.goodrow td:first-child{box-shadow:inset 4px 0 0 var(--good)}
+.om{font-size:.9rem; color:var(--muted)}
+.om.low{color:var(--low); font-weight:600}
+.om.ok{color:var(--good); font-weight:600}
+
+/* Week */
+.week{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px}
+.day{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; border-top:5px solid var(--ing)}
+.day.egg{border-top-color:var(--ayur)}
+.day h4{margin:0 0 2px; font-family:var(--serif); font-size:1.15rem}
+.day .dish{font-weight:700; margin:0 0 8px}
+.day .pro{margin-top:10px; font-size:.92rem; color:var(--muted)}
+.day .pro b{color:var(--good)}
+
+/* Synergy */
+.syn{border-top:5px solid var(--syn)}
+.syn h3{margin:0 0 8px; font-size:1.1rem}
+.syn .why{margin:8px 0 6px}
+.syn .src{font-size:.86rem; color:var(--muted); margin:0}
+
+/* Insights */
+.ins{position:relative; border-top:5px solid var(--head)}
+.ins .big{font-family:var(--serif); font-size:2.2rem; font-weight:700; line-height:1; margin:2px 0 8px; color:var(--head)}
+.ins h3{margin:0 0 8px; font-size:1.12rem}
+.ins .src{font-size:.86rem; color:var(--muted); margin:8px 0 0}
+.ins.t-good{border-top-color:var(--good)} .ins.t-good .big{color:var(--good)}
+.ins.t-low{border-top-color:var(--low)} .ins.t-low .big{color:var(--low)}
+.ins.t-syn{border-top-color:var(--syn)} .ins.t-syn .big{color:var(--syn)}
+.ins.t-ing{border-top-color:var(--ing)} .ins.t-ing .big{color:var(--ing)}
+.ins.t-ayur{border-top-color:var(--ayur)} .ins.t-ayur .big{color:var(--ayur)}
+:root[data-theme="dark"] .ins .big{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ins:not([class*="t-"]) .big{color:var(--syn)}}
+
+.pager{display:flex; justify-content:space-between; gap:12px; margin-top:34px; padding-top:18px; border-top:1px solid var(--line)}
+.pager a{display:inline-block; text-decoration:none; font-weight:700; color:var(--head); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:9px 14px}
+:root[data-theme="dark"] .pager a{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pager a{color:var(--ink)}}
+.pager a:hover{border-color:var(--head)}
+.pager .sp{flex:1}
+
+.refs{font-size:.92rem}
+.refs li{margin:7px 0}
+footer{color:var(--muted); font-size:.85rem; text-align:center; padding:0 16px 40px}
+
+@media (max-width:760px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g2,.g3{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr; gap:4px}
+  .step .when{text-align:left; padding-top:0}
+  .step .when b{display:inline; margin-right:8px}
+  header.hero{padding:28px 18px 22px}
 }
 @media print{
-  nav.toc, details.toc-mobile, .back{display:none}
-  .layout{display:block}
+  nav.tabs,.pager{display:none}
+  .panel{display:block !important; page-break-before:always}
   body{background:#fff}
 }
 </style>
 </head>
 <body>
-<div class="layout">
 
-<nav class="toc" aria-label="Table of contents">
-  <h2>Contents</h2>
-  <ol>
-    <li><a href="#glance">At a glance</a></li>
-    <li><a href="#night">Night-before prep</a></li>
-    <li><a href="#morning">The morning sequence</a></li>
-    <li><a href="#smoothie">Smoothie recipe</a></li>
-    <li><a href="#week">Day-by-day plan</a></li>
-    <li><a href="#nutrients">Nutrient profile vs RDA</a></li>
-    <li><a href="#synergy">Food synergy and absorption</a></li>
-    <li><a href="#ayurveda">Where Ayurveda disagrees</a></li>
-    <li><a href="#cautions">Cautions</a></li>
-    <li><a href="#corrections">Corrections to earlier advice</a></li>
-    <li><a href="#sources">Assumptions and sources</a></li>
-  </ol>
-</nav>
-
-<main>
-<header class="doc" id="top">
-  <p class="kicker">Personal nutrition plan. Version of October 4, 2026.</p>
-  <h1>Morning meal plan</h1>
-  <p class="lede">A vegetarian morning built around greens, fruit, nuts and Greek yogurt, sequenced for better absorption and steadier blood sugar, with Ayurvedic notes alongside.</p>
+<header class="hero">
+  <div class="wrap">
+    <p class="for">Personal nutrition plan for Rahul · Boca Raton, FL · October 2026</p>
+    <h1>Your Morning Meal Plan</h1>
+    <p class="sub">A vegetarian morning of greens, fruit, nuts and Greek yogurt, eaten in an order that improves absorption and steadies blood sugar. Checked against nutrition research and classical Ayurveda.</p>
+    <div class="stats">
+      <div class="stat"><b>~20–35 g</b><span>protein, first meal (by day)</span></div>
+      <div class="stat"><b>~30 g</b><span>protein, yogurt drink</span></div>
+      <div class="stat"><b>~26 g</b><span>fiber for the morning</span></div>
+      <div class="stat alert"><b>2 gaps</b><span>vitamin D and vitamin E</span></div>
+    </div>
+  </div>
 </header>
 
-<details class="toc-mobile">
-  <summary>Contents</summary>
-  <ol>
-    <li><a href="#glance">At a glance</a></li>
-    <li><a href="#night">Night-before prep</a></li>
-    <li><a href="#morning">The morning sequence</a></li>
-    <li><a href="#smoothie">Smoothie recipe</a></li>
-    <li><a href="#week">Day-by-day plan</a></li>
-    <li><a href="#nutrients">Nutrient profile vs RDA</a></li>
-    <li><a href="#synergy">Food synergy and absorption</a></li>
-    <li><a href="#ayurveda">Where Ayurveda disagrees</a></li>
-    <li><a href="#cautions">Cautions</a></li>
-    <li><a href="#corrections">Corrections to earlier advice</a></li>
-    <li><a href="#sources">Assumptions and sources</a></li>
-  </ol>
-</details>
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <a href="#overview" data-t="overview"><span class="k">1</span>Overview</a>
+    <a href="#prep" data-t="prep"><span class="k">2</span>Night before</a>
+    <a href="#morning" data-t="morning"><span class="k">3</span>Morning routine</a>
+    <a href="#smoothie" data-t="smoothie"><span class="k">4</span>Smoothie</a>
+    <a href="#week" data-t="week"><span class="k">5</span>Weekly plan</a>
+    <a href="#nutrients" data-t="nutrients"><span class="k">6</span>Nutrients vs RDA</a>
+    <a href="#synergy" data-t="synergy"><span class="k">7</span>Food synergy</a>
+    <a href="#ayurveda" data-t="ayurveda"><span class="k">8</span>Ayurveda's view</a>
+    <a href="#cautions" data-t="cautions"><span class="k">9</span>Cautions</a>
+    <a href="#notes" data-t="notes"><span class="k">10</span>Notes &amp; sources</a>
+    <a href="#insights" data-t="insights"><span class="k">11</span>Insights</a>
+  </div>
+</nav>
 
-<!-- 1 -->
-<section id="glance">
-  <h2><span class="n">1</span>At a glance</h2>
-  <p>Every morning follows the same order: warm lemon water, then a protein-and-fat course, then the green smoothie, then a Greek yogurt drink about two hours later. A banana is eaten separately in the afternoon or around a run.</p>
-  <div class="table-wrap"><table>
-    <tr><th>Measure</th><th>Typical day</th><th>Omelette day</th></tr>
-    <tr><td>Protein, first meal</td><td class="num">~19 g + rotating item (6–15 g)</td><td class="num">~25 g</td></tr>
-    <tr><td>Protein, yogurt drink</td><td class="num">~30 g</td><td class="num">~30 g</td></tr>
-    <tr><td>Fiber</td><td class="num">~26 g</td><td class="num">~26 g</td></tr>
-    <tr><td>Total sugars (added sugar from honey)</td><td class="num">~66 g (~11 g)</td><td class="num">~66 g (~11 g)</td></tr>
-    <tr><td>Calories (banana excluded)</td><td class="num">~950 + rotating item</td><td class="num">~1,080</td></tr>
-  </table></div>
-  <p>Two gaps remain that this morning cannot fill on its own: <strong>vitamin D</strong> (near zero) and <strong>vitamin E</strong> (about 42% of need). Zinc, potassium and B12 are partly covered and can be completed by lunch and dinner.</p>
-  <a class="back" href="#top">Back to top</a>
+<main class="wrap">
+
+<!-- OVERVIEW -->
+<section class="panel" id="overview">
+  <h2>Overview</h2>
+  <p class="intro">Four steps every morning, always in the same order. Only the protein dish in Step 2 changes through the week.</p>
+
+  <div class="legend">
+    <span class="badge b-ing">Ingredients and amounts</span>
+    <span class="badge b-good">Meets or beats the RDA</span>
+    <span class="badge b-low">Below the RDA</span>
+    <span class="badge b-syn">Absorption synergy</span>
+    <span class="badge b-ayur">Ayurveda</span>
+    <span class="badge b-warn">Caution</span>
+  </div>
+
+  <div class="grid g2">
+    <div class="card"><h3 style="margin-top:0">1 · Lemon-ginger water</h3><p><span class="ing">600 mL warm water</span><span class="ing">juice of 1 lemon</span><span class="ing">1 tsp grated ginger</span><span class="ing">1 tsp raw honey</span></p></div>
+    <div class="card"><h3 style="margin-top:0">2 · Protein and fat first</h3><p><span class="ing">12 soaked almonds</span><span class="ing">2 tbsp peanuts</span><span class="ing">3 tbsp pumpkin seeds</span> plus the day's protein dish.</p></div>
+    <div class="card"><h3 style="margin-top:0">3 · Green smoothie</h3><p><span class="ing">600 mL</span>, blended fresh, no banana, no apple, at room temperature.</p></div>
+    <div class="card"><h3 style="margin-top:0">4 · Yogurt drink, 2 hours later</h3><p><span class="ing">1 cup Greek yogurt</span><span class="ing">soaked oats + chia, with their water</span><span class="ing">1 tbsp ground flax</span><span class="ing">1 tsp honey or ½ tsp amla</span></p></div>
+  </div>
+
+  <div class="call c-low"><p><strong>What breakfast doesn't cover:</strong> vitamin D (almost none) and vitamin E (about 42%) are the two real gaps. Several other nutrients are below 100% from breakfast alone, which is normal for one meal. They're marked in orange in <a href="#nutrients" data-go="nutrients">Nutrients vs RDA</a>.</p></div>
+
+  <div class="pager"><span class="sp"></span><a href="#prep" data-go="prep">Next: Night before</a></div>
 </section>
 
-<!-- 2 -->
-<section id="night">
-  <h2><span class="n">2</span>Night-before prep</h2>
-  <div class="table-wrap"><table>
-    <tr><th>What to soak</th><th>Amount</th><th>In</th><th>Soak water</th></tr>
-    <tr><td>Rolled oats + chia seeds (together, in a covered jar in the fridge)</td><td class="num">4 tbsp oats (20 g)<br>2 tbsp chia (20 g)</td><td>About ½ cup (120 mL) water</td><td><span class="tag keep">Keep and drink it</span> The soluble oat fiber (beta-glucan) and some B vitamins move into this water. Stir it all into the yogurt drink.</td></tr>
-    <tr><td>Almonds</td><td class="num">12 almonds (15 g)</td><td>Enough water to cover</td><td><span class="tag discard">Discard it</span> Rinse the almonds. Peel them if you follow the Ayurvedic custom, or keep the skin for its polyphenols. Vitamin E is in the kernel either way.</td></tr>
-  </table></div>
-  <div class="note"><p><strong>Optional, for vitamin D on omelette days:</strong> set fresh shiitake gill-side up in direct sun for 30–60 minutes before cooking, or use dried shiitake soaked in water. Only UV-exposed mushrooms make meaningful vitamin D, and the amount varies widely.</p></div>
-  <a class="back" href="#top">Back to top</a>
+<!-- PREP -->
+<section class="panel" id="prep">
+  <h2>Night before</h2>
+  <p class="intro">Two soaks, each handled differently in the morning.</p>
+
+  <div class="grid g2">
+    <div class="card" style="border-top:5px solid var(--good)">
+      <h3 style="margin-top:0">Oats and chia</h3>
+      <p><span class="ing"><span class="qty">4 tbsp</span> rolled oats (20 g)</span><span class="ing"><span class="qty">2 tbsp</span> chia seeds (20 g)</span><span class="ing"><span class="qty">½ cup</span> water (120 mL)</span></p>
+      <p>Soak together in a covered jar in the fridge.</p>
+      <p><span class="badge b-good">Keep the water</span> Stir it all into the yogurt drink. The soluble oat fiber (beta-glucan) and some B vitamins move into the water.</p>
+    </div>
+    <div class="card" style="border-top:5px solid var(--warn)">
+      <h3 style="margin-top:0">Almonds</h3>
+      <p><span class="ing"><span class="qty">12</span> almonds (15 g)</span><span class="ing">water to cover</span></p>
+      <p>Soak overnight at room temperature.</p>
+      <p><span class="badge b-warn">Discard the water</span> Rinse the almonds. Peeling is the Ayurvedic custom. Keeping the skin keeps its polyphenols. The vitamin E is in the kernel either way.</p>
+    </div>
+  </div>
+
+  <div class="call c-syn"><p><strong>Omelette days (Mon, Wed, Fri):</strong> for vitamin D, set <span class="ing">fresh shiitake</span> gill-side up in direct sun for 30–60 minutes before cooking, or use <span class="ing">dried shiitake</span> soaked in water. Only UV-exposed mushrooms make meaningful vitamin D, and the amount varies widely.</p></div>
+
+  <div class="pager"><a href="#overview" data-go="overview">Previous</a><span class="sp"></span><a href="#morning" data-go="morning">Next: Morning routine</a></div>
 </section>
 
-<!-- 3 -->
-<section id="morning">
-  <h2><span class="n">3</span>The morning sequence</h2>
-  <p>Clock times are examples. What matters is the order and the gaps between steps.</p>
+<!-- MORNING -->
+<section class="panel" id="morning">
+  <h2>Morning routine</h2>
+  <p class="intro">Clock times are examples. What matters is the order and the gaps between steps.</p>
 
-  <ol class="timeline">
-    <li>
-      <div class="t">6:30</div>
+  <ol class="steps">
+    <li class="step s1">
+      <div class="when"><b>6:30</b><span>on waking</span></div>
       <div class="card">
-        <h3>Step 1: Lemon and ginger water</h3>
+        <h3>Step 1 · Lemon-ginger water</h3>
+        <p><span class="ing"><span class="qty">600 mL</span> water</span><span class="ing"><span class="qty">1 tsp</span> grated fresh ginger (2–3 g)</span><span class="ing">juice of <span class="qty">1</span> lemon</span><span class="ing"><span class="qty">1 tsp</span> raw honey</span></p>
         <ul>
-          <li>600 mL water, heated, with 1 tsp grated fresh ginger (about 2–3 g) steeped for 5 minutes.</li>
-          <li>Let it cool to comfortably warm, below about 40°C (104°F), roughly body temperature.</li>
-          <li>Then stir in the juice of 1 lemon and 1 tsp raw honey.</li>
+          <li>Heat the water and steep the ginger for 5 minutes.</li>
+          <li>Let it cool until comfortably warm, below about 40°C (104°F).</li>
+          <li>Only then stir in the lemon juice and honey.</li>
         </ul>
-        <span class="tag ayur">Ayurveda: honey goes in only after cooling</span>
+        <span class="badge b-ayur">Ayurveda: never add honey to hot water</span>
       </div>
     </li>
-    <li>
-      <div class="t">6:50</div>
+    <li class="step s2">
+      <div class="when"><b>6:50</b><span>20 min later</span></div>
       <div class="card">
-        <h3>Step 2: Protein and fat first</h3>
+        <h3>Step 2 · Protein and fat first</h3>
+        <p><strong>Nut bowl, every day:</strong><br>
+          <span class="ing"><span class="qty">12</span> soaked almonds (15 g)</span><span class="ing"><span class="qty">2 tbsp</span> unsalted roasted peanuts (15 g)</span><span class="ing"><span class="qty">3 tbsp</span> pumpkin seeds (25 g)</span></p>
+        <p><strong>Plus the day's protein dish.</strong> See <a href="#week" data-go="week">Weekly plan</a>.</p>
+        <p><strong>Optional instead of ginger in Step 1:</strong> chew <span class="ing">a thin slice of fresh ginger</span> with <span class="ing">a pinch of rock salt</span> just before eating. This is a traditional Ayurvedic way to stimulate digestion.</p>
+        <span class="badge b-syn">Eat 10 minutes before the smoothie</span>
+      </div>
+    </li>
+    <li class="step s3">
+      <div class="when"><b>7:05</b><span>10 min later</span></div>
+      <div class="card">
+        <h3>Step 3 · Green smoothie</h3>
+        <p><span class="ing"><span class="qty">600 mL</span>, blended fresh</span> at room temperature rather than ice-cold. No banana and no apple. Full recipe in <a href="#smoothie" data-go="smoothie">Smoothie</a>.</p>
+      </div>
+    </li>
+    <li class="step s4">
+      <div class="when"><b>9:05</b><span>2 hours later</span></div>
+      <div class="card">
+        <h3>Step 4 · Greek yogurt drink</h3>
+        <p><span class="ing"><span class="qty">1 cup</span> plain unsweetened Greek yogurt (227 g)</span><span class="ing">the soaked oats + chia <span class="qty">with all their water</span></span><span class="ing"><span class="qty">1 tbsp</span> ground flaxseed (7 g)</span><span class="ing"><span class="qty">1 tsp</span> raw honey <em>or</em> <span class="qty">½ tsp</span> amla powder</span></p>
         <ul>
-          <li>Nut bowl, every day: 12 soaked almonds (15 g), 2 tbsp unsalted roasted peanuts (15 g), 3 tbsp pumpkin seeds (25 g).</li>
-          <li>Plus the day's protein item. See <a href="#week">Day-by-day plan</a>.</li>
-          <li>Optional, if you skip ginger in Step 1: a thin slice of fresh ginger with a pinch of rock salt, chewed just before eating. This is a traditional Ayurvedic way to kindle digestion.</li>
+          <li>Keep ground flax in the fridge, since it goes rancid quickly.</li>
+          <li>No salt on normal days. Add a ¼ tsp pinch only after a long, sweaty run.</li>
         </ul>
-        <span class="tag">Eat this 10 minutes before the smoothie</span>
+        <span class="badge b-syn">2 hours apart, so calcium doesn't block iron</span>
       </div>
     </li>
-    <li>
-      <div class="t">7:05</div>
+    <li class="step s5">
+      <div class="when"><b>Afternoon</b><span>or near a run</span></div>
       <div class="card">
-        <h3>Step 3: Green smoothie, 600 mL</h3>
-        <p>Made fresh, no banana and no apple, served at room temperature rather than ice-cold. Full recipe in <a href="#smoothie">Smoothie recipe</a>.</p>
-      </div>
-    </li>
-    <li>
-      <div class="t">9:05</div>
-      <div class="card">
-        <h3>Step 4: Greek yogurt drink, about 2 hours later</h3>
+        <h3>Banana, on its own</h3>
+        <p><span class="ing"><span class="qty">1</span> medium banana</span>, at least 2–3 hours after the smoothie.</p>
         <ul>
-          <li>1 cup (227 g) plain, unsweetened Greek yogurt.</li>
-          <li>The soaked oats and chia, <strong>with all their soaking water</strong>.</li>
-          <li>1 tbsp (7 g) ground flaxseed. Keep ground flax in the fridge.</li>
-          <li>1 tsp raw honey <em>or</em> ½ tsp amla powder (an Ayurvedic accompaniment for curd).</li>
-          <li>Salt: none on normal days. A ¼ tsp pinch only after a long, sweaty run.</li>
-        </ul>
-        <span class="tag">Kept 2 hours from the smoothie so calcium doesn't compete with iron</span>
-      </div>
-    </li>
-    <li>
-      <div class="t">Afternoon</div>
-      <div class="card">
-        <h3>Banana, eaten on its own</h3>
-        <ul>
-          <li>1 medium banana, at least 2–3 hours after the smoothie.</li>
           <li>Good as an afternoon snack with a few nuts, or 30–60 minutes before a run.</li>
-          <li>Not with the yogurt drink or milk. Ayurveda classes banana with curd as an incompatible food.</li>
+          <li>Never with the yogurt drink or milk.</li>
         </ul>
+        <span class="badge b-ayur">Ayurveda: banana with curd is incompatible</span>
       </div>
     </li>
   </ol>
-  <a class="back" href="#top">Back to top</a>
+
+  <div class="pager"><a href="#prep" data-go="prep">Previous</a><span class="sp"></span><a href="#smoothie" data-go="smoothie">Next: Smoothie</a></div>
 </section>
 
-<!-- 4 -->
-<section id="smoothie">
-  <h2><span class="n">4</span>Smoothie recipe</h2>
-  <p>Your usual batch makes about 1.5 L, and you drink 600 mL, which is 40% of it. The simplest approach is to blend a single 600 mL serving each morning. That keeps it fresh, avoids storing leftovers, and makes the nutrition numbers below accurate.</p>
-  <div class="table-wrap"><table>
-    <tr><th>Ingredient</th><th>Full batch (~1.5 L)</th><th>Your serving (600 mL)</th></tr>
-    <tr><td>Kale</td><td class="num">150 g</td><td class="num">60 g (weigh it; cup volume varies a lot)</td></tr>
-    <tr><td>Bok choy</td><td class="num">150 g</td><td class="num">60 g (about 1 cup chopped)</td></tr>
-    <tr><td>Blueberries</td><td class="num">75 g (½ cup)</td><td class="num">30 g (about 3 tbsp)</td></tr>
-    <tr><td>Strawberries</td><td class="num">75 g (5 medium)</td><td class="num">30 g (2 medium)</td></tr>
-    <tr><td>Orange, peeled (replaces apple)</td><td class="num">1 medium (~180 g)</td><td class="num">70 g (about half an orange)</td></tr>
-    <tr><td>Pineapple</td><td class="num">80 g (½ cup)</td><td class="num">32 g (about 3 tbsp chunks)</td></tr>
-    <tr><td>Grapes</td><td class="num">75 g (½ cup)</td><td class="num">30 g (about 6 grapes)</td></tr>
-    <tr><td>Fresh figs</td><td class="num">3 (~150 g)</td><td class="num">1 large (~60 g)</td></tr>
-    <tr><td>Medjool dates, pitted</td><td class="num">2 (~48 g)</td><td class="num">1 small (~19 g)</td></tr>
-    <tr><td>Seasonal fruit (mango is ideal)</td><td class="num">~75 g</td><td class="num">~30 g</td></tr>
-    <tr><td>Water</td><td class="num">to 1.5 L</td><td class="num">about 250 mL, to reach 600 mL</td></tr>
-    <tr><td>Fresh ginger (optional)</td><td class="num">n/a</td><td class="num">a small pinch, grated</td></tr>
+<!-- SMOOTHIE -->
+<section class="panel" id="smoothie">
+  <h2>Smoothie</h2>
+  <p class="intro">Your 1.5 L batch is shown alongside your 600 mL serving, which is 40% of the batch. Blending one serving fresh each morning is the simplest option, and it's what the nutrition numbers assume.</p>
+
+  <div class="tw"><table>
+    <tr><th>Ingredient</th><th>Your 600 mL serving</th><th>Full 1.5 L batch</th></tr>
+    <tr><td><span class="ing">Kale</span></td><td class="n"><b>60 g</b> (weigh it)</td><td class="n">150 g</td></tr>
+    <tr><td><span class="ing">Bok choy</span></td><td class="n"><b>60 g</b> (about 1 cup chopped)</td><td class="n">150 g</td></tr>
+    <tr><td><span class="ing">Blueberries</span></td><td class="n"><b>30 g</b> (about 3 tbsp)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Strawberries</span></td><td class="n"><b>30 g</b> (2 medium)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Orange, peeled</span> <span class="badge b-syn">replaces apple</span></td><td class="n"><b>70 g</b> (about half)</td><td class="n">1 medium</td></tr>
+    <tr><td><span class="ing">Pineapple</span></td><td class="n"><b>32 g</b> (about 3 tbsp chunks)</td><td class="n">80 g</td></tr>
+    <tr><td><span class="ing">Grapes</span></td><td class="n"><b>30 g</b> (about 6)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Fresh fig</span></td><td class="n"><b>1 large</b> (~60 g)</td><td class="n">3</td></tr>
+    <tr><td><span class="ing">Medjool date, pitted</span></td><td class="n"><b>1 small</b> (~19 g)</td><td class="n">2</td></tr>
+    <tr><td><span class="ing">Mango</span> (or other low-enzyme seasonal fruit)</td><td class="n"><b>30 g</b></td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Water</span></td><td class="n"><b>~250 mL</b>, to reach 600 mL</td><td class="n">to 1.5 L</td></tr>
+    <tr><td><span class="ing">Fresh ginger</span> (optional)</td><td class="n">a small pinch</td><td class="n">n/a</td></tr>
   </table></div>
-  <div class="note berry">
-    <p><strong>Why no apple:</strong> in the same UC Davis study that flagged banana, the researchers measured browning-enzyme (PPO) activity in 18 foods. Apples, bananas and beet greens were high. Kale was low. Orange, mango and pineapple are the low-PPO fruits the researchers recommend pairing with berries and grapes.</p>
+
+  <div class="grid g2">
+    <div class="call c-syn" style="margin:0"><p><strong>Why no banana or apple:</strong> both are high in polyphenol oxidase (PPO), the enzyme that browns cut fruit. Once blended, it destroys the flavanols in berries and grapes. Kale is low in PPO, and orange, mango and pineapple are the low-PPO fruits the researchers recommend pairing with berries.</p></div>
+    <div class="call c-ayur" style="margin:0"><p><strong>If you make a full batch:</strong> refrigerate the rest in a full, sealed jar and drink it within 24 hours. Vitamin C fades with time and air, and Ayurveda advises against leftover food.</p></div>
   </div>
-  <p>If you do make a full batch, refrigerate the rest in a sealed, full jar and drink it within 24 hours. Vitamin C and polyphenols decline with time and air exposure.</p>
-  <a class="back" href="#top">Back to top</a>
+
+  <div class="pager"><a href="#morning" data-go="morning">Previous</a><span class="sp"></span><a href="#week" data-go="week">Next: Weekly plan</a></div>
 </section>
 
-<!-- 5 -->
-<section id="week">
-  <h2><span class="n">5</span>Day-by-day plan</h2>
-  <p>Every day includes Steps 1–4 above and the afternoon banana. Only the protein item in Step 2 changes. It is eaten with the nut bowl, before the smoothie.</p>
-  <div class="table-wrap"><table>
-    <tr><th>Day</th><th>Protein item (with nut bowl)</th><th>Amounts</th><th>Adds about</th></tr>
-    <tr><td><strong>Monday</strong></td><td>Shiitake omelette</td><td>1 large egg, 40 g fresh shiitake (3–4 caps, sun-exposed) or 3 dried soaked, 1 tsp oil or ghee</td><td class="num">6 g protein</td></tr>
-    <tr><td><strong>Tuesday</strong></td><td>Besan chilla</td><td>30 g besan (about ⅓ cup), onion, cilantro, water to batter, ½ tsp oil</td><td class="num">6–7 g protein</td></tr>
-    <tr><td><strong>Wednesday</strong></td><td>Shiitake omelette</td><td>As Monday</td><td class="num">6 g protein</td></tr>
-    <tr><td><strong>Thursday</strong></td><td>Tofu scramble</td><td>100 g firm tofu (calcium-set if available), turmeric, a pinch of black pepper, ½ tsp oil</td><td class="num">10–15 g protein (check label)</td></tr>
-    <tr><td><strong>Friday</strong></td><td>Shiitake omelette</td><td>As Monday</td><td class="num">6 g protein</td></tr>
-    <tr><td><strong>Saturday</strong></td><td>Paneer bhurji</td><td>50 g paneer, tomato, onion, ½ tsp oil</td><td class="num">~9 g protein</td></tr>
-    <tr><td><strong>Sunday</strong></td><td>Sprouted moong chaat</td><td>About ¾ cup (100 g) lightly sprouted whole moong, lemon, onion, tomato</td><td class="num">~8–10 g protein (varies with sprout length)</td></tr>
-  </table></div>
-  <div class="note"><p>Tofu and paneer days add calcium (roughly 100–350 mg) to the first meal, which slightly reduces iron absorption from the smoothie. That's acceptable a couple of times a week. The vitamin C in the smoothie partly offsets it.</p></div>
-  <a class="back" href="#top">Back to top</a>
-</section>
+<!-- WEEK -->
+<section class="panel" id="week">
+  <h2>Weekly plan</h2>
+  <p class="intro">Every day includes all four steps and the afternoon banana. Only the Step 2 protein dish changes, eaten with the nut bowl of <span class="ing">12 soaked almonds</span><span class="ing">2 tbsp peanuts</span><span class="ing">3 tbsp pumpkin seeds</span>.</p>
 
-<!-- 6 -->
-<section id="nutrients">
-  <h2><span class="n">6</span>Nutrient profile vs RDA</h2>
-  <p>Estimates calculated from USDA FoodData Central values for the exact amounts in this plan, on a typical day without the rotating protein item, compared with the RDA or Adequate Intake (AI) for men aged 51–70. Expect ±20% from natural variation in produce and brands.</p>
-  <div class="table-wrap"><table>
-    <tr><th>Nutrient</th><th>Typical day</th><th>% of need</th><th>Omelette day</th><th>Daily need</th></tr>
-    <tr><td>Vitamin C</td><td class="num">~180 mg</td><td class="num pct good">~200%</td><td class="num">~180 mg</td><td class="num">90 mg</td></tr>
-    <tr><td>Vitamin K</td><td class="num">~280 µg</td><td class="num pct good">~230%</td><td class="num">~280 µg</td><td class="num">120 µg (AI)</td></tr>
-    <tr><td>Vitamin A (RAE)</td><td class="num">~300 µg</td><td class="num pct">~33%</td><td class="num">~380 µg (42%)</td><td class="num">900 µg</td></tr>
-    <tr><td>Folate (DFE)</td><td class="num">~260 µg</td><td class="num pct">~65%</td><td class="num">~285 µg (71%)</td><td class="num">400 µg</td></tr>
-    <tr><td>Riboflavin (B2)</td><td class="num">~1.3 mg</td><td class="num pct good">~100%</td><td class="num">~1.6 mg (125%)</td><td class="num">1.3 mg</td></tr>
-    <tr><td>Vitamin B12</td><td class="num">~1.7 µg</td><td class="num pct">~71%</td><td class="num">~2.2 µg (90%)*</td><td class="num">2.4 µg</td></tr>
-    <tr><td>Vitamin E</td><td class="num">~6.3 mg</td><td class="num pct low">~42%</td><td class="num">~6.8 mg (45%)</td><td class="num">15 mg</td></tr>
-    <tr><td>Vitamin D</td><td class="num">~0 µg</td><td class="num pct low">~0%</td><td class="num">~1–1.5 µg (7–10%), more with sun-exposed shiitake</td><td class="num">15 µg (600 IU)</td></tr>
-    <tr><td>Calcium</td><td class="num">~760 mg</td><td class="num pct">~76%</td><td class="num">~790 mg (79%)</td><td class="num">1,000 mg</td></tr>
-    <tr><td>Iron</td><td class="num">~8.5 mg</td><td class="num pct">~59% of vegetarian target</td><td class="num">~9.4 mg (65%)</td><td class="num">8 mg standard; ~14 mg vegetarian</td></tr>
-    <tr><td>Magnesium</td><td class="num">~440 mg</td><td class="num pct good">~105%</td><td class="num">~445 mg</td><td class="num">420 mg</td></tr>
-    <tr><td>Zinc</td><td class="num">~6.6 mg</td><td class="num pct">~60%</td><td class="num">~7.2 mg (66%)</td><td class="num">11 mg</td></tr>
-    <tr><td>Potassium</td><td class="num">~1,950 mg</td><td class="num pct">~57%</td><td class="num">~2,020 mg (59%)</td><td class="num">3,400 mg (AI)</td></tr>
-    <tr><td>Selenium</td><td class="num">~46 µg</td><td class="num pct">~84%</td><td class="num">~63 µg (115%)</td><td class="num">55 µg</td></tr>
-    <tr><td>Iodine</td><td class="num">~115 µg</td><td class="num pct">~77%</td><td class="num">~145 µg (97%)</td><td class="num">150 µg</td></tr>
-    <tr><td>Copper</td><td class="num">~1.2 mg</td><td class="num pct good">~135%</td><td class="num">~1.2 mg</td><td class="num">0.9 mg</td></tr>
-    <tr><td>Manganese</td><td class="num">~4.7 mg</td><td class="num pct good">~200%</td><td class="num">~4.7 mg</td><td class="num">2.3 mg (AI)</td></tr>
-    <tr><td>Omega-3 (ALA)</td><td class="num">~5.2 g</td><td class="num pct good">~325%</td><td class="num">~5.2 g</td><td class="num">1.6 g (AI)</td></tr>
-    <tr><td>Fiber</td><td class="num">~26 g</td><td class="num pct">~87%</td><td class="num">~26 g</td><td class="num">30 g (AI)</td></tr>
-  </table></div>
-  <p>*Only a small share of the B12 in eggs is absorbed. The B12 in dairy is absorbed much better, so the yogurt is your main source.</p>
-
-  <h3>How to read this</h3>
-  <ul>
-    <li><strong>Well covered:</strong> vitamins C and K, riboflavin, magnesium, copper, manganese, omega-3 (ALA), and nearly selenium and iodine. A breakfast normally covers about a third of the day, so you're well ahead on most nutrients.</li>
-    <li><strong>Real gap, vitamin D:</strong> food here supplies almost none. Sunlight, UV-exposed mushrooms or a supplement would need to cover it. A blood test (25-hydroxyvitamin D) shows where you stand.</li>
-    <li><strong>Partial gap, vitamin E:</strong> almonds doubled it from about 3 mg to about 6 mg. Increasing almonds to about 20 (25 g) would bring the morning to roughly 8.5 mg.</li>
-    <li><strong>Iron:</strong> this covers more than the standard 8 mg RDA. Against NIH's advice that vegetarians aim for about 1.8 times the RDA, it covers about 60%.</li>
-    <li><strong>Iodine:</strong> mostly from the yogurt. Rock salt is not iodized, so it adds none.</li>
-    <li><strong>For lunch and dinner:</strong> zinc, potassium and B12 are easy to complete with dal, beans, vegetables and dairy.</li>
-  </ul>
-  <a class="back" href="#top">Back to top</a>
-</section>
-
-<!-- 7 -->
-<section id="synergy">
-  <h2><span class="n">7</span>Food synergy and absorption</h2>
-  <p>Each pairing below, why it improves absorption, and where the evidence comes from.</p>
-
-  <h3>Vitamin C with plant iron</h3>
-  <p><strong>Pairing:</strong> lemon, orange, strawberries, pineapple and kale (about 180 mg vitamin C) with iron from greens, pumpkin seeds, almonds, chia and oats.</p>
-  <p><strong>Why it works:</strong> plant iron is mostly in the ferric form (Fe³⁺), which the gut absorbs poorly. Vitamin C converts it to the ferrous form (Fe²⁺) and binds it in a soluble form. This partly offsets phytates and polyphenols, which nuts, seeds and oats contain.</p>
-  <p><strong>Source:</strong> NIH Office of Dietary Supplements, Iron fact sheet.</p>
-
-  <h3>Fat with fat-soluble nutrients</h3>
-  <p><strong>Pairing:</strong> almonds, peanuts, pumpkin seeds and egg yolk with the carotenoids (beta-carotene, lutein), vitamin K and vitamin E in kale and bok choy, and vitamin D from shiitake.</p>
-  <p><strong>Why it works:</strong> these vitamins dissolve in fat and need it to be packaged for absorption. In a Purdue trial, monounsaturated fat (the main fat in almonds and peanuts) gave the same carotenoid absorption at 3 g as at 20 g. Adding whole eggs to raw vegetables raised carotenoid absorption 3- to 8-fold and vitamin E absorption 4- to 7-fold. Those studies used 3 eggs, so your 1 egg adds a smaller boost on top of the nuts.</p>
-  <p><strong>Source:</strong> Goltz and Ferruzzi, Purdue 2012; Kim and Campbell, Purdue 2015 and 2016.</p>
-
-  <h3>A low-enzyme smoothie that protects flavanols</h3>
-  <p><strong>Pairing:</strong> blueberries and grapes with low-PPO companions (kale, orange, pineapple, mango), and no banana or apple.</p>
-  <p><strong>Why it works:</strong> polyphenol oxidase (PPO), the enzyme that browns cut fruit, destroys flavanols once fruit is blended. A banana smoothie reduced flavanol absorption by 84% compared with a low-PPO berry smoothie.</p>
-  <p><strong>Source:</strong> Ottaviani et al., <em>Food &amp; Function</em> 2023. Note: the study was small (8 and 11 men) and funded by Mars, Inc.</p>
-
-  <h3>Calcium kept away from iron</h3>
-  <p><strong>Pairing:</strong> the calcium-rich yogurt drink (about 250 mg from yogurt and 126 mg from chia) eaten 2 hours after the iron-rich smoothie.</p>
-  <p><strong>Why it works:</strong> calcium reduces iron absorption when the two are eaten together. Separating them protects the iron.</p>
-  <p><strong>Source:</strong> NIH ODS Iron fact sheet.</p>
-
-  <h3>Protein and fat before carbohydrate</h3>
-  <p><strong>Pairing:</strong> the nut bowl and protein item about 10 minutes before the fruit sugars in the smoothie.</p>
-  <p><strong>Why it works:</strong> protein and fat slow stomach emptying and trigger gut hormones that blunt the glucose rise. Eating them first lowered glucose peaks by more than 40% in people with prediabetes.</p>
-  <p><strong>Source:</strong> Shukla et al., <em>Diabetes Care</em> 2015; <em>Diabetes, Obesity and Metabolism</em> 2019.</p>
-
-  <h3>Protein split into two doses</h3>
-  <p><strong>Pairing:</strong> about 25 g of protein in the first meal (omelette days) and about 30 g in the yogurt drink.</p>
-  <p><strong>Why it works:</strong> muscle protein synthesis peaks at about 25–30 g per meal. Spreading protein evenly across meals raised 24-hour muscle protein synthesis about 25% compared with concentrating it at dinner.</p>
-  <p><strong>Source:</strong> Paddon-Jones and Rasmussen 2009; Mamerow et al. 2014.</p>
-
-  <h3>Raw blended crucifers</h3>
-  <p><strong>Pairing:</strong> raw kale and bok choy, blended.</p>
-  <p><strong>Why it works:</strong> blending raw crucifers releases the enzyme myrosinase, which converts glucosinolates into isothiocyanates (the sulforaphane family). Cooking inactivates this enzyme.</p>
-  <p><strong>Source:</strong> Linus Pauling Institute, Isothiocyanates.</p>
-
-  <h3>Yogurt iodine with raw greens</h3>
-  <p><strong>Pairing:</strong> iodine from yogurt (and egg) alongside daily raw crucifers.</p>
-  <p><strong>Why it works:</strong> large amounts of raw crucifers can slightly interfere with thyroid iodine uptake, mainly when iodine intake is low. Adequate iodine removes most of this concern.</p>
-  <p><strong>Source:</strong> NIH ODS Iodine fact sheet; Linus Pauling Institute.</p>
-
-  <h3>Probiotics with prebiotic fiber</h3>
-  <p><strong>Pairing:</strong> live cultures in the yogurt with oat beta-glucan and chia and flax fiber.</p>
-  <p><strong>Why it works:</strong> the fiber feeds gut bacteria. Gut bacteria also convert flax lignans into their active forms, enterodiol and enterolactone.</p>
-  <p><strong>Source:</strong> Linus Pauling Institute, Lignans.</p>
-
-  <h3>Keeping the soaking water</h3>
-  <p><strong>Pairing:</strong> oats and chia soaked together, with the water consumed.</p>
-  <p><strong>Why it works:</strong> beta-glucan is water-soluble, so draining would lose part of it. Commercial oats are heat-treated, which inactivates most of their phytase, so a plain soak removes little phytate anyway.</p>
-  <p><strong>Source:</strong> USDA and food-science literature on oat processing.</p>
-
-  <div class="note warn">
-    <p><strong>Trade-offs that remain:</strong></p>
-    <ul>
-      <li>Phytates in nuts, seeds, oats and chia lower zinc absorption, and vitamin C doesn't help with zinc. This is the main reason vegetarians may need more zinc.</li>
-      <li>Egg yolk protein (phosvitin) slightly reduces iron absorption on omelette days. This is minor at 3 eggs a week.</li>
-    </ul>
+  <div class="week">
+    <div class="day egg"><h4>Monday</h4><p class="dish">Shiitake omelette</p>
+      <p><span class="ing">1 large egg</span><span class="ing">40 g fresh shiitake (sun-exposed) or 3 dried, soaked</span><span class="ing">1 tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~26 g</b></p></div>
+    <div class="day"><h4>Tuesday</h4><p class="dish">Besan chilla</p>
+      <p><span class="ing">30 g besan (⅓ cup)</span><span class="ing">onion, cilantro</span><span class="ing">water to batter</span><span class="ing">½ tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~26–27 g</b></p></div>
+    <div class="day egg"><h4>Wednesday</h4><p class="dish">Shiitake omelette</p>
+      <p><span class="ing">1 large egg</span><span class="ing">40 g shiitake</span><span class="ing">1 tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~26 g</b></p></div>
+    <div class="day"><h4>Thursday</h4><p class="dish">Tofu scramble</p>
+      <p><span class="ing">100 g firm tofu (calcium-set if available)</span><span class="ing">turmeric</span><span class="ing">pinch of black pepper</span><span class="ing">½ tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~30–35 g</b> (check the label)</p></div>
+    <div class="day egg"><h4>Friday</h4><p class="dish">Shiitake omelette</p>
+      <p><span class="ing">1 large egg</span><span class="ing">40 g shiitake</span><span class="ing">1 tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~26 g</b></p></div>
+    <div class="day"><h4>Saturday</h4><p class="dish">Paneer bhurji</p>
+      <p><span class="ing">50 g paneer</span><span class="ing">tomato, onion</span><span class="ing">½ tsp oil</span></p>
+      <p class="pro">First-meal protein: <b>~29 g</b></p></div>
+    <div class="day"><h4>Sunday</h4><p class="dish">Sprouted moong chaat</p>
+      <p><span class="ing">100 g lightly sprouted whole moong (~¾ cup)</span><span class="ing">lemon, onion, tomato</span></p>
+      <p class="pro">First-meal protein: <b>~28–30 g</b> (varies with sprout length)</p></div>
   </div>
-  <a class="back" href="#top">Back to top</a>
+
+  <div class="call c-syn"><p><strong>Why oil rather than ghee for the omelette:</strong> Ayurveda considers honey and ghee in equal amounts incompatible. You'd be having 1 tsp honey and 1 tsp ghee in the same meal, so oil avoids the question.</p><p><strong>Tofu and paneer days</strong> add roughly 100–350 mg of calcium to the first meal, which slightly reduces iron absorption from the smoothie. That's fine twice a week.</p></div>
+
+  <div class="pager"><a href="#smoothie" data-go="smoothie">Previous</a><span class="sp"></span><a href="#nutrients" data-go="nutrients">Next: Nutrients vs RDA</a></div>
 </section>
 
-<!-- 8 -->
-<section id="ayurveda">
-  <h2><span class="n">8</span>Where Ayurveda disagrees</h2>
-  <p>The classical rule on curd, from Ashtanga Hridaya (Sutrasthana 5.29–31), says curd should not be taken at night, warm, in spring, summer or autumn, without mung soup, honey, ghee with sugar, or amla, or continuously. Here is how the plan compares with that rule and with other Ayurvedic principles.</p>
-  <div class="table-wrap"><table>
-    <tr><th>Ayurvedic principle</th><th>This plan</th><th>Status</th><th>What you can do</th></tr>
-    <tr><td>Curd should not be eaten continuously (daily)</td><td>Greek yogurt every day</td><td><strong>Disagrees</strong></td><td>On 1–3 days a week, replace it with buttermilk (yogurt thinned with water), which Ayurveda permits daily. That lowers protein, so add a protein item to the first meal on those days.</td></tr>
-    <tr><td>Curd is unsuitable in spring, summer and autumn</td><td>Year-round, in a warm Florida climate</td><td><strong>Disagrees</strong></td><td>Ayurveda favors curd in the cooler months. Buttermilk is the classical alternative in the heat.</td></tr>
-    <tr><td>Strained, thick curd is heavy (guru)</td><td>Greek yogurt is strained and dense</td><td><strong>Partly disagrees</strong></td><td>Thinning it with water moves it toward the lighter forms Ayurveda prefers.</td></tr>
-    <tr><td>Cold and raw food weakens digestive fire (agni)</td><td>Raw green smoothie every day</td><td><strong>Partly disagrees</strong></td><td>Already reduced by serving it at room temperature with ginger. Ayurveda would still prefer cooked greens. Raw is kept here because of the myrosinase benefit.</td></tr>
-    <tr><td>Fruit is best eaten alone, not blended with other foods (modern Ayurvedic food-combining teaching, e.g. Vasant Lad)</td><td>Many fruits blended with greens</td><td><strong>Disagrees</strong></td><td>No simple fix without changing the smoothie. Note this is modern teaching rather than a classical text rule.</td></tr>
-    <tr><td>Eggs and mushrooms are considered tamasic in the yogic (sattvic) diet</td><td>Shiitake omelette, 3 days a week</td><td><strong>Disagrees</strong> (yogic tradition)</td><td>Other days already use besan, tofu, paneer or moong instead.</td></tr>
-    <tr><td>Honey must never be heated</td><td>Honey added only once the water has cooled below about 40°C (104°F)</td><td>Compatible</td><td>Classical texts describe honey water (madhudaka) with cool water. Lukewarm is common practice. Never add honey to hot water.</td></tr>
-    <tr><td>Honey and ghee in equal amounts are incompatible</td><td>1 tsp honey (lemon water) and possibly 1 tsp ghee (omelette), eaten separately</td><td>Compatible, with care</td><td>The concern is mixing them in equal amounts. Cooking the omelette in oil avoids the question entirely.</td></tr>
-    <tr><td>Banana with curd or milk is incompatible (viruddha)</td><td>Banana eaten alone, hours apart</td><td>Compatible</td><td>Keep it separate from the yogurt drink.</td></tr>
-    <tr><td>Curd should be taken with an accompaniment</td><td>1 tsp honey or ½ tsp amla in the yogurt drink</td><td>Compatible</td><td>Never skip the accompaniment.</td></tr>
-    <tr><td>Curd not at night, not heated</td><td>Mid-morning, cold</td><td>Compatible</td><td>None needed.</td></tr>
-    <tr><td>Avoid stale or leftover food (paryushita)</td><td>Single 600 mL smoothie blended fresh</td><td>Compatible</td><td>Blend daily instead of storing a batch.</td></tr>
+<!-- NUTRIENTS -->
+<section class="panel" id="nutrients">
+  <h2>Nutrients vs RDA</h2>
+  <p class="intro">Breakfast only, on a typical day without the rotating protein dish, compared with the RDA or Adequate Intake for men aged 51–70. <span style="color:var(--low); font-weight:700">Orange means below 100%.</span> Lunch and dinner are expected to fill these. Estimates are within about ±20%.</p>
+
+  <div class="tw"><table>
+    <tr><th>Nutrient</th><th>Amount</th><th>% of daily need</th><th>Omelette day</th><th>Daily need</th></tr>
+    <tr class="goodrow"><td>Vitamin C</td><td class="n">~185 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">205%</span></div></td><td class="n om ok">~185 mg · 205%</td><td class="n">90 mg</td></tr>
+    <tr class="goodrow"><td>Vitamin K</td><td class="n">~280 µg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">233%</span></div></td><td class="n om ok">~280 µg · 233%</td><td class="n">120 µg</td></tr>
+    <tr class="goodrow"><td>Riboflavin (B2)</td><td class="n">~1.3 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">100%</span></div></td><td class="n om ok">~1.6 mg · 123%</td><td class="n">1.3 mg</td></tr>
+    <tr class="goodrow"><td>Magnesium</td><td class="n">~440 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">105%</span></div></td><td class="n om ok">~445 mg · 106%</td><td class="n">420 mg</td></tr>
+    <tr class="goodrow"><td>Copper</td><td class="n">~1.2 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">135%</span></div></td><td class="n om ok">~1.2 mg · 135%</td><td class="n">0.9 mg</td></tr>
+    <tr class="goodrow"><td>Manganese</td><td class="n">~4.7 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">204%</span></div></td><td class="n om ok">~4.7 mg · 204%</td><td class="n">2.3 mg</td></tr>
+    <tr class="goodrow"><td>Omega-3 (ALA)</td><td class="n">~5.2 g</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">325%</span></div></td><td class="n om ok">~5.2 g · 325%</td><td class="n">1.6 g</td></tr>
+    <tr class="goodrow"><td>Iron (standard RDA)</td><td class="n">~8.5 mg</td><td><div class="meter"><div class="bar"><i style="width:100%"></i></div><span class="pct">106%</span></div></td><td class="n om ok">~9.4 mg · 118%</td><td class="n">8 mg</td></tr>
+    <tr class="lowrow"><td>Iron (vegetarian target)*</td><td class="n">~8.5 mg</td><td><div class="meter"><div class="bar"><i style="width:59%"></i></div><span class="pct">59%</span></div></td><td class="n om low">~9.4 mg · 65%</td><td class="n">~14.4 mg</td></tr>
+    <tr class="lowrow"><td>Selenium</td><td class="n">~46 µg</td><td><div class="meter"><div class="bar"><i style="width:84%"></i></div><span class="pct">84%</span></div></td><td class="n om ok">~63 µg · 115%</td><td class="n">55 µg</td></tr>
+    <tr class="lowrow"><td>Fiber</td><td class="n">~26 g</td><td><div class="meter"><div class="bar"><i style="width:87%"></i></div><span class="pct">87%</span></div></td><td class="n om low">~26 g · 87%</td><td class="n">30 g</td></tr>
+    <tr class="lowrow"><td>Iodine</td><td class="n">~115 µg</td><td><div class="meter"><div class="bar"><i style="width:77%"></i></div><span class="pct">77%</span></div></td><td class="n om low">~145 µg · 97%</td><td class="n">150 µg</td></tr>
+    <tr class="lowrow"><td>Calcium</td><td class="n">~760 mg</td><td><div class="meter"><div class="bar"><i style="width:76%"></i></div><span class="pct">76%</span></div></td><td class="n om low">~790 mg · 79%</td><td class="n">1,000 mg</td></tr>
+    <tr class="lowrow"><td>Vitamin B12</td><td class="n">~1.7 µg</td><td><div class="meter"><div class="bar"><i style="width:71%"></i></div><span class="pct">71%</span></div></td><td class="n om low">~2.2 µg · 90%†</td><td class="n">2.4 µg</td></tr>
+    <tr class="lowrow"><td>Folate (DFE)</td><td class="n">~270 µg</td><td><div class="meter"><div class="bar"><i style="width:68%"></i></div><span class="pct">68%</span></div></td><td class="n om low">~295 µg · 74%</td><td class="n">400 µg</td></tr>
+    <tr class="lowrow"><td>Zinc</td><td class="n">~6.6 mg</td><td><div class="meter"><div class="bar"><i style="width:60%"></i></div><span class="pct">60%</span></div></td><td class="n om low">~7.2 mg · 66%</td><td class="n">11 mg</td></tr>
+    <tr class="lowrow"><td>Potassium</td><td class="n">~1,950 mg</td><td><div class="meter"><div class="bar"><i style="width:57%"></i></div><span class="pct">57%</span></div></td><td class="n om low">~2,020 mg · 59%</td><td class="n">3,400 mg</td></tr>
+    <tr class="lowrow"><td>Vitamin E</td><td class="n">~6.3 mg</td><td><div class="meter"><div class="bar"><i style="width:42%"></i></div><span class="pct">42%</span></div></td><td class="n om low">~6.8 mg · 45%</td><td class="n">15 mg</td></tr>
+    <tr class="lowrow"><td>Vitamin A (RAE)</td><td class="n">~310 µg</td><td><div class="meter"><div class="bar"><i style="width:34%"></i></div><span class="pct">34%</span></div></td><td class="n om low">~390 µg · 43%</td><td class="n">900 µg</td></tr>
+    <tr class="lowrow"><td>Vitamin D</td><td class="n">~0 µg</td><td><div class="meter"><div class="bar"><i style="width:1%"></i></div><span class="pct">~0%</span></div></td><td class="n om low">~1–1.5 µg · 7–10%</td><td class="n">15 µg</td></tr>
   </table></div>
-  <div class="note ayur"><p><strong>A fair perspective:</strong> these Ayurvedic rules come from classical texts and long practice, not modern clinical trials. The nutrient and absorption sections above are research-based. Where the two agree (no banana with curd, unheated honey, fresh food) you have support from both. Where they differ, mainly daily yogurt and the raw smoothie, your own digestion is a reasonable guide.</p></div>
-  <a class="back" href="#top">Back to top</a>
+  <p style="font-size:.92rem; color:var(--muted)">*NIH advises vegetarians to aim for about 1.8 times the standard iron RDA, because plant iron is absorbed less well. †Only a small share of the B12 in eggs is absorbed, so the yogurt is the reliable source.</p>
+
+  <div class="grid g3">
+    <div class="call c-low" style="margin:0"><p><strong>Vitamin D:</strong> the only near-zero nutrient. Sun, UV-exposed mushrooms or a supplement would have to cover it. A blood test (25-hydroxyvitamin D) shows where you stand.</p></div>
+    <div class="call c-low" style="margin:0"><p><strong>Vitamin E:</strong> almonds doubled it from about 3 mg. Going up to <span class="ing">20 almonds</span> would bring the morning to roughly 8.5 mg (57%).</p></div>
+    <div class="call c-good" style="margin:0"><p><strong>Easy to finish later in the day:</strong> zinc, potassium, folate and B12 come readily from dal, beans, vegetables and dairy at lunch and dinner.</p></div>
+  </div>
+
+  <div class="pager"><a href="#week" data-go="week">Previous</a><span class="sp"></span><a href="#synergy" data-go="synergy">Next: Food synergy</a></div>
 </section>
 
-<!-- 9 -->
-<section id="cautions">
-  <h2><span class="n">9</span>Cautions</h2>
+<!-- SYNERGY -->
+<section class="panel" id="synergy">
+  <h2>Food synergy</h2>
+  <p class="intro">Why the vitamins and minerals in this plan are absorbed better than they would be from the same foods eaten in any order.</p>
+
+  <div class="grid g2">
+    <div class="card syn"><h3>Vitamin C unlocks plant iron</h3>
+      <p><span class="ing">lemon</span><span class="ing">orange</span><span class="ing">strawberries</span><span class="ing">pineapple</span><span class="ing">kale</span> with iron from <span class="ing">greens</span><span class="ing">pumpkin seeds</span><span class="ing">chia</span><span class="ing">oats</span></p>
+      <p class="why">Plant iron is mostly ferric (Fe³⁺), which the gut absorbs poorly. Vitamin C converts it to ferrous iron (Fe²⁺) and keeps it soluble, which partly overcomes the phytates in nuts, seeds and oats.</p>
+      <p class="src">Source: NIH ODS, Iron fact sheet</p></div>
+
+    <div class="card syn"><h3>Fat carries fat-soluble vitamins</h3>
+      <p><span class="ing">almonds</span><span class="ing">peanuts</span><span class="ing">pumpkin seeds</span><span class="ing">egg yolk</span> with carotenoids and vitamins K and E in <span class="ing">kale</span><span class="ing">bok choy</span></p>
+      <p class="why">These vitamins need fat to be absorbed. Monounsaturated fat, the main fat in almonds and peanuts, gave the same carotenoid absorption at 3 g as at 20 g. Whole eggs raised carotenoid absorption from raw vegetables 3- to 8-fold, but that was with 3 eggs, so 1 egg adds a smaller boost.</p>
+      <p class="src">Source: Purdue, Goltz &amp; Ferruzzi 2012; Kim et al. 2015, 2016</p></div>
+
+    <div class="card syn"><h3>Low-enzyme smoothie protects flavanols</h3>
+      <p><span class="ing">blueberries</span><span class="ing">grapes</span> with <span class="ing">kale</span><span class="ing">orange</span><span class="ing">pineapple</span><span class="ing">mango</span>, no banana or apple</p>
+      <p class="why">The browning enzyme PPO destroys flavanols after blending. A banana smoothie cut flavanol absorption by 84% compared with a low-PPO berry smoothie.</p>
+      <p class="src">Source: Ottaviani et al., Food &amp; Function 2023. Small study, funded by Mars, Inc.</p></div>
+
+    <div class="card syn"><h3>Calcium kept away from iron</h3>
+      <p><span class="ing">Greek yogurt</span><span class="ing">chia</span> eaten 2 hours after the iron-rich smoothie</p>
+      <p class="why">Calcium reduces iron absorption when the two are eaten in the same meal. Separating them protects the iron.</p>
+      <p class="src">Source: NIH ODS, Iron fact sheet</p></div>
+
+    <div class="card syn"><h3>Low-oxalate greens release their calcium</h3>
+      <p><span class="ing">kale</span><span class="ing">bok choy</span> instead of spinach</p>
+      <p class="why">Oxalate locks up calcium. Kale and bok choy are low in oxalate, so about 49–54% of their calcium is absorbed, compared with about 32% from milk and about 5% from spinach.</p>
+      <p class="src">Source: Heaney &amp; Weaver, Am J Clin Nutr 1990; Weaver et al. 1999</p></div>
+
+    <div class="card syn"><h3>Protein and fat before sugar</h3>
+      <p><span class="ing">nut bowl</span> + protein dish, 10 minutes before the smoothie</p>
+      <p class="why">Protein and fat slow stomach emptying and trigger gut hormones that blunt the glucose rise. Eating them first lowered glucose peaks by more than 40% in people with prediabetes.</p>
+      <p class="src">Source: Shukla et al., Diabetes Care 2015; Diabetes Obes Metab 2019</p></div>
+
+    <div class="card syn"><h3>Protein split into two doses</h3>
+      <p>~26 g in the first meal, ~30 g in the yogurt drink</p>
+      <p class="why">Muscle protein synthesis peaks at roughly 25–30 g per meal. Spreading protein evenly raised 24-hour muscle protein synthesis by about 25% compared with loading it at dinner.</p>
+      <p class="src">Source: Paddon-Jones &amp; Rasmussen 2009; Mamerow et al. 2014</p></div>
+
+    <div class="card syn"><h3>Raw crucifers make sulforaphane</h3>
+      <p><span class="ing">raw kale</span><span class="ing">raw bok choy</span>, blended</p>
+      <p class="why">Blending releases the enzyme myrosinase, which turns glucosinolates into isothiocyanates (the sulforaphane family). Cooking destroys the enzyme.</p>
+      <p class="src">Source: Linus Pauling Institute, Isothiocyanates</p></div>
+
+    <div class="card syn"><h3>Yogurt iodine balances raw greens</h3>
+      <p><span class="ing">Greek yogurt</span><span class="ing">egg</span> alongside daily <span class="ing">raw crucifers</span></p>
+      <p class="why">Large amounts of raw crucifers can slightly interfere with thyroid iodine uptake, mainly when iodine is low. Adequate iodine removes most of the concern. Rock salt is not iodized.</p>
+      <p class="src">Source: NIH ODS, Iodine fact sheet</p></div>
+
+    <div class="card syn"><h3>Probiotics fed by fiber</h3>
+      <p><span class="ing">yogurt cultures</span> with <span class="ing">oat beta-glucan</span><span class="ing">chia</span><span class="ing">flax</span></p>
+      <p class="why">The fiber feeds gut bacteria, and gut bacteria convert flax lignans into their active forms (enterodiol and enterolactone). Keeping the soaking water keeps the soluble beta-glucan.</p>
+      <p class="src">Source: Linus Pauling Institute, Lignans</p></div>
+  </div>
+
+  <div class="call c-warn"><p><strong>Trade-offs that remain:</strong></p>
   <ul>
-    <li><strong>Fiber:</strong> about 26 g in one morning. If that's new for you, build up chia, flax and oats over 1–2 weeks and drink water with them.</li>
-    <li><strong>Teeth:</strong> lemon water and fruit acids soften enamel. Rinse with plain water afterward and wait about 30 minutes before brushing.</li>
-    <li><strong>Ginger:</strong> use one ginger route per morning, about 2–3 g fresh. Commonly cited guidance is to keep total ginger to about 4 g a day. Check with your doctor if you take blood thinners or have gallstones.</li>
-    <li><strong>Vitamin K:</strong> kale supplies about 230% of daily needs. If you are ever prescribed warfarin, keep kale intake consistent and tell your doctor, since vitamin K affects how the drug works.</li>
-    <li><strong>Glucose:</strong> check your glucose about 1 hour after the smoothie on a few omelette days and a few non-omelette days. Your own readings are the best test of the food-order effect.</li>
-    <li><strong>Chia:</strong> always eat it soaked. Dry chia expands and can stick in the throat.</li>
-    <li><strong>Calories:</strong> about 950–1,100 for the morning, plus about 105 for the banana. This is a substantial breakfast, so lunch can be lighter.</li>
-  </ul>
-  <p>This plan is general nutrition information, not medical advice. Review it with your doctor or a registered dietitian if you have a medical condition or take regular medication.</p>
-  <a class="back" href="#top">Back to top</a>
+    <li>Phytates in nuts, seeds, oats and chia lower zinc absorption, and vitamin C doesn't help with zinc.</li>
+    <li>Egg yolk protein (phosvitin) slightly reduces iron absorption on omelette days. This is minor at 3 eggs a week.</li>
+  </ul></div>
+
+  <div class="pager"><a href="#nutrients" data-go="nutrients">Previous</a><span class="sp"></span><a href="#ayurveda" data-go="ayurveda">Next: Ayurveda's view</a></div>
 </section>
 
-<!-- 10 -->
-<section id="corrections">
-  <h2><span class="n">10</span>Corrections to earlier advice</h2>
-  <p>While cross-checking this document, I found these errors in what I told you earlier. The numbers in this document are the corrected ones.</p>
-  <ul>
-    <li><strong>Apple should also come out of the smoothie.</strong> I only removed the banana, but the same study measured apples as high in PPO too. Orange or mango replaces it.</li>
-    <li><strong>Yogurt drink protein is about 30 g, not about 33 g.</strong> I recalculated with 4 tbsp oats, 2 tbsp chia and 1 tbsp flax.</li>
-    <li><strong>Ginger amount:</strong> I suggested ½ inch (about 5 g) while also saying to stay under 4 g a day. Those conflicted. The corrected amount is about 1 tsp grated (2–3 g).</li>
-    <li><strong>Vitamin C is higher than I said</strong>, about 180 mg rather than 145 mg, because orange replaces apple.</li>
-  </ul>
-  <a class="back" href="#top">Back to top</a>
+<!-- AYURVEDA -->
+<section class="panel" id="ayurveda">
+  <h2>Ayurveda's view</h2>
+  <p class="intro">Where classical Ayurveda agrees and disagrees with this plan. The rule on curd comes from Ashtanga Hridaya (Sutrasthana 5.29–31): curd should not be taken at night, warm, in spring, summer or autumn, without mung soup, honey, ghee with sugar, or amla, or continuously.</p>
+
+  <h3>Where Ayurveda disagrees</h3>
+  <div class="tw"><table>
+    <tr><th>Principle</th><th>Source</th><th>This plan</th><th>Status</th><th>Option</th></tr>
+    <tr><td>Don't eat curd continuously (daily)</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Greek yogurt every day</td><td><span class="badge b-low">Disagrees</span></td><td>On some days, replace it with buttermilk (yogurt thinned with water), which Ayurveda allows daily. Protein drops, so add protein to the first meal on those days.</td></tr>
+    <tr><td>Avoid curd in spring, summer and autumn</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Year-round in a warm Florida climate</td><td><span class="badge b-low">Disagrees</span></td><td>Buttermilk is the classical choice for hot weather.</td></tr>
+    <tr><td>Eat only after the previous meal is digested (jīrṇe aśnīyāt). Eating before that is adhyaśana.</td><td>Charaka Vimana Sthana 1</td><td>Yogurt drink 2 hours after breakfast</td><td><span class="badge b-low">Disagrees</span></td><td>Ayurveda would space meals further apart (often 3+ hours), or treat the yogurt drink as part of breakfast.</td></tr>
+    <tr><td>Eat warm food (uṣṇam aśnīyāt)</td><td>Charaka Vimana Sthana 1</td><td>Raw, blended green smoothie</td><td><span class="badge b-ayur">Partly</span></td><td>Already softened by serving it at room temperature with ginger. Raw is kept for the myrosinase benefit.</td></tr>
+    <tr><td>Fruit is best eaten alone, not mixed with other foods</td><td>Modern Ayurvedic food-combining teaching (e.g. Vasant Lad), not a classical rule</td><td>Many fruits blended with greens</td><td><span class="badge b-low">Disagrees</span></td><td>No simple fix without changing the smoothie.</td></tr>
+    <tr><td>Eggs and mushrooms are considered tamasic</td><td>Yogic (sattvic) dietary tradition</td><td>Shiitake omelette 3 days a week</td><td><span class="badge b-ayur">Tradition-dependent</span></td><td>The other four days already use besan, tofu, paneer or moong.</td></tr>
+  </table></div>
+
+  <h3>Where Ayurveda agrees</h3>
+  <div class="tw"><table>
+    <tr><th>Principle</th><th>Source</th><th>How the plan follows it</th></tr>
+    <tr><td>Never heat honey or mix it into hot liquids</td><td>Ashtanga Hridaya Su. 5.53; Charaka Su. 26.84</td><td>Honey goes in only after the water cools below about 40°C (104°F)</td></tr>
+    <tr><td>Honey water in the morning (madhudaka)</td><td>Charaka Su. 27</td><td>1 tsp honey in lemon water. Classically it's made with cool water; lukewarm is common practice.</td></tr>
+    <tr><td>Banana with curd is incompatible (viruddha)</td><td>Classical viruddha ahara lists</td><td>Banana eaten alone, hours away from the yogurt</td></tr>
+    <tr><td>Take curd with an accompaniment</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>1 tsp honey or ½ tsp amla in the yogurt drink</td></tr>
+    <tr><td>No curd at night, and never heated</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Mid-morning, cold</td></tr>
+    <tr><td>Honey and ghee in equal amounts are incompatible</td><td>Charaka Su. 26</td><td>Omelette cooked in oil, not ghee</td></tr>
+    <tr><td>Avoid stale or leftover food</td><td>General Ayurvedic dietetics</td><td>Smoothie blended fresh each morning</td></tr>
+    <tr><td>Ginger with rock salt before meals stimulates digestion (agni)</td><td>Ayurvedic practice (Lad)</td><td>Offered as an option in Step 2</td></tr>
+  </table></div>
+
+  <div class="call c-ayur"><p><strong>A fair perspective:</strong> these Ayurvedic rules come from classical texts and long practice, not modern clinical trials. The nutrition sections of this plan are research-based. Where the two agree, you have support from both. Where they differ, mainly daily yogurt, meal timing and the raw smoothie, your own digestion is a reasonable guide.</p></div>
+
+  <div class="pager"><a href="#synergy" data-go="synergy">Previous</a><span class="sp"></span><a href="#cautions" data-go="cautions">Next: Cautions</a></div>
 </section>
 
-<!-- 11 -->
-<section id="sources">
-  <h2><span class="n">11</span>Assumptions and sources</h2>
+<!-- CAUTIONS -->
+<section class="panel" id="cautions">
+  <h2>Cautions</h2>
+  <p class="intro">Practical safety notes for this routine.</p>
+  <div class="grid g2">
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Fiber</h3><p>About 26 g in one morning. If that's new for you, build up chia, flax and oats over 1–2 weeks and drink water with them.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Teeth</h3><p>Lemon water and fruit acids soften enamel. Rinse with plain water afterward and wait about 30 minutes before brushing.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Ginger</h3><p>Use one ginger route per morning, about 2–3 g fresh. Common guidance is to keep total ginger to about 4 g a day. Check with your doctor if you take blood thinners or have gallstones.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Vitamin K</h3><p>Kale supplies about 230% of daily needs. If you're ever prescribed warfarin, keep kale intake consistent and tell your doctor.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Chia</h3><p>Always eat it soaked. Dry chia expands and can stick in the throat.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Calories and glucose</h3><p>About 950–1,100 calories for the morning, plus about 105 for the banana, so lunch can be lighter. Check your glucose about 1 hour after the smoothie on a few omelette and non-omelette days.</p></div>
+  </div>
+  <p style="margin-top:18px; color:var(--muted)">This is general nutrition information, not medical advice. Review it with your doctor or a registered dietitian if you have a medical condition or take regular medication.</p>
+  <div class="pager"><a href="#ayurveda" data-go="ayurveda">Previous</a><span class="sp"></span><a href="#notes" data-go="notes">Next: Notes &amp; sources</a></div>
+</section>
+
+<!-- NOTES -->
+<section class="panel" id="notes">
+  <h2>Notes &amp; sources</h2>
+  <p class="intro">The assumptions behind the numbers, corrections to earlier advice, and the references.</p>
+
   <h3>Assumptions</h3>
   <ul>
     <li>Targets are the RDA or AI for men aged 51–70. Calcium and vitamin D targets rise after 70.</li>
-    <li>Greek yogurt is plain and nonfat. Low-fat or whole-milk versions add calories and slightly change protein.</li>
-    <li>Figs are fresh, dates are Medjool, peanuts and pumpkin seeds are unsalted, and oats are rolled.</li>
-    <li>Nutrient values come from USDA FoodData Central and are estimates, typically within ±20%.</li>
+    <li>Greek yogurt is plain and nonfat. Figs are fresh, dates are Medjool, peanuts and pumpkin seeds are unsalted, and oats are rolled.</li>
+    <li>Nutrient values come from USDA FoodData Central. Kale's calcium value varies between USDA entries, so the calcium figure could be roughly 60 mg lower.</li>
   </ul>
-  <h3>Sources</h3>
+
+  <h3>Corrections to earlier advice</h3>
+  <ul>
+    <li><strong>Apple came out of the smoothie too.</strong> The UC Davis study measured apples as high in PPO, like banana.</li>
+    <li><strong>The yogurt drink has about 30 g of protein,</strong> not 33 g.</li>
+    <li><strong>Ginger is about 1 tsp grated (2–3 g),</strong> not ½ inch, to stay within the 4 g daily guidance.</li>
+    <li><strong>Ayurveda's meal-spacing rule</strong> (eat only after the previous meal is digested) was missing from the earlier comparison. It's now listed.</li>
+  </ul>
+
+  <h3>References</h3>
   <ol class="refs">
     <li>USDA FoodData Central. <a href="https://fdc.nal.usda.gov/">fdc.nal.usda.gov</a></li>
-    <li>NIH Office of Dietary Supplements, Nutrient Recommendations (DRIs). <a href="https://ods.od.nih.gov/HealthInformation/nutrientrecommendations.aspx">ods.od.nih.gov</a></li>
-    <li>NIH ODS, Iron fact sheet for health professionals. <a href="https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/">ods.od.nih.gov</a></li>
-    <li>NIH ODS, Vitamin B12 fact sheet. <a href="https://ods.od.nih.gov/factsheets/VitaminB12-HealthProfessional/">ods.od.nih.gov</a></li>
-    <li>NIH ODS, Iodine fact sheet. <a href="https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/">ods.od.nih.gov</a></li>
-    <li>NIH ODS, Vitamin D fact sheet. <a href="https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/">ods.od.nih.gov</a></li>
-    <li>Ottaviani JI et al. Impact of polyphenol oxidase on the bioavailability of flavan-3-ols in fruit smoothies. <em>Food &amp; Function</em> 2023;14:8217–8228. <a href="https://pubs.rsc.org/en/content/articlelanding/2023/fo/d3fo01599h">pubs.rsc.org</a></li>
-    <li>UC Davis news release on the smoothie study. <a href="https://www.ucdavis.edu/health/news/right-combo-getting-most-health-benefits-fruit-smoothies">ucdavis.edu</a></li>
-    <li>Shukla AP et al. Food order has a significant impact on postprandial glucose and insulin levels. <em>Diabetes Care</em> 2015;38:e98–e99. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4876745">PMC4876745</a></li>
-    <li>Shukla AP et al. The impact of food order on postprandial glycaemic excursions in prediabetes. <em>Diabetes Obes Metab</em> 2019;21:377–381. <a href="https://pubmed.ncbi.nlm.nih.gov/30101510/">PubMed 30101510</a></li>
-    <li>Purdue University: fat type in dressings and carotenoid absorption (Goltz, Ferruzzi 2012). <a href="https://www.purdue.edu/newsroom/research/2012/120619FerruzziSalad.html">purdue.edu</a></li>
-    <li>Kim JE et al. Eggs and carotenoid absorption from raw vegetables. <em>Am J Clin Nutr</em> 2015. <a href="https://www.sciencedaily.com/releases/2015/03/150329141005.htm">ScienceDaily summary</a></li>
-    <li>Purdue University: eggs increase vitamin E absorption from salad (2016). <a href="https://www.purdue.edu/newsroom/archive/releases/2016/Q4/study-toss-eggs-onto-salads-to-increase-vitamin-e-absorption.html">purdue.edu</a></li>
-    <li>Paddon-Jones D, Rasmussen BB. Dietary protein recommendations and the prevention of sarcopenia. 2009. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2760315/">PMC2760315</a></li>
-    <li>Mamerow MM et al. Dietary protein distribution positively influences 24-h muscle protein synthesis. <em>J Nutr</em> 2014. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4018950">PMC4018950</a></li>
-    <li>Linus Pauling Institute, Isothiocyanates and Lignans. <a href="https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/isothiocyanates">lpi.oregonstate.edu</a></li>
-    <li>Ashtanga Hridaya, Sutrasthana 5.29–31 (rules for curd). <a href="https://www.wisdomlib.org/definition/aghrita">wisdomlib.org</a></li>
-    <li>Charaka Samhita, Viruddha Ahara (incompatible foods). <a href="https://www.carakasamhitaonline.com/index.php/Viruddha_Ahara">carakasamhitaonline.com</a></li>
-    <li>Analytical review of viruddha ahara, including banana with curd. <a href="https://www.jssayurvedacollege.org/pdfs/25-An-analytical-review-on-aahita-aahara.pdf">JSS Ayurveda College</a></li>
-    <li>Honey and heat in Ayurveda (Ashtanga Hridaya Sutrasthana 5.53; Charaka Sutrasthana 26.84; Madhudaka, Charaka Sutrasthana 27). <a href="https://www.easyayurveda.com/hot-water-honey-benefits/">easyayurveda.com</a></li>
-    <li>Lad V. <em>The Complete Book of Ayurvedic Home Remedies</em> (ginger with salt before meals; food combining).</li>
+    <li>NIH ODS, Nutrient Recommendations (DRIs). <a href="https://ods.od.nih.gov/HealthInformation/nutrientrecommendations.aspx">ods.od.nih.gov</a></li>
+    <li>NIH ODS fact sheets: <a href="https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/">Iron</a>, <a href="https://ods.od.nih.gov/factsheets/VitaminB12-HealthProfessional/">Vitamin B12</a>, <a href="https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/">Iodine</a>, <a href="https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/">Vitamin D</a>, <a href="https://ods.od.nih.gov/factsheets/Omega3FattyAcids-HealthProfessional/">Omega-3</a>.</li>
+    <li>Ottaviani JI et al. Impact of polyphenol oxidase on the bioavailability of flavan-3-ols in fruit smoothies. <em>Food &amp; Function</em> 2023;14:8217–28. <a href="https://pubs.rsc.org/en/content/articlelanding/2023/fo/d3fo01599h">pubs.rsc.org</a></li>
+    <li>Heaney RP, Weaver CM. Calcium absorption from kale. <em>Am J Clin Nutr</em> 1990;51:656–7. <a href="https://pubmed.ncbi.nlm.nih.gov/2321572/">PubMed</a></li>
+    <li>Weaver CM, Proulx WR, Heaney R. Choices for achieving adequate dietary calcium with a vegetarian diet. <em>Am J Clin Nutr</em> 1999;70(3 Suppl):543S–548S.</li>
+    <li>Shukla AP et al. Food order and postprandial glucose. <em>Diabetes Care</em> 2015. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4876745">PMC4876745</a>; <em>Diabetes Obes Metab</em> 2019. <a href="https://pubmed.ncbi.nlm.nih.gov/30101510/">PubMed</a></li>
+    <li>Purdue: fat type and carotenoid absorption (2012). <a href="https://www.purdue.edu/newsroom/research/2012/120619FerruzziSalad.html">purdue.edu</a></li>
+    <li>Kim JE et al. Eggs and carotenoid absorption, <em>Am J Clin Nutr</em> 2015 (<a href="https://www.sciencedaily.com/releases/2015/03/150329141005.htm">summary</a>); eggs and vitamin E, 2016 (<a href="https://www.purdue.edu/newsroom/archive/releases/2016/Q4/study-toss-eggs-onto-salads-to-increase-vitamin-e-absorption.html">purdue.edu</a>).</li>
+    <li>Paddon-Jones D, Rasmussen BB, 2009. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2760315/">PMC2760315</a>. Mamerow MM et al., <em>J Nutr</em> 2014. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4018950">PMC4018950</a></li>
+    <li>Chen M et al. Dairy consumption and risk of type 2 diabetes: 3 cohorts of US adults and an updated meta-analysis. <em>BMC Medicine</em> 2014;12:215.</li>
+    <li>Linus Pauling Institute: <a href="https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/isothiocyanates">Isothiocyanates</a>, <a href="https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/lignans">Lignans</a>.</li>
+    <li>Ashtanga Hridaya Sutrasthana 5.29–31, curd. <a href="https://www.wisdomlib.org/definition/aghrita">wisdomlib.org</a></li>
+    <li>Charaka Samhita, Viruddha Ahara. <a href="https://www.carakasamhitaonline.com/index.php/Viruddha_Ahara">carakasamhitaonline.com</a>; Charaka Vimana Sthana 1 (rules of eating).</li>
+    <li>Review of viruddha ahara, including banana with curd. <a href="https://www.jssayurvedacollege.org/pdfs/25-An-analytical-review-on-aahita-aahara.pdf">JSS Ayurveda College</a></li>
+    <li>Honey and heat: Ashtanga Hridaya Su. 5.53; Charaka Su. 26.84; madhudaka, Charaka Su. 27. <a href="https://www.easyayurveda.com/hot-water-honey-benefits/">easyayurveda.com</a></li>
+    <li>Lad V. <em>The Complete Book of Ayurvedic Home Remedies.</em></li>
   </ol>
-  <a class="back" href="#top">Back to top</a>
+
+  <div class="pager"><a href="#cautions" data-go="cautions">Previous</a><span class="sp"></span><a href="#insights" data-go="insights">Next: Insights</a></div>
 </section>
 
-<footer>
-  Prepared October 4, 2026. Nutrient figures are estimates for planning, not lab measurements.
-</footer>
+<!-- INSIGHTS -->
+<section class="panel" id="insights">
+  <h2>Insights</h2>
+  <p class="intro">Ten patterns hidden in this plan, each checked against published research.</p>
+
+  <div class="grid g2">
+    <div class="card ins t-good"><div class="big">49–54%</div><h3>Your greens beat milk at calcium absorption</h3>
+      <p>About 49% of kale's calcium and 54% of bok choy's is absorbed, compared with about 32% from milk and only about 5% from spinach. Your 120 g of greens likely deliver about as much absorbable calcium as your cup of Greek yogurt, or more.</p>
+      <p class="src">Heaney &amp; Weaver 1990; Weaver et al. 1999</p></div>
+
+    <div class="card ins t-syn"><div class="big">&gt;40%</div><h3>Order matters as much as the food</h3>
+      <p>Identical food, eaten in a different order, gave glucose peaks more than 40% lower when protein and vegetables came before carbohydrate. Your nut bowl does this job before the smoothie, at no extra cost.</p>
+      <p class="src">Shukla et al. 2015, 2019</p></div>
+
+    <div class="card ins t-low"><div class="big">84%</div><h3>One banana can undo the berries</h3>
+      <p>A banana smoothie cut flavanol absorption by 84% compared with a berry smoothie. A fruit can be healthy alone and still work against another fruit once they're blended together.</p>
+      <p class="src">Ottaviani et al. 2023</p></div>
+
+    <div class="card ins t-ing"><div class="big">60 g</div><h3>Kale alone covers nearly 2 days of vitamin K</h3>
+      <p>Your 60 g of kale supplies about 234 µg of vitamin K, about 195% of the daily need, from a few handfuls of leaves.</p>
+      <p class="src">USDA FoodData Central</p></div>
+
+    <div class="card ins t-good"><div class="big">35%</div><h3>Three spoonfuls, a third of your magnesium</h3>
+      <p>Three tablespoons of pumpkin seeds supply about 148 mg of magnesium, roughly 35% of your daily need. Weight for weight, they are among the most mineral-dense foods in your morning, rich in zinc and iron too.</p>
+      <p class="src">USDA FoodData Central</p></div>
+
+    <div class="card ins t-low"><div class="big">22 g</div><h3>Pro-rating changed the verdict</h3>
+      <p>The sugar from figs and dates looked like about 55 g when counted for the whole batch, but your 600 mL serving has about 22 g. Measuring what you actually eat turned a "cut this" into "this is fine."</p>
+      <p class="src">USDA FoodData Central, calculated</p></div>
+
+    <div class="card ins t-ayur"><div class="big">2 traditions</div><h3>Same advice, different reasons</h3>
+      <p>Ayurveda keeps banana apart from curd as an incompatible food. The PPO research keeps banana apart from berries to protect flavanols. Different mechanisms, but your plan follows both by eating the banana alone.</p>
+      <p class="src">Viruddha ahara texts; Ottaviani 2023</p></div>
+
+    <div class="card ins t-ayur"><div class="big">18%</div><h3>Where the traditions split: daily yogurt</h3>
+      <p>Ayurveda advises against daily curd. In a Harvard analysis of 3 large cohorts plus a meta-analysis, each daily serving of yogurt was linked to an 18% lower risk of type 2 diabetes. That evidence is observational, so it shows an association, not cause and effect, and it's a genuine point of disagreement.</p>
+      <p class="src">Chen et al., BMC Medicine 2014</p></div>
+
+    <div class="card ins t-syn"><div class="big">325%</div><h3>Plenty of omega-3, but not the kind you might think</h3>
+      <p>Chia and flax give about 5 g of ALA, over three times the daily need. But the body converts only a small fraction of ALA into EPA and DHA, the long-chain omega-3s found in fish. Vegetarians who want those use algae oil.</p>
+      <p class="src">NIH ODS, Omega-3 fact sheet</p></div>
+
+    <div class="card ins t-low"><div class="big">~0</div><h3>The Sunshine State gap</h3>
+      <p>Your breakfast has almost no vitamin D. At Boca Raton's latitude, about 26°N, midday sun can make vitamin D in the skin through much of the year, but skin type, age and sunscreen change the amount a lot. Only a blood test tells you your real status.</p>
+      <p class="src">NIH ODS, Vitamin D fact sheet</p></div>
+  </div>
+
+  <div class="pager"><a href="#notes" data-go="notes">Previous</a><span class="sp"></span><a href="#overview" data-go="overview">Back to overview</a></div>
+</section>
+
 </main>
-</div>
+<footer>Prepared October 2026 for planning purposes. Nutrient figures are estimates, not lab measurements.</footer>
+
+<script>
+(function(){
+  var ids=["overview","prep","morning","smoothie","week","nutrients","synergy","ayurveda","cautions","notes","insights"];
+  function show(id,scroll){
+    if(ids.indexOf(id)<0) id="overview";
+    ids.forEach(function(x){
+      var p=document.getElementById(x); if(p) p.classList.toggle("active",x===id);
+    });
+    document.querySelectorAll("nav.tabs a").forEach(function(a){
+      var on=a.getAttribute("data-t")===id;
+      a.setAttribute("aria-current",on?"true":"false");
+      if(on && a.scrollIntoView){ try{a.scrollIntoView({block:"nearest",inline:"center"});}catch(e){} }
+    });
+    if(scroll){
+      var nav=document.querySelector("nav.tabs");
+      var top=nav.getBoundingClientRect().top+window.pageYOffset;
+      if(window.pageYOffset>top) window.scrollTo(0,top);
+    }
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest("a[data-t],a[data-go]");
+    if(!a) return;
+    e.preventDefault();
+    var id=a.getAttribute("data-t")||a.getAttribute("data-go");
+    try{history.replaceState(null,"","#"+id);}catch(err){}
+    show(id,true);
+  });
+  window.addEventListener("hashchange",function(){show(location.hash.slice(1),true);});
+  show((location.hash||"#overview").slice(1),false);
+})();
+</script>
 </body>
 </html>
