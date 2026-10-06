@@ -445,13 +445,17 @@ body.ro .tbtn{cursor:default; border-bottom-color:transparent}
 tr.grow th{background:var(--bg); text-align:left; font-family:var(--serif); font-size:1rem; color:var(--head); padding-top:14px}
 :root[data-theme="dark"] tr.grow th{color:var(--syn)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) tr.grow th{color:var(--syn)}}
+.syncinfo{display:flex; flex-direction:column; gap:6px; margin:10px 0}
+.syncinfo div{display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid var(--line); padding-bottom:6px}
+.syncinfo span{color:var(--muted)}
+#bSync{cursor:pointer}
 
 </style>
 </head>
 <body>
 <header class="hero">
   <div class="wrap">
-    <p class="for">Personal nutrition plan - October 2026</p>
+    <p class="for">Personal nutrition plan for Rahul and his son · Boca Raton, FL · October 2026</p>
     <h1>Your Daily Meal Plan</h1>
     <p class="sub">The whole day, from lemon water to dinner, in an order that improves absorption and steadies blood sugar. One shared plan you can both change. Checked against nutrition research and classical Ayurveda.</p>
     <div class="stats">
@@ -1083,6 +1087,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp
 
 /* ---------- State ---------- */
 var CFG=window.MP_CONFIG||null;
+var APP_VERSION="2026-10-06";
 var S={week:weekStart(todayKey()),sel:todayKey(),plans:{},mode:"loading",readOnly:false,me:null,names:{},db:null,user:null,unsub:null};
 function changed(k){var p=S.plans[k];return !!(p&&!p.auto);}
 function isPast(k){return k<todayKey();}
@@ -1247,7 +1252,7 @@ function renderBoard(){
  $("#bTitle").textContent=head;
  $("#bStatus").innerHTML=statusLine(k)+(isPast(k)?" · Past day, view only":"");
  $("#bReset").hidden=!changed(k)||locked();
- var sync=S.mode==="db"?(S.readOnly?"View only":"Shared and synced"):S.mode==="sync"?"Synced with Google Sheet":S.mode==="offline"?"Offline, will sync later":S.mode==="local"?(CFG?"Not connected, this device only":"Saved on this device only"):"Connecting...";
+ var sync=S.mode==="db"?(S.readOnly?"View only":"Shared and synced"):S.mode==="sync"?("Synced with Google Sheet"+(GS.last?" · checked "+GS.last.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}):"")):S.mode==="offline"?"Offline, will sync later":S.mode==="local"?(CFG?"Not connected, this device only":"Saved on this device only"):"Connecting...";
  $("#bSync").textContent=sync;$("#bSync").className="sync s-"+S.mode+(S.readOnly?" ro":"");
  // warnings
  var w="";
@@ -1397,7 +1402,10 @@ document.addEventListener("click",function(e){
  if(t.closest("[data-remove]")){removeItem(sheet.dataset.slot,+sheet.dataset.i);closeSheet();return;}
  if((b=t.closest("[data-q]"))){var s=slotsFor(S.sel).filter(function(x){return x.id===sheet.dataset.slot;})[0],cur=s.items[+sheet.dataset.i].q,nq=Math.max(0.5,Math.min(4,cur+parseFloat(b.getAttribute("data-q"))));setQty(sheet.dataset.slot,+sheet.dataset.i,nq);$("#qv").textContent=nq;return;}
  if(t.closest("[data-close]")){closeSheet();return;}
- if(CFG&&t.closest("#bSync")){askSetup();return;}
+ if(CFG&&t.closest("#bSync")){if(gsReady())syncPanel();else askSetup();return;}
+ if(t.closest("[data-sync-now]")){closeSheet();gsFlush();GS.busy=false;gsPoll();toast("Checking the Google Sheet...");return;}
+ if(t.closest("[data-sync-reload]")){closeSheet();reloadFromSheet();return;}
+ if(t.closest("[data-sync-setup]")){askSetup();return;}
  if(t.closest("[data-save-setup]")){var kv=($("#setKey").value||"").trim(),wv=($("#setWho").value||"").trim();if(!kv||!wv){toast("Enter both the passcode and your name.",true);return;}lsRaw("key",kv);lsRaw("who",wv);GS.key=kv;GS.who=wv;closeSheet();gsLoadAll(true);return;}
  if((b=t.closest("[data-hist]"))){var r=document.getElementById("hd-"+b.getAttribute("data-hist"));if(r){r.hidden=!r.hidden;b.setAttribute("aria-expanded",String(!r.hidden));}return;}
  if(t.closest("#histMore")){HIST_LIMIT+=60;renderHistory();return;}
@@ -1477,8 +1485,8 @@ function lsRaw(k,v){try{if(v===undefined)return localStorage.getItem(LS+k)||"";i
 function gsReady(){return !!(GS.url&&GS.key&&GS.who);}
 function gsCache(){lsSet("all",S.plans);lsSet("dirty",GS.dirty);}
 function gsGet(params){params.key=GS.key;var q=Object.keys(params).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(params[k]);}).join("&");
- return fetch(GS.url+(GS.url.indexOf("?")<0?"?":"&")+q,{redirect:"follow"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};return j;});}
-function gsPost(body){body.key=GS.key;return fetch(GS.url,{method:"POST",body:JSON.stringify(body),redirect:"follow"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};return j;});}
+ return fetch(GS.url+(GS.url.indexOf("?")<0?"?":"&")+q+"&_="+Date.now(),{redirect:"follow",cache:"no-store"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};GS.last=new Date();return j;});}
+function gsPost(body){body.key=GS.key;return fetch(GS.url,{method:"POST",body:JSON.stringify(body),redirect:"follow",cache:"no-store"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};return j;});}
 function nutCols(slots){var T=totals(normSlots(clone(slots))),out=[];NUT.forEach(function(d){var v=T[d.k];out.push([shortName(d)+" ("+d.u+")",+(d.d?v.toFixed(d.d):Math.round(v))]);if(d.t)out.push([shortName(d)+(d.lim?" % of limit":" % RDA"),Math.round(v/d.t*100)]);});return out;}
 function summaryOf(slots){return sortSlots(normSlots(clone(slots))).filter(function(s){return s.items.length;}).map(function(s){return fmtT(s.t)+": "+s.items.map(function(x){return fname(x.f)+(x.q!==1?" x"+x.q:"");}).join(", ");}).join(" | ");}
 function gsInit(){
@@ -1491,6 +1499,21 @@ function gsInit(){
  if(!GS.url){S.mode="local";renderAll();return;}
  if(!GS.key||!GS.who){S.mode="local";renderAll();askSetup();return;}
  S.mode="sync";renderAll();gsLoadAll(false);
+}
+function syncPanel(){
+ var pend=Object.keys(GS.dirty).length,id=(GS.url.match(/\/s\/([^/]+)/)||[])[1]||"";
+ openSheet('<h3>Sync</h3><div class="syncinfo">'+
+  '<div><span>This device</span><b>'+esc(GS.who||"-")+'</b></div>'+
+  '<div><span>Page version</span><b>'+APP_VERSION+'</b></div>'+
+  '<div><span>Google Sheet link ends in</span><b>'+esc(id.slice(-6)||"not set")+'</b></div>'+
+  '<div><span>Last checked</span><b>'+(GS.last?GS.last.toLocaleString(undefined,{weekday:"short",hour:"numeric",minute:"2-digit",second:"2-digit"}):"not yet")+'</b></div>'+
+  '<div><span>Changes waiting to upload</span><b>'+pend+'</b></div></div>'+
+  '<p class="om">Both devices should show the same page version and the same link ending. If they do not, see "If two devices disagree" in SETUP.md.</p>'+
+  '<button type="button" class="btn" data-sync-now>Sync now</button><button type="button" class="btn" data-sync-reload>Reload everything from the Sheet</button><button type="button" class="btn ghost" data-sync-setup>Change passcode or name</button><button type="button" class="btn ghost" data-close>Close</button>',"Sync");
+}
+function reloadFromSheet(){
+ Object.keys(S.plans).forEach(function(k){if(!GS.dirty[k])delete S.plans[k];});gsCache();
+ GS.busy=false;gsGet({action:"all"}).then(function(j){mergeServer(j.plans||[],null);S.mode="sync";gsCache();renderAll();gsFlush();toast("Reloaded from the Google Sheet.");},function(){S.mode="offline";renderAll();toast("Couldn't reach the Google Sheet. Check the connection.",true);});
 }
 function askSetup(msg){
  openSheet('<h3>Connect this device</h3>'+(msg?'<p class="setmsg">'+esc(msg)+'</p>':'')+'<p class="om">Enter the family passcode from the Google Sheet setup, and who uses this device. Both are saved in this browser.</p>'+
@@ -1512,7 +1535,7 @@ function gsLoadAll(first){
  });
 }
 function gsPoll(){
- if(!gsReady()||GS.busy)return;GS.busy=true;
+ if(!gsReady())return;if(GS.busy&&Date.now()-GS.busyAt<20000)return;GS.busy=true;GS.busyAt=Date.now();
  var a=addDays(S.week,-1),b=addDays(S.week,8),tk=todayKey();if(tk<a)a=tk;if(tk>b)b=tk;
  gsGet({action:"list",from:a,to:b}).then(function(j){GS.busy=false;mergeServer(j.plans||[],[a,b]);if(S.mode!=="sync"){S.mode="sync";}fillGaps();gsCache();renderAll();gsFlush();},
   function(e){GS.busy=false;if(e&&e.error==="bad_key"){GS.key="";lsRaw("key",null);S.mode="local";renderAll();askSetup("The family passcode has changed. Enter the new one.");return;}S.mode="offline";renderBoard();});
