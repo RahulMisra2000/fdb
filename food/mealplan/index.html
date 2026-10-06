@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Meal Plan · Rahul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#16222D; --muted:#5A6774; --line:#DCE2E8;
+  --head:#17324D; --head-ink:#FFFFFF; --head-muted:#B9C8D8;
+  --good:#1E7B4F; --good-soft:#E2F3E9;
+  --low:#C2410C; --low-soft:#FDEBE2;
+  --ing:#7A3E9D; --ing-soft:#F2E8F9;
+  --syn:#0E7490; --syn-soft:#DFF1F5;
+  --ayur:#9A6A07; --ayur-soft:#FBF2D9;
+  --warn:#B42318; --warn-soft:#FCE8E6;
+  --serif:"Literata", Georgia, serif;
+  --sans:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161C; --surface:#18212A; --ink:#E6ECF1; --muted:#A2AFBB; --line:#2B3742;
+    --head:#0F2236; --head-ink:#FFFFFF; --head-muted:#9FB3C8;
+    --good:#5CC892; --good-soft:#163326; --low:#F59A6B; --low-soft:#3A2218;
+    --ing:#CDA2E6; --ing-soft:#2C2036; --syn:#5CC3DA; --syn-soft:#14313A;
+    --ayur:#E5B84E; --ayur-soft:#352B14; --warn:#F2958A; --warn-soft:#3A1F1C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161C; --surface:#18212A; --ink:#E6ECF1; --muted:#A2AFBB; --line:#2B3742;
+  --head:#0F2236; --head-ink:#FFFFFF; --head-muted:#9FB3C8;
+  --good:#5CC892; --good-soft:#163326; --low:#F59A6B; --low-soft:#3A2218;
+  --ing:#CDA2E6; --ing-soft:#2C2036; --syn:#5CC3DA; --syn-soft:#14313A;
+  --ayur:#E5B84E; --ayur-soft:#352B14; --warn:#F2958A; --warn-soft:#3A1F1C;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:1.06rem; line-height:1.6}
+a{color:var(--syn)}
+:focus-visible{outline:3px solid var(--syn); outline-offset:2px; border-radius:4px}
+
+/* Header */
+header.hero{background:var(--head); color:var(--head-ink); padding:40px 24px 30px}
+.wrap{max-width:1040px; margin:0 auto}
+.hero p.for{margin:0 0 6px; color:var(--head-muted); font-size:.95rem}
+.hero h1{font-family:var(--serif); font-weight:600; font-size:clamp(2rem,5vw,2.9rem); line-height:1.1; margin:0 0 10px}
+.hero p.sub{margin:0 0 24px; color:var(--head-muted); max-width:640px; font-size:1.08rem}
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.stat{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:14px 16px}
+.stat b{display:block; font-family:var(--serif); font-size:1.6rem; font-weight:600; line-height:1.1}
+.stat span{font-size:.88rem; color:var(--head-muted)}
+.stat.alert b{color:#FFB38A}
+
+/* Sticky tab nav */
+nav.tabs{position:sticky; top:0; z-index:5; background:var(--surface); border-bottom:1px solid var(--line); padding-top:env(safe-area-inset-top,0px)}
+nav.tabs .wrap{display:flex; gap:6px; overflow-x:auto; padding:10px 16px; scrollbar-width:thin}
+nav.tabs a{flex:0 0 auto; text-decoration:none; color:var(--muted); font-weight:600; font-size:.92rem; padding:7px 13px; border-radius:20px; border:1px solid transparent; white-space:nowrap}
+nav.tabs a .k{color:var(--muted); opacity:.7; margin-right:5px; font-weight:700}
+nav.tabs a:hover{background:var(--bg)}
+nav.tabs a[aria-current="true"]{background:var(--head); color:#fff; border-color:var(--head)}
+nav.tabs a[aria-current="true"] .k{color:#fff}
+
+main{padding:28px 16px 70px}
+.panel{display:none}
+.panel.active{display:block}
+.panel > h2{font-family:var(--serif); font-weight:600; font-size:clamp(1.6rem,3.5vw,2.05rem); line-height:1.2; margin:4px 0 8px}
+.panel > p.intro{color:var(--muted); font-size:1.08rem; max-width:720px; margin:0 0 22px}
+h3{font-family:var(--serif); font-weight:600; font-size:1.2rem; margin:26px 0 10px}
+p{margin:0 0 12px}
+ul{margin:0 0 12px; padding-left:1.25em}
+li{margin:5px 0}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px 20px}
+.grid{display:grid; gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+/* Ingredient chips */
+.ing{display:inline-block; background:var(--ing-soft); color:var(--ing); font-weight:600; border-radius:6px; padding:1px 8px; margin:2px 2px; line-height:1.5}
+.qty{font-weight:700}
+
+/* Badges */
+.badge{display:inline-block; font-size:.8rem; font-weight:700; padding:2px 9px; border-radius:20px; white-space:nowrap}
+.b-good{background:var(--good-soft); color:var(--good)}
+.b-low{background:var(--low-soft); color:var(--low)}
+.b-ayur{background:var(--ayur-soft); color:var(--ayur)}
+.b-warn{background:var(--warn-soft); color:var(--warn)}
+.b-syn{background:var(--syn-soft); color:var(--syn)}
+.b-ing{background:var(--ing-soft); color:var(--ing)}
+
+.legend{display:flex; flex-wrap:wrap; gap:10px; margin:6px 0 20px}
+
+/* Callouts */
+.call{border-radius:10px; padding:14px 18px; margin:16px 0; border-left:5px solid}
+.call p:last-child,.call ul:last-child{margin-bottom:0}
+.c-syn{background:var(--syn-soft); border-color:var(--syn)}
+.c-ayur{background:var(--ayur-soft); border-color:var(--ayur)}
+.c-warn{background:var(--warn-soft); border-color:var(--warn)}
+.c-low{background:var(--low-soft); border-color:var(--low)}
+.c-good{background:var(--good-soft); border-color:var(--good)}
+
+/* Timeline */
+.steps{list-style:none; padding:0; margin:10px 0}
+.step{display:grid; grid-template-columns:92px 1fr; gap:18px; margin-bottom:16px}
+.step .when{text-align:right; padding-top:16px}
+.step .when b{display:block; font-family:var(--serif); font-size:1.25rem; color:var(--head)}
+.step .when span{font-size:.85rem; color:var(--muted)}
+.step .card{border-left:5px solid var(--head)}
+.step .card h3{margin:0 0 8px; font-size:1.15rem}
+.step.s2 .card{border-left-color:var(--good)}
+.step.s3 .card{border-left-color:var(--ing)}
+.step.s4 .card{border-left-color:var(--syn)}
+.step.s5 .card{border-left-color:var(--ayur)}
+:root[data-theme="dark"] .step .when b{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .step .when b{color:var(--syn)}}
+
+/* Tables */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface); margin:12px 0 18px}
+table{border-collapse:collapse; width:100%; font-size:.97rem}
+th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{font-weight:700; font-size:.88rem; color:var(--muted); background:var(--bg); white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n{white-space:nowrap; font-variant-numeric:tabular-nums}
+
+/* Nutrient meters */
+.meter{display:flex; align-items:center; gap:10px; min-width:190px}
+.bar{flex:1; height:9px; background:var(--line); border-radius:6px; overflow:hidden}
+.bar i{display:block; height:100%; border-radius:6px}
+.lowrow .bar i{background:var(--low)}
+.goodrow .bar i{background:var(--good)}
+.pct{font-weight:700; min-width:58px; text-align:right; font-variant-numeric:tabular-nums}
+.lowrow .pct{color:var(--low)}
+.goodrow .pct{color:var(--good)}
+.lowrow td:first-child{box-shadow:inset 4px 0 0 var(--low)}
+.goodrow td:first-child{box-shadow:inset 4px 0 0 var(--good)}
+.om{font-size:.9rem; color:var(--muted)}
+.om.low{color:var(--low); font-weight:600}
+.om.ok{color:var(--good); font-weight:600}
+
+/* Week */
+.week{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px}
+.day{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; border-top:5px solid var(--ing)}
+.day.egg{border-top-color:var(--ayur)}
+.day h4{margin:0 0 2px; font-family:var(--serif); font-size:1.15rem}
+.day .dish{font-weight:700; margin:0 0 8px}
+.day .pro{margin-top:10px; font-size:.92rem; color:var(--muted)}
+.day .pro b{color:var(--good)}
+
+/* Synergy */
+.syn{border-top:5px solid var(--syn)}
+.syn h3{margin:0 0 8px; font-size:1.1rem}
+.syn .why{margin:8px 0 6px}
+.syn .src{font-size:.86rem; color:var(--muted); margin:0}
+
+/* Insights */
+.ins{position:relative; border-top:5px solid var(--head)}
+.ins .big{font-family:var(--serif); font-size:2.2rem; font-weight:700; line-height:1; margin:2px 0 8px; color:var(--head)}
+.ins h3{margin:0 0 8px; font-size:1.12rem}
+.ins .src{font-size:.86rem; color:var(--muted); margin:8px 0 0}
+.ins.t-good{border-top-color:var(--good)} .ins.t-good .big{color:var(--good)}
+.ins.t-low{border-top-color:var(--low)} .ins.t-low .big{color:var(--low)}
+.ins.t-syn{border-top-color:var(--syn)} .ins.t-syn .big{color:var(--syn)}
+.ins.t-ing{border-top-color:var(--ing)} .ins.t-ing .big{color:var(--ing)}
+.ins.t-ayur{border-top-color:var(--ayur)} .ins.t-ayur .big{color:var(--ayur)}
+:root[data-theme="dark"] .ins .big{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ins:not([class*="t-"]) .big{color:var(--syn)}}
+
+.pager{display:flex; justify-content:space-between; gap:12px; margin-top:34px; padding-top:18px; border-top:1px solid var(--line)}
+.pager a{display:inline-block; text-decoration:none; font-weight:700; color:var(--head); background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:9px 14px}
+:root[data-theme="dark"] .pager a{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pager a{color:var(--ink)}}
+.pager a:hover{border-color:var(--head)}
+.pager .sp{flex:1}
+
+.refs{font-size:.92rem}
+.refs li{margin:7px 0}
+footer{color:var(--muted); font-size:.85rem; text-align:center; padding:0 16px 40px}
+
+@media (max-width:760px){
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g2,.g3{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr; gap:4px}
+  .step .when{text-align:left; padding-top:0}
+  .step .when b{display:inline; margin-right:8px}
+  header.hero{padding:28px 18px 22px}
+}
+@media print{
+  nav.tabs,.pager{display:none}
+  .panel{display:block !important; page-break-before:always}
+  body{background:#fff}
+}
+/* ===== Planner ===== */
+.planner{display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:24px; align-items:start}
+.weeknav{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:0 0 10px}
+.weeknav #wkLabel{font-weight:700; margin-right:auto; color:var(--muted)}
+.btn{font:inherit; font-weight:700; border-radius:9px; border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:9px 14px; cursor:pointer; min-height:42px}
+.btn:hover{border-color:var(--head)}
+.btn.small{padding:6px 11px; min-height:36px; font-size:.92rem}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--warn); border-color:var(--warn)}
+.bhead .btn.ghost{color:#fff; border-color:rgba(255,255,255,.35)}
+.strip{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; margin-bottom:14px}
+.dbtn{font:inherit; position:relative; display:flex; flex-direction:column; align-items:center; gap:0; padding:8px 2px 10px; border-radius:12px; border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer; min-height:62px}
+.dbtn .dn{font-size:.8rem; font-weight:700; color:var(--muted)}
+.dbtn .dd{font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.15}
+.dbtn.today{border-color:var(--syn); box-shadow:inset 0 0 0 1px var(--syn)}
+.dbtn.today{border-width:2px}
+.dbtn.on{background:var(--head); border-color:var(--head); color:#fff}
+.dbtn.on .dn{color:var(--head-muted)}
+.dflags{position:absolute; bottom:5px; display:flex; gap:4px}
+.dflags i{width:7px; height:7px; border-radius:50%; display:block}
+.fl-ed{background:var(--ing)}
+.fl-soak{background:#D98E04}
+
+
+.board{background:var(--surface); border:1px solid var(--line); border-radius:16px; overflow:hidden; scroll-margin-top:70px}
+.bhead{background:var(--head); color:#fff; padding:18px 20px 16px; display:flex; gap:12px; align-items:flex-start; justify-content:space-between}
+.bhead h3{margin:0; font-family:var(--serif); font-size:clamp(1.45rem,3.6vw,1.9rem); line-height:1.15}
+.bmeta{margin:6px 0 0; color:var(--head-muted); font-size:.92rem; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.sync{font-size:.8rem; font-weight:700; padding:2px 9px; border-radius:20px; background:rgba(255,255,255,.12); color:#fff}
+.sync.s-db::before{content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:#5CC892; margin-right:6px; vertical-align:1px}
+.sync.s-local{background:#7a4b00; color:#FFE3B3}
+.sync.ro{background:#5a1f1a; color:#FCE8E6}
+
+.warns{margin:14px 16px 0; background:var(--warn-soft); border:2px solid var(--warn); border-radius:12px; padding:12px 16px}
+.warns h4{margin:0 0 6px; color:var(--warn); font-size:1.02rem}
+.warns ul{margin:0; padding-left:1.1em}
+.warns li{margin:6px 0; color:var(--ink)}
+.warns li b{color:var(--warn)}
+.src{display:inline-block; font-size:.78rem; font-weight:700; padding:0 7px; border-radius:20px; white-space:nowrap}
+.src.s-res{background:var(--syn-soft); color:var(--syn)}
+.src.s-ayur{background:var(--ayur-soft); color:var(--ayur)}
+
+.slots{padding:6px 16px 4px; position:relative}
+.slot{display:grid; grid-template-columns:118px minmax(0,1fr); gap:12px; padding:12px 0; border-bottom:1px solid var(--line); position:relative}
+.slot:last-child{border-bottom:0}
+.stime{display:flex; flex-direction:column; align-items:flex-start; gap:1px; padding-top:4px}
+.tbtn{font:inherit; font-family:var(--serif); font-size:1.18rem; font-weight:600; color:var(--head); background:none; border:0; border-bottom:1px dashed var(--line); padding:0; cursor:pointer}
+:root[data-theme="dark"] .tbtn{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tbtn{color:var(--syn)}}
+.tinput{font:inherit; font-size:1rem; padding:4px; border:1px solid var(--syn); border-radius:6px; background:var(--surface); color:var(--ink); max-width:112px}
+.slabel{font-size:.86rem; color:var(--muted); line-height:1.3}
+.skc{font-size:.78rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.sdel{font:inherit; font-size:.78rem; color:var(--warn); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline}
+.sbody{display:flex; flex-wrap:wrap; gap:8px; align-content:flex-start; min-height:48px; padding:6px; border-radius:12px; border:2px dashed transparent; transition:background .15s, border-color .15s}
+.dhint{display:none; align-self:center; font-size:.85rem; color:var(--muted)}
+.slot .sbody:empty + .dhint{display:inline}
+.slot:not(:has(.chip)) .dhint{display:inline}
+body.dragging .dhint{display:inline}
+body.dragging .sbody{border-color:var(--line)}
+.slot.over .sbody{background:var(--syn-soft); border-color:var(--syn)}
+.slot.flash .sbody{animation:fl .7s ease}
+@keyframes fl{0%{background:var(--good-soft)}100%{background:transparent}}
+
+.chip{font:inherit; display:inline-flex; align-items:center; gap:7px; padding:8px 12px 8px 10px; border-radius:10px; border:1px solid var(--line); border-left:6px solid var(--c); background:var(--surface); color:var(--ink); font-weight:600; font-size:.98rem; line-height:1.2; cursor:grab; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; touch-action:manipulation; text-align:left}
+.chip:hover{border-color:var(--c)}
+.cdot{display:none}
+.cq{font-size:.82rem; font-weight:700; color:var(--muted)}
+.chip.clash{border-color:var(--warn); border-left-color:var(--warn); background:var(--warn-soft); color:var(--warn)}
+.bang{display:inline-grid; place-items:center; width:19px; height:19px; border-radius:50%; background:var(--warn); color:#fff; font-size:.78rem; font-weight:800}
+.chip.lifted,.food.lifted{opacity:.35}
+.dragghost{position:fixed; left:0; top:0; z-index:60; pointer-events:none; padding:10px 14px; border-radius:10px; background:var(--surface); color:var(--ink); border:2px solid var(--c); border-left-width:7px; font-weight:700; box-shadow:0 10px 26px rgba(0,0,0,.25)}
+
+.addslot{display:block; margin:6px 16px 14px; font:inherit; font-weight:700; color:var(--syn); background:none; border:1px dashed var(--line); border-radius:10px; padding:9px 14px; cursor:pointer; width:calc(100% - 32px)}
+.addslot:hover{border-color:var(--syn)}
+.bfoot{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:0; border-top:1px solid var(--line)}
+.prepbox{padding:14px 18px; background:#FFF6E0; color:#3d2a00; border-right:1px solid var(--line)}
+:root[data-theme="dark"] .prepbox{background:#35290f; color:#F5E6C4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .prepbox{background:#35290f; color:#F5E6C4}}
+.prepbox:empty{display:none}
+.prepbox h4,.minin h4,.goods h4{margin:0 0 6px; font-size:1rem}
+.prepbox ul{list-style:none; margin:0; padding:0}
+.prepbox li{margin:6px 0; padding-left:12px; border-left:4px solid var(--c); font-size:.95rem}
+.prepbox li.big{font-size:1.02rem}
+.prepbox li.big::before{content:"Soak "; display:none}
+.minin{padding:14px 18px}
+.minin .kc{font-size:.95rem; color:var(--muted); margin-bottom:6px}
+.minin .kc b{font-family:var(--serif); font-size:1.4rem; color:var(--ink)}
+.mn{display:grid; grid-template-columns:86px minmax(0,1fr) 46px; gap:8px; align-items:center; font-size:.88rem; margin:4px 0}
+.mbar{height:8px; background:var(--line); border-radius:6px; overflow:hidden}
+.mbar i{display:block; height:100%; border-radius:6px}
+.mn.ok .mbar i{background:var(--good)} .mn.ok .mp{color:var(--good)}
+.mn.lo .mbar i{background:var(--low)} .mn.lo .mp{color:var(--low)}
+.mp{font-weight:700; text-align:right; font-variant-numeric:tabular-nums}
+.minin .more{display:inline-block; margin-top:8px; font-weight:700; font-size:.9rem}
+.goods{padding:12px 18px 16px; border-top:1px solid var(--line); background:var(--good-soft)}
+.goods:empty{display:none}
+.goods h4{color:var(--good)}
+.goods ul{margin:0; padding-left:1.1em; font-size:.95rem}
+
+.weekgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px}
+.wday{font:inherit; text-align:left; display:flex; flex-direction:column; gap:6px; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 14px; cursor:pointer}
+.wday:hover{border-color:var(--head)}
+.wday.on{box-shadow:inset 0 0 0 2px var(--head)}
+.wday.today{border-color:var(--syn)}
+.wh{font-family:var(--serif); font-weight:600; font-size:1.05rem; display:flex; gap:6px; flex-wrap:wrap; align-items:baseline}
+.wh small{font-family:var(--sans); color:var(--muted); font-weight:600}
+.wed,.wwarn{font-style:normal; font-family:var(--sans); font-size:.72rem; font-weight:700; padding:0 7px; border-radius:20px}
+.wed{background:var(--ing-soft); color:var(--ing)}
+.wwarn{background:var(--warn-soft); color:var(--warn)}
+.wrow{display:flex; flex-wrap:wrap; gap:4px; align-items:center}
+.wrow small{width:100%; font-size:.76rem; color:var(--muted); font-weight:700}
+.wi{font-size:.84rem; font-weight:600; padding:1px 7px; border-radius:5px; border-left:4px solid var(--c); background:var(--bg)}
+.wi.none{border-left-color:var(--line); color:var(--muted)}
+
+/* Menu */
+.menu{position:sticky; top:68px; max-height:calc(100vh - 84px); overflow:auto; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 14px 18px; overscroll-behavior:contain}
+.mhead{display:flex; justify-content:space-between; align-items:center}
+.mhead h3{margin:0}
+.mclose{display:none; font:inherit; font-weight:700; background:none; border:1px solid var(--line); border-radius:8px; padding:6px 12px; color:var(--ink); cursor:pointer}
+.mtip{font-size:.88rem; color:var(--muted); margin:4px 0 10px}
+#mSearch{width:100%; font:inherit; padding:9px 12px; border-radius:9px; border:1px solid var(--line); background:var(--bg); color:var(--ink); margin-bottom:6px}
+.mcat h4{margin:14px 0 6px; font-size:.92rem; color:var(--c); display:flex; align-items:center; gap:7px}
+.mcat h4::before{content:""; width:10px; height:10px; border-radius:3px; background:var(--c)}
+.mitems{display:flex; flex-direction:column; gap:6px}
+.food{font:inherit; text-align:left; display:flex; flex-direction:column; gap:1px; padding:8px 11px; border-radius:10px; border:1px solid var(--line); border-left:6px solid var(--c); background:var(--surface); color:var(--ink); cursor:grab; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; touch-action:manipulation}
+.food:hover{border-color:var(--c)}
+.fname{font-weight:700}
+.fmeta{font-size:.8rem; color:var(--muted)}
+.empty{color:var(--muted)}
+.fab{display:none}
+#trash{position:fixed; left:50%; bottom:calc(16px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,140%); z-index:55; background:var(--warn); color:#fff; font-weight:700; padding:14px 28px; border-radius:30px; transition:transform .2s; box-shadow:0 8px 22px rgba(0,0,0,.25)}
+body.dragging-chip #trash{transform:translate(-50%,0)}
+#trash.over{transform:translate(-50%,0) scale(1.08)}
+body.ro .addslot,body.ro .menu,body.ro .fab,body.ro .mtip{display:none}
+body.ro .planner{grid-template-columns:1fr}
+body.ro .chip{cursor:pointer}
+
+/* Sheets and toast */
+.sheetwrap{position:fixed; inset:0; z-index:70; background:rgba(10,20,30,.45); display:flex; align-items:flex-end; justify-content:center}
+.sheet{background:var(--surface); color:var(--ink); width:min(520px,100%); max-height:85vh; overflow:auto; border-radius:18px 18px 0 0; padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px))}
+@media (min-width:700px){.sheetwrap{align-items:center}.sheet{border-radius:18px}}
+.sheet h3{margin:0 0 4px}
+.edh{border-left:6px solid var(--c); padding-left:10px}
+.sh{font-weight:700; margin:14px 0 6px}
+.picks{display:flex; flex-direction:column; gap:6px}
+.pick{font:inherit; text-align:left; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer}
+.pick:hover{border-color:var(--syn)}
+.pick b{font-family:var(--serif); margin-right:8px}
+.newt{display:flex; gap:8px; align-items:flex-end; flex-wrap:wrap; margin:14px 0 6px}
+.newt label{display:flex; flex-direction:column; font-weight:700; font-size:.9rem; gap:4px}
+.newt input{font:inherit; padding:8px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink)}
+.sheet .btn{width:100%; margin-top:8px}
+.newt .btn{width:auto; margin:0}
+.qrow{display:flex; align-items:center; gap:12px; margin:14px 0 4px; font-weight:700}
+.qrow span{margin-right:auto}
+.qb{font:inherit; font-size:1.3rem; width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer}
+#qv{min-width:28px; text-align:center; font-size:1.2rem}
+#toast{position:fixed; left:50%; top:calc(14px + env(safe-area-inset-top,0px)); transform:translate(-50%,-160%); z-index:80; background:var(--ink); color:var(--surface); padding:10px 18px; border-radius:24px; font-weight:600; transition:transform .25s; max-width:90vw}
+#toast.on{transform:translate(-50%,0)}
+.prepnow{border-left:5px solid #D98E04; background:#FFF6E0; color:#3d2a00}
+:root[data-theme="dark"] .prepnow{background:#35290f; color:#F5E6C4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .prepnow{background:#35290f; color:#F5E6C4}}
+tr.neutral td:first-child{box-shadow:inset 4px 0 0 var(--line)}
+.dayplan{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.dayplan .card h3{margin:0 0 6px; font-size:1.05rem}
+.dayplan .card .tm{font-family:var(--serif); font-weight:600; color:var(--syn); font-size:.95rem}
+
+@media (max-width:900px){
+ .planner{grid-template-columns:1fr}
+ .menu{position:fixed; left:0; right:0; bottom:0; top:auto; z-index:50; max-height:62vh; border-radius:18px 18px 0 0; transform:translateY(105%); transition:transform .25s ease; box-shadow:0 -10px 30px rgba(0,0,0,.2); padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+ body.menu-open .menu{transform:translateY(0)}
+ body.menu-open.dragging .menu{transform:translateY(105%)}
+ .mclose{display:inline-block}
+ .fab{display:block; position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:45; font:inherit; font-weight:700; font-size:1.05rem; background:var(--head); color:#fff; border:0; border-radius:30px; padding:14px 22px; box-shadow:0 8px 22px rgba(0,0,0,.25); cursor:pointer}
+ body.menu-open .fab{display:none}
+ .bfoot{grid-template-columns:1fr}
+ .prepbox{border-right:0; border-bottom:1px solid var(--line)}
+ .dayplan{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #plan{padding-bottom:70px}
+}
+@media (max-width:560px){
+ .slot{grid-template-columns:1fr; gap:4px}
+ .stime{flex-direction:row; align-items:baseline; gap:10px; flex-wrap:wrap}
+ .slots{padding:4px 12px}
+ .bhead{flex-direction:column}
+ .strip{gap:4px}
+ .dbtn .dd{font-size:1.15rem}
+ .dayplan{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important; animation:none !important}}
+@media print{.menu,.fab,#trash,.addslot,.weeknav,.strip{display:none !important}.planner{grid-template-columns:1fr}}
+
+body.dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
+
+header.hero{padding:26px 24px 20px}
+.hero h1{font-size:clamp(1.7rem,4.2vw,2.4rem); margin-bottom:6px}
+.hero p.sub{margin-bottom:16px; font-size:1rem}
+.stat{padding:10px 14px}
+.stat b{font-size:1.35rem}
+@media (max-width:760px){.hero p.sub,.hero p.for{display:none} header.hero{padding:18px 16px 14px} .stats{grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px} .stat{padding:8px 8px} .stat b{font-size:1.05rem} .stat span{font-size:.72rem; line-height:1.25; display:block}}
+.pmain,.planner>*{min-width:0}
+@media (max-width:560px){
+ #plan > h2, #plan > p.intro{display:none}
+ #plan{padding-top:0}
+ .weeknav{gap:6px}
+ .weeknav #wkLabel{width:100%; margin:0}
+ .weeknav .btn{flex:1; padding:6px 6px; font-size:.85rem}
+ main{padding-top:16px}
+}
+
+#toast.bad{background:var(--warn); color:#fff}
+nav.tabs{z-index:30}
+#toast{pointer-events:none}
+
+body.ro .tbtn{cursor:default; border-bottom-color:transparent}
+.wday.past{opacity:.72}
+.dbtn.past:not(.on){opacity:.6}
+/* History */
+.hist table{font-size:.9rem}
+.hist th,.hist td{padding:7px 9px; white-space:nowrap}
+.hist .hday{position:sticky; left:0; z-index:1; background:var(--surface); min-width:120px; box-shadow:1px 0 0 var(--line)}
+.hist thead .hday{background:var(--bg)}
+.hist .hday small{display:block; font-size:.76rem; color:var(--muted); font-weight:600}
+.hbtn{font:inherit; text-align:left; background:none; border:0; padding:0; color:var(--ink); cursor:pointer}
+.hbtn b{text-decoration:underline; text-decoration-color:var(--line); text-underline-offset:3px}
+.hist td.hg{background:var(--good-soft); color:var(--good); font-weight:700}
+.hist td.hm{background:#FFF3D6; color:#8A5A00; font-weight:700}
+.hist td.hl{background:var(--low-soft); color:var(--low); font-weight:700}
+:root[data-theme="dark"] .hist td.hm{background:#3a2e12; color:#F2C46B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hist td.hm{background:#3a2e12; color:#F2C46B}}
+.hist tr.havg td{border-bottom:2px solid var(--line)}
+.hist tr.havg .hday{background:var(--bg)}
+.hdet td{white-space:normal; background:var(--bg)}
+.hfoods{display:flex; flex-direction:column; gap:6px; position:sticky; left:0; max-width:min(720px,85vw)}
+.hfoods > div{display:flex; flex-wrap:wrap; gap:4px; align-items:center}
+.hfoods > div b{font-family:var(--serif); min-width:74px}
+.hfoods a{font-weight:700; margin-top:4px}
+.hkey{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px}
+.hkey span{font-size:.82rem; font-weight:700; padding:2px 10px; border-radius:20px}
+.hkey .k1{background:var(--good-soft); color:var(--good)} .hkey .k2{background:#FFF3D6; color:#8A5A00} .hkey .k3{background:var(--low-soft); color:var(--low)}
+/* Setup sheet */
+.setf{display:flex; flex-direction:column; gap:10px; margin:12px 0}
+.setf label{display:flex; flex-direction:column; gap:4px; font-weight:700; font-size:.92rem}
+.setf input{font:inherit; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink)}
+.setmsg{color:var(--warn); font-weight:700}
+#bSync{cursor:default}
+.fport{font-size:.82rem; color:var(--ink); opacity:.8; line-height:1.3}
+tr.grow th{background:var(--bg); text-align:left; font-family:var(--serif); font-size:1rem; color:var(--head); padding-top:14px}
+:root[data-theme="dark"] tr.grow th{color:var(--syn)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) tr.grow th{color:var(--syn)}}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="for">Personal nutrition plan - October 2026</p>
+    <h1>Your Daily Meal Plan</h1>
+    <p class="sub">The whole day, from lemon water to dinner, in an order that improves absorption and steadies blood sugar. One shared plan you can both change. Checked against nutrition research and classical Ayurveda.</p>
+    <div class="stats">
+      <div class="stat"><b id="hPro">-</b><span id="hProL">protein today</span></div>
+      <div class="stat"><b id="hFib">-</b><span id="hFibL">fiber today</span></div>
+      <div class="stat"><b id="hKc">-</b><span id="hKcL">calories today</span></div>
+      <div class="stat alert"><b id="hGap">-</b><span id="hGapL"></span></div>
+    </div>
+  </div>
+</header>
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <a href="#plan" data-t="plan"><span class="k">1</span>Today's plan</a>
+    <a href="#overview" data-t="overview"><span class="k">2</span>Overview</a>
+    <a href="#prep" data-t="prep"><span class="k">3</span>Night before</a>
+    <a href="#morning" data-t="morning"><span class="k">4</span>Morning routine</a>
+    <a href="#smoothie" data-t="smoothie"><span class="k">5</span>Smoothie</a>
+    <a href="#nutrients" data-t="nutrients"><span class="k">6</span>Nutrients vs RDA</a>
+    <a href="#history" data-t="history"><span class="k">7</span>History</a>
+    <a href="#synergy" data-t="synergy"><span class="k">8</span>Food synergy</a>
+    <a href="#ayurveda" data-t="ayurveda"><span class="k">9</span>Ayurveda's view</a>
+    <a href="#cautions" data-t="cautions"><span class="k">10</span>Cautions</a>
+    <a href="#notes" data-t="notes"><span class="k">11</span>Notes &amp; sources</a>
+    <a href="#insights" data-t="insights"><span class="k">12</span>Insights</a>
+  </div>
+</nav>
+<main class="wrap">
+<section class="panel" id="plan">
+  <h2>Today's plan</h2>
+  <p class="intro">What to make and eat today, hour by hour. Change it by dragging foods from the menu onto a time. Any change is shared, so if your son swaps something early in the morning, it's here when you open the plan.</p>
+  <div class="planner">
+    <div class="pmain">
+      <div class="weeknav"><span id="wkLabel"></span><button type="button" class="btn small" id="wkPrev">Previous week</button><button type="button" class="btn small" id="wkToday">This week</button><button type="button" class="btn small" id="wkNext">Next week</button></div>
+      <div class="strip" id="strip" aria-label="Pick a day"></div>
+      <article class="board" id="board">
+        <header class="bhead"><div><h3 id="bTitle">Today</h3><p class="bmeta"><span id="bStatus"></span><span id="bSync" class="sync">Connecting...</span></p></div><button type="button" class="btn ghost small" id="bReset" hidden>Reset to default</button></header>
+        <div id="bWarn"></div>
+        <div class="slots" id="slots"></div>
+        <button type="button" class="addslot" id="addSlot">Add a time</button>
+        <div class="bfoot"><div id="bPrep" class="prepbox"></div><div id="bNut" class="minin"></div></div>
+        <div id="bGood" class="goods"></div>
+      </article>
+      <h3>This week</h3>
+      <p class="om" style="margin-top:-4px">Tap a day to open it. Purple dot on a day: changed from the default. Amber dot: something to soak that night.</p>
+      <div class="weekgrid" id="weekGrid"></div>
+    </div>
+    <aside class="menu" id="menu" aria-label="Food menu">
+      <div class="mhead"><h3>Food menu</h3><button type="button" class="mclose" id="menuClose">Close</button></div>
+      <p class="mtip">Drag a food onto a time. On a phone, press and hold, then drag. Or just tap a food to pick a time.</p>
+      <input id="mSearch" type="search" placeholder="Search foods" aria-label="Search foods">
+      <div id="menuList"></div>
+    </aside>
+  </div>
+  <button type="button" class="fab" id="menuToggle">Add food</button>
+  <div id="trash" aria-hidden="true">Drop here to remove</div>
+  <div class="pager"><span class="sp"></span><a href="#overview" data-go="overview">Next: Overview</a></div>
+</section>
+
+<section class="panel" id="overview">
+  <h2>Overview</h2>
+  <p class="intro">Eight eating times through the day. The morning is the same every day except the protein dish. Lunch and dinner rotate through your lentils, legumes and vegetables, with pasta once a week.</p>
+  <div class="legend">
+    <span class="badge b-ing">Ingredients and amounts</span>
+    <span class="badge b-good">Meets or beats the RDA</span>
+    <span class="badge b-low">Below the RDA</span>
+    <span class="badge b-syn">Absorption synergy</span>
+    <span class="badge b-ayur">Ayurveda</span>
+    <span class="badge b-warn">Caution or clash</span>
+  </div>
+  <div class="dayplan">
+    <div class="card"><span class="tm">6:30 am</span><h3>Lime water</h3><p><span class="ing">600 mL warm water</span><span class="ing">1 lime</span><span class="ing">1 tsp honey</span></p></div>
+    <div class="card"><span class="tm">6:50 am</span><h3>Protein and fat first</h3><p><span class="ing">nut and seed bowl</span> plus <span class="ing">2-egg shiitake omelette</span> (Mon, Wed, Fri) or <span class="ing">1½ cups moong sprouts</span></p></div>
+    <div class="card"><span class="tm">7:05 am</span><h3>Green smoothie</h3><p><span class="ing">600 mL</span>, no banana, no apple</p></div>
+    <div class="card"><span class="tm">9:05 am</span><h3>Yogurt drink</h3><p>2 hours after the smoothie, so calcium doesn't block iron</p></div>
+    <div class="card"><span class="tm">12:30 pm</span><h3>Lunch, the main meal</h3><p><span class="ing">1 legume</span><span class="ing">1 vegetable</span><span class="ing">rice or roti</span><span class="ing">raw plate</span></p></div>
+    <div class="card"><span class="tm">3:00 pm</span><h3>Banana, on its own</h3><p>Away from the smoothie, yogurt and milky tea</p></div>
+    <div class="card"><span class="tm">4:30 pm</span><h3>Tea and dark chocolate</h3><p>At least an hour from any iron-rich meal</p></div>
+    <div class="card"><span class="tm">7:00 pm</span><h3>Dinner, lighter</h3><p><span class="ing">arhar dal</span> with a vegetable, or avocado toast</p></div>
+  </div>
+  <div class="call c-syn"><p><strong>The rule behind the timing:</strong> iron-rich foods (legumes, sprouts, the smoothie) get vitamin C with them and stay at least 1 hour away from tea and chocolate and 2 hours away from the yogurt drink. If you or your son move something too close, <a href="#plan" data-go="plan">Today's plan</a> shows it in red.</p></div>
+  <div class="call c-low"><p><strong>What the full day still misses:</strong> vitamin D (only eggs, sun-dried shiitake and the milk in tea supply any) and vitamin E on some days. See <a href="#nutrients" data-go="nutrients">Nutrients vs RDA</a> for any day's numbers.</p></div>
+  <div class="pager"><a href="#plan" data-go="plan">Previous</a><span class="sp"></span><a href="#prep" data-go="prep">Next: Night before</a></div>
+</section>
+
+<section class="panel" id="prep">
+  <h2>Night before</h2>
+  <p class="intro">What to soak each night. The list at the top follows the shared plan, so if anyone changes tomorrow's meals, it updates.</p>
+  <div class="call prepnow" id="prepTonight"></div>
+  <div class="grid g2">
+    <div class="card" style="border-top:5px solid #1F5FA8">
+      <h3 style="margin-top:0">Rajma and chickpeas</h3>
+      <p><span class="ing">about ⅓ cup dry per bowl</span><span class="ing">3 times their volume of water</span></p>
+      <p>Soak overnight, 8-12 hours. In the morning, drain, rinse and pressure-cook in fresh water.</p>
+      <p><span class="badge b-warn">Discard the water</span> Soaking and draining removes some of the phytates that block iron and zinc, and the sugars that cause gas.</p>
+    </div>
+    <div class="card" style="border-top:5px solid #1F5FA8">
+      <h3 style="margin-top:0">Black-eyed peas and arhar dal</h3>
+      <p>Black-eyed peas need 6-8 hours (overnight is fine). Arhar dal needs only 30-60 minutes before cooking, so it doesn't show up in tonight's list.</p>
+    </div>
+    <div class="card" style="border-top:5px solid #7A3E9D">
+      <h3 style="margin-top:0">Whole moong for sprouts</h3>
+      <p><span class="ing">about ⅓ cup (68 g) dry moong</span> makes about 1½ cups of sprouts.</p>
+      <p>Soak overnight, drain in the morning, then keep it covered in a colander or damp cloth for about a day, rinsing morning and night. It's ready when the tails are just showing.</p>
+    </div>
+    <div class="card" style="border-top:5px solid var(--good)">
+      <h3 style="margin-top:0">Chia</h3>
+      <p><span class="ing"><span class="qty">2 heaped tbsp</span> chia seeds (about 25 g)</span><span class="ing">water to cover well</span></p>
+      <p>Soak in a covered jar in the fridge, then stir it all into the yogurt drink with 2 tbsp ground flax.</p>
+    </div>
+    <div class="card" style="border-top:5px solid var(--warn)">
+      <h3 style="margin-top:0">Almonds and walnuts</h3>
+      <p><span class="ing"><span class="qty">21</span> almonds (26 g)</span><span class="ing"><span class="qty">7</span> walnut halves (14 g)</span><span class="ing">water to cover</span></p>
+      <p>Soak overnight at room temperature.</p>
+      <p><span class="badge b-warn">Discard the water</span> Rinse them. Peeling almonds is the Ayurvedic custom. Keeping the skin keeps its polyphenols.</p>
+    </div>
+  </div>
+  <div class="call c-syn"><p><strong>Omelette days:</strong> for vitamin D, set <span class="ing">fresh shiitake</span> gill-side up in direct sun for 30-60 minutes before cooking, or use <span class="ing">dried shiitake</span> soaked in water. Only UV-exposed mushrooms make meaningful vitamin D, and the amount varies widely.</p></div>
+  <div class="pager"><a href="#overview" data-go="overview">Previous</a><span class="sp"></span><a href="#morning" data-go="morning">Next: Morning routine</a></div>
+</section>
+
+<section class="panel" id="morning">
+  <h2>Morning routine</h2>
+  <p class="intro">Clock times are examples. What matters is the order and the gaps between steps.</p>
+
+  <ol class="steps">
+    <li class="step s1">
+      <div class="when"><b>6:30</b><span>on waking</span></div>
+      <div class="card">
+        <h3>Step 1 · Lime water with honey</h3>
+        <p><span class="ing"><span class="qty">600 mL</span> warm water</span><span class="ing">juice of <span class="qty">1</span> lime</span><span class="ing"><span class="qty">1 tsp</span> raw honey</span><span class="ing">ginger: optional</span></p>
+        <ul>
+          <li>Let the water cool until comfortably warm, below about 40°C (104°F).</li>
+          <li>Only then stir in the lime juice and honey.</li>
+          <li>Ginger isn't needed. Its best evidence is for nausea; add a few slices only if you like the taste.</li>
+        </ul>
+        <span class="badge b-ayur">Ayurveda: never add honey to hot water</span>
+      </div>
+    </li>
+    <li class="step s2">
+      <div class="when"><b>6:50</b><span>20 min later</span></div>
+      <div class="card">
+        <h3>Step 2 · Protein and fat first</h3>
+        <p><strong>Nut bowl, every day:</strong><br>
+          <span class="ing"><span class="qty">21</span> soaked almonds (26 g)</span><span class="ing"><span class="qty">7</span> soaked walnut halves (14 g)</span><span class="ing"><span class="qty">1 fistful</span> roasted unsalted peanuts (28 g)</span><span class="ing"><span class="qty">12</span> lightly salted roasted cashews (19 g)</span><span class="ing"><span class="qty">2 tbsp</span> roasted pumpkin kernels (15 g)</span><span class="ing"><span class="qty">2 tbsp</span> roasted sunflower seeds (16 g)</span></p>
+        <p><strong>Plus the day's protein dish:</strong> <span class="ing">2-egg omelette with ~10 shiitake</span> or <span class="ing">1½ cups moong sprouts</span>. See <a href="#plan" data-go="plan">Today's plan</a>.</p>
+        <p><strong>Optional instead of ginger in Step 1:</strong> chew <span class="ing">a thin slice of fresh ginger</span> with <span class="ing">a pinch of rock salt</span> just before eating. This is a traditional Ayurvedic way to stimulate digestion.</p>
+        <span class="badge b-syn">Eat 10 minutes before the smoothie</span>
+      </div>
+    </li>
+    <li class="step s3">
+      <div class="when"><b>7:05</b><span>10 min later</span></div>
+      <div class="card">
+        <h3>Step 3 · Green smoothie</h3>
+        <p><span class="ing"><span class="qty">600 mL</span>, blended fresh</span> at room temperature rather than ice-cold. No banana and no apple. Full recipe in <a href="#smoothie" data-go="smoothie">Smoothie</a>.</p>
+      </div>
+    </li>
+    <li class="step s4">
+      <div class="when"><b>9:05</b><span>2 hours later</span></div>
+      <div class="card">
+        <h3>Step 4 · Greek yogurt drink</h3>
+        <p><span class="ing"><span class="qty">1 cup</span> Stonyfield organic nonfat plain Greek yogurt (227 g)</span><span class="ing"><span class="qty">2 heaped tbsp</span> soaked chia (about 25 g dry)</span><span class="ing"><span class="qty">2 tbsp</span> ground flaxseed (14 g)</span><span class="ing">water to about <span class="qty">700 mL</span></span></p>
+        <p class="om">No oats: 20 g would add under 1 g of beta-glucan, far below the 3 g a day linked to lower LDL cholesterol, and your fiber is already very high.</p>
+        <ul>
+          <li>Keep ground flax in the fridge, since it goes rancid quickly.</li>
+          <li>No salt on normal days. Add a ¼ tsp pinch only after a long, sweaty run.</li>
+        </ul>
+        <span class="badge b-syn">2 hours apart, so calcium doesn't block iron</span>
+      </div>
+    </li>
+    <li class="step s5">
+      <div class="when"><b>3:00 pm</b><span>or near a run</span></div>
+      <div class="card">
+        <h3>Banana, on its own</h3>
+        <p><span class="ing"><span class="qty">1</span> medium banana</span>, at least 2–3 hours after the smoothie.</p>
+        <ul>
+          <li>Good as an afternoon snack with a few nuts, or 30–60 minutes before a run.</li>
+          <li>Never with the yogurt drink or milky tea.</li>
+        </ul>
+        <span class="badge b-ayur">Ayurveda: banana with curd is incompatible</span>
+      </div>
+    </li>
+  </ol>
+  <div class="call c-syn"><p><strong>Lunch, tea and dinner</strong> are in <a href="#plan" data-go="plan">Today's plan</a>, which also flags any food placed too close to another one it clashes with.</p></div>
+  <div class="pager"><a href="#prep" data-go="prep">Previous</a><span class="sp"></span><a href="#smoothie" data-go="smoothie">Next: Smoothie</a></div>
+</section>
+
+<section class="panel" id="smoothie">
+  <h2>Smoothie</h2>
+  <p class="intro">Your 1.5 L batch is shown alongside your 600 mL serving, which is 40% of the batch. Blending one serving fresh each morning is the simplest option, and it's what the nutrition numbers assume.</p>
+
+  <div class="tw"><table>
+    <tr><th>Ingredient</th><th>Your 600 mL serving</th><th>Full 1.5 L batch</th></tr>
+    <tr><td><span class="ing">Kale</span></td><td class="n"><b>60 g</b> (weigh it)</td><td class="n">150 g</td></tr>
+    <tr><td><span class="ing">Bok choy</span></td><td class="n"><b>60 g</b> (about 1 cup chopped)</td><td class="n">150 g</td></tr>
+    <tr><td><span class="ing">Blueberries</span></td><td class="n"><b>30 g</b> (about 3 tbsp)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Strawberries</span></td><td class="n"><b>30 g</b> (2 medium)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Orange, peeled</span> <span class="badge b-syn">replaces apple</span></td><td class="n"><b>70 g</b> (about half)</td><td class="n">1 medium</td></tr>
+    <tr><td><span class="ing">Pineapple</span></td><td class="n"><b>32 g</b> (about 3 tbsp chunks)</td><td class="n">80 g</td></tr>
+    <tr><td><span class="ing">Grapes</span></td><td class="n"><b>30 g</b> (about 6)</td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Fresh fig</span></td><td class="n"><b>1 large</b> (~60 g)</td><td class="n">3</td></tr>
+    <tr><td><span class="ing">Medjool date, pitted</span></td><td class="n"><b>1 small</b> (~19 g)</td><td class="n">2</td></tr>
+    <tr><td><span class="ing">Mango</span> (or other low-enzyme seasonal fruit)</td><td class="n"><b>30 g</b></td><td class="n">75 g</td></tr>
+    <tr><td><span class="ing">Water</span></td><td class="n"><b>~250 mL</b>, to reach 600 mL</td><td class="n">to 1.5 L</td></tr>
+    <tr><td><span class="ing">Fresh ginger</span> (optional)</td><td class="n">a small pinch</td><td class="n">n/a</td></tr>
+  </table></div>
+
+  <div class="grid g2">
+    <div class="call c-syn" style="margin:0"><p><strong>Why no banana or apple:</strong> both are high in polyphenol oxidase (PPO), the enzyme that browns cut fruit. Once blended, it destroys the flavanols in berries and grapes. Kale is low in PPO, and orange, mango and pineapple are the low-PPO fruits the researchers recommend pairing with berries.</p></div>
+    <div class="call c-ayur" style="margin:0"><p><strong>If you make a full batch:</strong> refrigerate the rest in a full, sealed jar and drink it within 24 hours. Vitamin C fades with time and air, and Ayurveda advises against leftover food.</p></div>
+  </div>
+  <div class="pager"><a href="#morning" data-go="morning">Previous</a><span class="sp"></span><a href="#nutrients" data-go="nutrients">Next: Nutrients vs RDA</a></div>
+</section>
+
+<section class="panel" id="nutrients">
+  <h2>Nutrients vs RDA</h2>
+  <p class="intro">The whole day for <strong id="nutDay"></strong>, for you, compared with the RDA or Adequate Intake for men aged 51-70. <span id="nutStatus"></span> <span style="color:var(--low); font-weight:700">Orange means below 100%.</span> Estimates are within about ±20%. Pick a different day in <a href="#plan" data-go="plan">Today's plan</a>.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Nutrient</th><th>Amount</th><th>% of daily need</th><th>Daily need</th><th>Main sources</th></tr></thead>
+    <tbody id="nutRows"></tbody>
+  </table></div>
+  <div class="call c-low" id="nutLow"></div>
+  <div class="call c-syn"><p><strong>Iron:</strong> the target shown is 14.4 mg, because NIH advises vegetarians to aim for about 1.8 times the standard RDA of 8 mg. <strong>B12:</strong> after 50, NIH suggests getting most B12 from supplements or fortified foods, because food B12 is absorbed less well. <strong>Vitamin D:</strong> almost no food here supplies it, so sun, UV-exposed mushrooms or a supplement would have to cover it. A blood test shows where you stand.</p></div>
+  <p class="om">Calories and protein are for you only. Your son's needs differ, mainly for calories, so his portions can be larger.</p>
+  <div class="pager"><a href="#smoothie" data-go="smoothie">Previous</a><span class="sp"></span><a href="#history" data-go="history">Next: History</a></div>
+</section>
+
+<section class="panel" id="history">
+  <h2>History</h2>
+  <p class="intro">Every past day, with what was on the plan and how it compared with the RDA for each vitamin and mineral. Tap a day to see the foods.</p>
+  <div class="hkey"><span class="k1">100% or more</span><span class="k2">70-99%</span><span class="k3">below 70%</span></div>
+  <div class="call c-syn" id="histSum"></div>
+  <div class="tw hist"><table><thead id="histHead"></thead><tbody id="histRows"></tbody></table></div>
+  <button type="button" class="btn" id="histMore" hidden>Show older days</button>
+  <p class="om">*Iron is compared with the vegetarian target of 14.4 mg. Protein is compared with the 56 g RDA. Figures are for you (men 51-70) and are estimates within about ±20%. History records the plan for each day. If you skip or add something without changing the plan, the record won't know. The vitamins and minerals tracked are the 13 shown; B1, B2, B3, B6, copper, phosphorus, manganese and iodine aren't tracked yet.</p>
+  <div class="pager"><a href="#nutrients" data-go="nutrients">Previous</a><span class="sp"></span><a href="#synergy" data-go="synergy">Next: Food synergy</a></div>
+</section>
+
+<section class="panel" id="synergy">
+  <h2>Food synergy</h2>
+  <p class="intro">Why the vitamins and minerals in this plan are absorbed better than they would be from the same foods eaten in any order.</p>
+
+  <div class="grid g2">
+    <div class="card syn"><h3>Vitamin C unlocks plant iron</h3>
+      <p><span class="ing">lemon</span><span class="ing">orange</span><span class="ing">strawberries</span><span class="ing">pineapple</span><span class="ing">kale</span> with iron from <span class="ing">greens</span><span class="ing">pumpkin seeds</span><span class="ing">chia</span><span class="ing">oats</span></p>
+      <p class="why">Plant iron is mostly ferric (Fe³⁺), which the gut absorbs poorly. Vitamin C converts it to ferrous iron (Fe²⁺) and keeps it soluble, which partly overcomes the phytates in nuts, seeds and oats.</p>
+      <p class="src">Source: NIH ODS, Iron fact sheet</p></div>
+
+    <div class="card syn"><h3>Fat carries fat-soluble vitamins</h3>
+      <p><span class="ing">almonds</span><span class="ing">peanuts</span><span class="ing">pumpkin seeds</span><span class="ing">egg yolk</span> with carotenoids and vitamins K and E in <span class="ing">kale</span><span class="ing">bok choy</span></p>
+      <p class="why">These vitamins need fat to be absorbed. Monounsaturated fat, the main fat in almonds and peanuts, gave the same carotenoid absorption at 3 g as at 20 g. Whole eggs raised carotenoid absorption from raw vegetables 3- to 8-fold, but that was with 3 eggs, so 1 egg adds a smaller boost.</p>
+      <p class="src">Source: Purdue, Goltz &amp; Ferruzzi 2012; Kim et al. 2015, 2016</p></div>
+
+    <div class="card syn"><h3>Low-enzyme smoothie protects flavanols</h3>
+      <p><span class="ing">blueberries</span><span class="ing">grapes</span> with <span class="ing">kale</span><span class="ing">orange</span><span class="ing">pineapple</span><span class="ing">mango</span>, no banana or apple</p>
+      <p class="why">The browning enzyme PPO destroys flavanols after blending. A banana smoothie cut flavanol absorption by 84% compared with a low-PPO berry smoothie.</p>
+      <p class="src">Source: Ottaviani et al., Food &amp; Function 2023. Small study, funded by Mars, Inc.</p></div>
+
+    <div class="card syn"><h3>Calcium kept away from iron</h3>
+      <p><span class="ing">Greek yogurt</span><span class="ing">chia</span> eaten 2 hours after the iron-rich smoothie</p>
+      <p class="why">Calcium reduces iron absorption when the two are eaten in the same meal. Separating them protects the iron.</p>
+      <p class="src">Source: NIH ODS, Iron fact sheet</p></div>
+
+    <div class="card syn"><h3>Low-oxalate greens release their calcium</h3>
+      <p><span class="ing">kale</span><span class="ing">bok choy</span> instead of spinach</p>
+      <p class="why">Oxalate locks up calcium. Kale and bok choy are low in oxalate, so about 49–54% of their calcium is absorbed, compared with about 32% from milk and about 5% from spinach.</p>
+      <p class="src">Source: Heaney &amp; Weaver, Am J Clin Nutr 1990; Weaver et al. 1999</p></div>
+
+    <div class="card syn"><h3>Protein and fat before sugar</h3>
+      <p><span class="ing">nut bowl</span> + protein dish, 10 minutes before the smoothie</p>
+      <p class="why">Protein and fat slow stomach emptying and trigger gut hormones that blunt the glucose rise. Eating them first lowered glucose peaks by more than 40% in people with prediabetes.</p>
+      <p class="src">Source: Shukla et al., Diabetes Care 2015; Diabetes Obes Metab 2019</p></div>
+
+    <div class="card syn"><h3>Protein split into two doses</h3>
+      <p>~26 g in the first meal, ~30 g in the yogurt drink</p>
+      <p class="why">Muscle protein synthesis peaks at roughly 25–30 g per meal. Spreading protein evenly raised 24-hour muscle protein synthesis by about 25% compared with loading it at dinner.</p>
+      <p class="src">Source: Paddon-Jones &amp; Rasmussen 2009; Mamerow et al. 2014</p></div>
+
+    <div class="card syn"><h3>Raw crucifers make sulforaphane</h3>
+      <p><span class="ing">raw kale</span><span class="ing">raw bok choy</span>, blended</p>
+      <p class="why">Blending releases the enzyme myrosinase, which turns glucosinolates into isothiocyanates (the sulforaphane family). Cooking destroys the enzyme.</p>
+      <p class="src">Source: Linus Pauling Institute, Isothiocyanates</p></div>
+
+    <div class="card syn"><h3>Yogurt iodine balances raw greens</h3>
+      <p><span class="ing">Greek yogurt</span><span class="ing">egg</span> alongside daily <span class="ing">raw crucifers</span></p>
+      <p class="why">Large amounts of raw crucifers can slightly interfere with thyroid iodine uptake, mainly when iodine is low. Adequate iodine removes most of the concern. Rock salt is not iodized.</p>
+      <p class="src">Source: NIH ODS, Iodine fact sheet</p></div>
+
+    <div class="card syn"><h3>Probiotics fed by fiber</h3>
+      <p><span class="ing">yogurt cultures</span> with <span class="ing">oat beta-glucan</span><span class="ing">chia</span><span class="ing">flax</span></p>
+      <p class="why">The fiber feeds gut bacteria, and gut bacteria convert flax lignans into their active forms (enterodiol and enterolactone). Keeping the soaking water keeps the soluble beta-glucan.</p>
+      <p class="src">Source: Linus Pauling Institute, Lignans</p></div>
+  </div>
+
+  <div class="call c-warn"><p><strong>Trade-offs that remain:</strong></p>
+  <ul>
+    <li>Phytates in nuts, seeds, oats and chia lower zinc absorption, and vitamin C doesn't help with zinc.</li>
+    <li>Egg yolk protein (phosvitin) slightly reduces iron absorption on omelette days. This is minor at 3 eggs a week.</li>
+  </ul></div>
+  <h3>Lunch, tea and dinner</h3>
+  <div class="grid g2">
+    <div class="card syn"><h3>Lemon on every dal</h3>
+      <p><span class="ing">fresh lemon juice</span> on <span class="ing">arhar</span><span class="ing">rajma</span><span class="ing">chickpeas</span><span class="ing">black-eyed peas</span></p>
+      <p class="why">Legumes are your main iron source. Vitamin C squeezed on just before eating is the best-proven way to raise plant iron absorption, and adding it at the end avoids heat losses.</p>
+      <p class="src">Source: Hallberg et al. 1989; NIH ODS, Iron fact sheet</p></div>
+    <div class="card syn"><h3>Tomatoes cooked in ghee</h3>
+      <p><span class="ing">lots of tomatoes</span> with <span class="ing">a little ghee</span></p>
+      <p class="why">Cooking tomatoes with fat makes their lycopene much easier to absorb than raw tomato.</p>
+      <p class="src">Source: Fielding et al. 2005</p></div>
+    <div class="card syn"><h3>Raw plate beside the legumes</h3>
+      <p><span class="ing">red bell pepper</span><span class="ing">radish</span><span class="ing">onion</span> with the legume meal</p>
+      <p class="why">One red bell pepper has well over a day's vitamin C, which adds to the lemon's effect on iron.</p>
+      <p class="src">Source: USDA FoodData Central; NIH ODS, Iron</p></div>
+    <div class="card syn"><h3>Avocado unlocks carotenoids</h3>
+      <p><span class="ing">avocado</span> with <span class="ing">red pepper</span><span class="ing">carrot</span></p>
+      <p class="why">Adding avocado to a salad raised carotenoid absorption several times over in a human study.</p>
+      <p class="src">Source: Unlu et al., J Nutr 2005</p></div>
+    <div class="card syn"><h3>Tea and chocolate kept apart from iron</h3>
+      <p><span class="ing">tea</span><span class="ing">100% dark chocolate</span> at 4:30 pm</p>
+      <p class="why">In a human study, black tea cut iron absorption from a meal by 79-94% and cocoa by about 71%. Placing them 4 hours after lunch and 2½ hours before dinner keeps them out of the way.</p>
+      <p class="src">Source: Hurrell, Reddy &amp; Cook, Br J Nutr 1999</p></div>
+    <div class="card syn"><h3>Vegetables before starch</h3>
+      <p><span class="ing">raw plate</span> first, then <span class="ing">dal and vegetables</span>, then <span class="ing">rice, roti or pasta</span></p>
+      <p class="why">The same food-order effect as the nut bowl before the smoothie: fiber and protein first give a gentler glucose rise from the starch.</p>
+      <p class="src">Source: Shukla et al. 2015, 2019</p></div>
+  </div>
+  <div class="pager"><a href="#history" data-go="history">Previous</a><span class="sp"></span><a href="#ayurveda" data-go="ayurveda">Next: Ayurveda's view</a></div>
+</section>
+
+<section class="panel" id="ayurveda">
+  <h2>Ayurveda's view</h2>
+  <p class="intro">Where classical Ayurveda agrees and disagrees with this plan. The rule on curd comes from Ashtanga Hridaya (Sutrasthana 5.29–31): curd should not be taken at night, warm, in spring, summer or autumn, without mung soup, honey, ghee with sugar, or amla, or continuously.</p>
+
+  <h3>Where Ayurveda disagrees</h3>
+  <div class="tw"><table>
+    <tr><th>Principle</th><th>Source</th><th>This plan</th><th>Status</th><th>Option</th></tr>
+    <tr><td>Don't eat curd continuously (daily)</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Greek yogurt every day</td><td><span class="badge b-low">Disagrees</span></td><td>On some days, replace it with buttermilk (yogurt thinned with water), which Ayurveda allows daily. Protein drops, so add protein to the first meal on those days.</td></tr>
+    <tr><td>Avoid curd in spring, summer and autumn</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Year-round in a warm Florida climate</td><td><span class="badge b-low">Disagrees</span></td><td>Buttermilk is the classical choice for hot weather.</td></tr>
+    <tr><td>Eat only after the previous meal is digested (jīrṇe aśnīyāt). Eating before that is adhyaśana.</td><td>Charaka Vimana Sthana 1</td><td>Yogurt drink 2 hours after breakfast</td><td><span class="badge b-low">Disagrees</span></td><td>Ayurveda would space meals further apart (often 3+ hours), or treat the yogurt drink as part of breakfast.</td></tr>
+    <tr><td>Eat warm food (uṣṇam aśnīyāt)</td><td>Charaka Vimana Sthana 1</td><td>Raw, blended green smoothie</td><td><span class="badge b-ayur">Partly</span></td><td>Already softened by serving it at room temperature with ginger. Raw is kept for the myrosinase benefit.</td></tr>
+    <tr><td>Fruit is best eaten alone, not mixed with other foods</td><td>Modern Ayurvedic food-combining teaching (e.g. Vasant Lad), not a classical rule</td><td>Many fruits blended with greens</td><td><span class="badge b-low">Disagrees</span></td><td>No simple fix without changing the smoothie.</td></tr>
+    <tr><td>Eggs and mushrooms are considered tamasic</td><td>Yogic (sattvic) dietary tradition</td><td>Shiitake omelette 3 days a week</td><td><span class="badge b-ayur">Tradition-dependent</span></td><td>The other four days use sprouted moong.</td></tr>
+  </table></div>
+
+  <h3>Where Ayurveda agrees</h3>
+  <div class="tw"><table>
+    <tr><th>Principle</th><th>Source</th><th>How the plan follows it</th></tr>
+    <tr><td>Never heat honey or mix it into hot liquids</td><td>Ashtanga Hridaya Su. 5.53; Charaka Su. 26.84</td><td>Honey goes in only after the water cools below about 40°C (104°F)</td></tr>
+    <tr><td>Honey water in the morning (madhudaka)</td><td>Charaka Su. 27</td><td>1 tsp honey in lemon water. Classically it's made with cool water; lukewarm is common practice.</td></tr>
+    <tr><td>Banana with curd is incompatible (viruddha)</td><td>Classical viruddha ahara lists</td><td>Banana eaten alone, hours away from the yogurt</td></tr>
+    <tr><td>Take curd with an accompaniment</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>1 tsp honey or ½ tsp amla in the yogurt drink</td></tr>
+    <tr><td>No curd at night, and never heated</td><td>Ashtanga Hridaya Su. 5.29–31</td><td>Mid-morning, cold</td></tr>
+    <tr><td>Honey and ghee in equal amounts are incompatible</td><td>Charaka Su. 26</td><td>Omelette cooked in oil, not ghee</td></tr>
+    <tr><td>Avoid stale or leftover food</td><td>General Ayurvedic dietetics</td><td>Smoothie blended fresh each morning</td></tr>
+    <tr><td>Ginger with rock salt before meals stimulates digestion (agni)</td><td>Ayurvedic practice (Lad)</td><td>Offered as an option in Step 2</td></tr>
+  </table></div>
+
+  <div class="call c-ayur"><p><strong>A fair perspective:</strong> these Ayurvedic rules come from classical texts and long practice, not modern clinical trials. The nutrition sections of this plan are research-based. Where the two agree, you have support from both. Where they differ, mainly daily yogurt, meal timing and the raw smoothie, your own digestion is a reasonable guide.</p></div>
+  <h3>Afternoon and evening rules the planner checks</h3>
+  <div class="tw"><table>
+    <tr><th>Principle</th><th>Source</th><th>How the plan follows it</th></tr>
+    <tr><td>Main meal at midday, lighter dinner</td><td>Charaka Vimana Sthana 1 (eat according to agni)</td><td>Lunch is the largest meal. Dinner is dal with a vegetable or avocado toast.</td></tr>
+    <tr><td>Banana with milk is incompatible (viruddha)</td><td>Classical viruddha ahara lists</td><td>Banana at 3:00 pm, 90 minutes before the milky tea</td></tr>
+    <tr><td>Milk with sour fruit or radish is incompatible</td><td>Classical viruddha ahara lists</td><td>Tea with milk at 4:30 pm, hours away from lemon, fruit and the raw plate</td></tr>
+    <tr><td>Eat only after the previous meal is digested</td><td>Charaka Vimana Sthana 1</td><td>Lunch and dinner 6½ hours apart. The planner warns if two main meals are less than 3 hours apart.</td></tr>
+  </table></div>
+  <div class="pager"><a href="#synergy" data-go="synergy">Previous</a><span class="sp"></span><a href="#cautions" data-go="cautions">Next: Cautions</a></div>
+</section>
+
+<section class="panel" id="cautions">
+  <h2>Cautions</h2>
+  <p class="intro">Practical safety notes for this routine.</p>
+  <div class="grid g2">
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Fiber</h3><p>About 26 g in the morning alone and 60–70 g for the whole day, roughly twice the usual target. If that's new for you, build up chia, flax and oats over 1–2 weeks and drink water with them.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Teeth</h3><p>Lemon water and fruit acids soften enamel. Rinse with plain water afterward and wait about 30 minutes before brushing.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Ginger</h3><p>Use one ginger route per morning, about 2–3 g fresh. Common guidance is to keep total ginger to about 4 g a day. Check with your doctor if you take blood thinners or have gallstones.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Vitamin K</h3><p>Kale supplies about 230% of daily needs. If you're ever prescribed warfarin, keep kale intake consistent and tell your doctor.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Chia</h3><p>Always eat it soaked. Dry chia expands and can stick in the throat.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Calories and glucose</h3><p>Your nut bowl alone is about 690 calories, and the morning comes to about 1,450–1,500. A default day is roughly 2,300–2,600 calories. If your weight creeps up, the nut bowl (especially the fistful of peanuts) is the easiest place to trim. Check your glucose about 1 hour after the smoothie on a few omelette and non-omelette days.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Dark chocolate</h3><p>Consumer Reports (2022) found lead and cadmium above California's daily guidance in most of the dark chocolate bars it tested. Keep to about 20 g a day and switch brands now and then.</p></div>
+    <div class="card" style="border-top:5px solid var(--warn)"><h3 style="margin-top:0">Tea timing</h3><p>Keep tea at least 1 hour from lunch, dinner and the smoothie. The planner flags it in red if it's moved closer.</p></div>
+  </div>
+  <p style="margin-top:18px; color:var(--muted)">This is general nutrition information, not medical advice. Review it with your doctor or a registered dietitian if you have a medical condition or take regular medication.</p>
+  <div class="pager"><a href="#ayurveda" data-go="ayurveda">Previous</a><span class="sp"></span><a href="#notes" data-go="notes">Next: Notes &amp; sources</a></div>
+</section>
+
+<section class="panel" id="notes">
+  <h2>Notes &amp; sources</h2>
+  <p class="intro">The assumptions behind the numbers, corrections to earlier advice, and the references.</p>
+
+  <h3>Assumptions</h3>
+  <ul>
+    <li>Targets are the RDA or AI for men aged 51–70. Calcium and vitamin D targets rise after 70.</li>
+    <li>Greek yogurt is plain and nonfat. Figs are fresh, dates are Medjool, peanuts and pumpkin seeds are unsalted, and oats are rolled.</li>
+    <li><strong>Every menu item shows its portion.</strong> Values are calculated from USDA SR28 (kale from SR Legacy 2018), the product labels for Stonyfield yogurt, Lindt 100% and Publix French and sourdough bread, and the USDA-FDA-NIH iodine database.</li>
+    <li><strong>Portions you gave:</strong> nut bowl (21 almonds, 7 walnut halves, a fistful of peanuts taken as 28 g, 12 lightly salted cashews, 2 tbsp each pumpkin and sunflower kernels); 2-egg omelette with about 10 shiitake (taken as 100 g) in ½ tsp olive oil; 1½ cups moong sprouts; yogurt drink with 1 cup Stonyfield, 2 heaped tbsp chia (taken as 25 g) and 2 tbsp ground flax; ½ avocado; Publix sourdough slices (56 g); 6 in of Publix French bread (113 g); raw plate with ½ red onion, a 6 in cucumber, a medium red pepper and a 3 in piece of radish (taken as daikon, 100 g); 4 steamed carrots and a slice of beet; Lindt 100%, 2 pieces (taken as 10 g).</li>
+    <li><strong>Assumed until you tell me otherwise:</strong> 1 cup of dal is ¾ cup cooked dal plus tomato tadka; 1 cup of rajma, chana or lobia is 0.8 cup cooked beans plus tomato gravy; each cup has about ½ tsp ghee and ¼ tsp iodized salt. Cooked vegetables have 1 tsp ghee and about ⅕ tsp salt per cup. Roti is a 6 in whole-wheat roti (40 g) with no ghee. Rice is white long-grain. Pasta is plain bucatini with jarred marinara, no cheese. Tea is black tea with 2 tbsp 2% milk. Butter is its own menu item.</li>
+    <li><strong>Iodine</strong> counts iodized salt, yogurt, eggs and milk only. Some iodine is lost in cooking, so the true figure is probably a bit lower than shown.</li>
+    <li>Nutrient values come from USDA FoodData Central. Kale's calcium value varies between USDA entries, so the calcium figure could be roughly 60 mg lower.</li>
+  </ul>
+
+  <h3>Corrections to earlier advice</h3>
+  <ul>
+    <li><strong>Besan chilla, tofu scramble and paneer bhurji</strong> came out of the weekly plan. They aren't among the foods you cook, so the morning protein is now an omelette or moong sprouts.</li>
+    <li><strong>Apple came out of the smoothie too.</strong> The UC Davis study measured apples as high in PPO, like banana.</li>
+    <li><strong>The yogurt drink has about 30 g of protein,</strong> not 33 g.</li>
+    <li><strong>Ginger is about 1 tsp grated (2–3 g),</strong> not ½ inch, to stay within the 4 g daily guidance.</li>
+    <li><strong>Ayurveda's meal-spacing rule</strong> (eat only after the previous meal is digested) was missing from the earlier comparison. It's now listed.</li>
+  </ul>
+
+  <h3>References</h3>
+  <ol class="refs">
+    <li>USDA FoodData Central. <a href="https://fdc.nal.usda.gov/">fdc.nal.usda.gov</a></li>
+    <li>NIH ODS, Nutrient Recommendations (DRIs). <a href="https://ods.od.nih.gov/HealthInformation/nutrientrecommendations.aspx">ods.od.nih.gov</a></li>
+    <li>NIH ODS fact sheets: <a href="https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/">Iron</a>, <a href="https://ods.od.nih.gov/factsheets/VitaminB12-HealthProfessional/">Vitamin B12</a>, <a href="https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/">Iodine</a>, <a href="https://ods.od.nih.gov/factsheets/VitaminD-HealthProfessional/">Vitamin D</a>, <a href="https://ods.od.nih.gov/factsheets/Omega3FattyAcids-HealthProfessional/">Omega-3</a>.</li>
+    <li>Ottaviani JI et al. Impact of polyphenol oxidase on the bioavailability of flavan-3-ols in fruit smoothies. <em>Food &amp; Function</em> 2023;14:8217–28. <a href="https://pubs.rsc.org/en/content/articlelanding/2023/fo/d3fo01599h">pubs.rsc.org</a></li>
+    <li>Heaney RP, Weaver CM. Calcium absorption from kale. <em>Am J Clin Nutr</em> 1990;51:656–7. <a href="https://pubmed.ncbi.nlm.nih.gov/2321572/">PubMed</a></li>
+    <li>Weaver CM, Proulx WR, Heaney R. Choices for achieving adequate dietary calcium with a vegetarian diet. <em>Am J Clin Nutr</em> 1999;70(3 Suppl):543S–548S.</li>
+    <li>Shukla AP et al. Food order and postprandial glucose. <em>Diabetes Care</em> 2015. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4876745">PMC4876745</a>; <em>Diabetes Obes Metab</em> 2019. <a href="https://pubmed.ncbi.nlm.nih.gov/30101510/">PubMed</a></li>
+    <li>Purdue: fat type and carotenoid absorption (2012). <a href="https://www.purdue.edu/newsroom/research/2012/120619FerruzziSalad.html">purdue.edu</a></li>
+    <li>Kim JE et al. Eggs and carotenoid absorption, <em>Am J Clin Nutr</em> 2015 (<a href="https://www.sciencedaily.com/releases/2015/03/150329141005.htm">summary</a>); eggs and vitamin E, 2016 (<a href="https://www.purdue.edu/newsroom/archive/releases/2016/Q4/study-toss-eggs-onto-salads-to-increase-vitamin-e-absorption.html">purdue.edu</a>).</li>
+    <li>Paddon-Jones D, Rasmussen BB, 2009. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2760315/">PMC2760315</a>. Mamerow MM et al., <em>J Nutr</em> 2014. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4018950">PMC4018950</a></li>
+    <li>Chen M et al. Dairy consumption and risk of type 2 diabetes: 3 cohorts of US adults and an updated meta-analysis. <em>BMC Medicine</em> 2014;12:215.</li>
+    <li>Linus Pauling Institute: <a href="https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/isothiocyanates">Isothiocyanates</a>, <a href="https://lpi.oregonstate.edu/mic/dietary-factors/phytochemicals/lignans">Lignans</a>.</li>
+    <li>Ashtanga Hridaya Sutrasthana 5.29–31, curd. <a href="https://www.wisdomlib.org/definition/aghrita">wisdomlib.org</a></li>
+    <li>Charaka Samhita, Viruddha Ahara. <a href="https://www.carakasamhitaonline.com/index.php/Viruddha_Ahara">carakasamhitaonline.com</a>; Charaka Vimana Sthana 1 (rules of eating).</li>
+    <li>Review of viruddha ahara, including banana with curd. <a href="https://www.jssayurvedacollege.org/pdfs/25-An-analytical-review-on-aahita-aahara.pdf">JSS Ayurveda College</a></li>
+    <li>Honey and heat: Ashtanga Hridaya Su. 5.53; Charaka Su. 26.84; madhudaka, Charaka Su. 27. <a href="https://www.easyayurveda.com/hot-water-honey-benefits/">easyayurveda.com</a></li>
+    <li>Lad V. <em>The Complete Book of Ayurvedic Home Remedies.</em></li>
+      <li>Hurrell RF, Reddy M, Cook JD. Inhibition of non-haem iron absorption in man by polyphenolic-containing beverages. <em>Br J Nutr</em> 1999;81:289-95.</li>
+    <li>Hallberg L, Brune M, Rossander L. The role of vitamin C in iron absorption. <em>Int J Vitam Nutr Res Suppl</em> 1989;30:103-8.</li>
+    <li>Unlu NZ et al. Carotenoid absorption from salad and salsa by humans is enhanced by the addition of avocado or avocado oil. <em>J Nutr</em> 2005;135:431-6.</li>
+    <li>Fielding JM et al. Increases in plasma lycopene concentration after consumption of tomatoes cooked with olive oil. <em>Asia Pac J Clin Nutr</em> 2005;14:131-6.</li>
+    <li>Consumer Reports. Lead and cadmium in dark chocolate, December 2022.</li>
+  </ol>
+  <div class="pager"><a href="#cautions" data-go="cautions">Previous</a><span class="sp"></span><a href="#insights" data-go="insights">Next: Insights</a></div>
+</section>
+
+<section class="panel" id="insights">
+  <h2>Insights</h2>
+  <p class="intro">Ten patterns hidden in this plan, each checked against published research.</p>
+
+  <div class="grid g2">
+    <div class="card ins t-good"><div class="big">49–54%</div><h3>Your greens beat milk at calcium absorption</h3>
+      <p>About 49% of kale's calcium and 54% of bok choy's is absorbed, compared with about 32% from milk and only about 5% from spinach. Your 120 g of greens likely deliver about as much absorbable calcium as your cup of Greek yogurt, or more.</p>
+      <p class="src">Heaney &amp; Weaver 1990; Weaver et al. 1999</p></div>
+
+    <div class="card ins t-syn"><div class="big">&gt;40%</div><h3>Order matters as much as the food</h3>
+      <p>Identical food, eaten in a different order, gave glucose peaks more than 40% lower when protein and vegetables came before carbohydrate. Your nut bowl does this job before the smoothie, at no extra cost.</p>
+      <p class="src">Shukla et al. 2015, 2019</p></div>
+
+    <div class="card ins t-low"><div class="big">84%</div><h3>One banana can undo the berries</h3>
+      <p>A banana smoothie cut flavanol absorption by 84% compared with a berry smoothie. A fruit can be healthy alone and still work against another fruit once they're blended together.</p>
+      <p class="src">Ottaviani et al. 2023</p></div>
+
+    <div class="card ins t-ing"><div class="big">60 g</div><h3>Kale alone covers nearly 2 days of vitamin K</h3>
+      <p>Your 60 g of kale supplies about 234 µg of vitamin K, about 195% of the daily need, from a few handfuls of leaves.</p>
+      <p class="src">USDA FoodData Central</p></div>
+
+    <div class="card ins t-good"><div class="big">19%</div><h3>Two spoonfuls, a fifth of your magnesium</h3>
+      <p>Two tablespoons of roasted pumpkin kernels supply about 81 mg of magnesium, roughly 19% of your daily need. Weight for weight, they are among the most mineral-dense foods in your morning, rich in zinc and iron too.</p>
+      <p class="src">USDA FoodData Central</p></div>
+
+    <div class="card ins t-low"><div class="big">22 g</div><h3>Pro-rating changed the verdict</h3>
+      <p>The sugar from figs and dates looked like about 55 g when counted for the whole batch, but your 600 mL serving has about 22 g. Measuring what you actually eat turned a "cut this" into "this is fine."</p>
+      <p class="src">USDA FoodData Central, calculated</p></div>
+
+    <div class="card ins t-ayur"><div class="big">2 traditions</div><h3>Same advice, different reasons</h3>
+      <p>Ayurveda keeps banana apart from curd as an incompatible food. The PPO research keeps banana apart from berries to protect flavanols. Different mechanisms, but your plan follows both by eating the banana alone.</p>
+      <p class="src">Viruddha ahara texts; Ottaviani 2023</p></div>
+
+    <div class="card ins t-ayur"><div class="big">18%</div><h3>Where the traditions split: daily yogurt</h3>
+      <p>Ayurveda advises against daily curd. In a Harvard analysis of 3 large cohorts plus a meta-analysis, each daily serving of yogurt was linked to an 18% lower risk of type 2 diabetes. That evidence is observational, so it shows an association, not cause and effect, and it's a genuine point of disagreement.</p>
+      <p class="src">Chen et al., BMC Medicine 2014</p></div>
+
+    <div class="card ins t-syn"><div class="big">478%</div><h3>Plenty of omega-3, but not the kind you might think</h3>
+      <p>Chia and flax in the yogurt drink give about 7.7 g of ALA, nearly five times the daily need. But the body converts only a small fraction of ALA into EPA and DHA, the long-chain omega-3s found in fish. Vegetarians who want those use algae oil.</p>
+      <p class="src">NIH ODS, Omega-3 fact sheet</p></div>
+
+    <div class="card ins t-low"><div class="big">~0</div><h3>The Sunshine State gap</h3>
+      <p>Your breakfast has almost no vitamin D. At Boca Raton's latitude, about 26°N, midday sun can make vitamin D in the skin through much of the year, but skin type, age and sunscreen change the amount a lot. Only a blood test tells you your real status.</p>
+      <p class="src">NIH ODS, Vitamin D fact sheet</p></div>
+  </div>
+  <div class="pager"><a href="#notes" data-go="notes">Previous</a><span class="sp"></span><a href="#plan" data-go="plan">Back to today's plan</a></div>
+</section>
+
+</main>
+<footer>Prepared October 2026 for planning purposes. Default plan: Monday to Sunday; changes apply to a single date. Nutrient figures are estimates, not lab measurements.</footer>
+
+<script>
+/* Paste your Google Apps Script web app URL (it ends in /exec) between the quotes. */
+window.MP_CONFIG={sheetUrl:"PASTE_YOUR_WEB_APP_URL_HERE"};
+</script>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var ids=["plan", "overview", "prep", "morning", "smoothie", "nutrients", "history", "synergy", "ayurveda", "cautions", "notes", "insights"];
+  function show(id,scroll){
+    if(id==="week") id="plan"; if(ids.indexOf(id)<0) id="plan";
+    ids.forEach(function(x){
+      var p=document.getElementById(x); if(p) p.classList.toggle("active",x===id);
+    });
+    document.querySelectorAll("nav.tabs a").forEach(function(a){
+      var on=a.getAttribute("data-t")===id;
+      a.setAttribute("aria-current",on?"true":"false");
+      if(on && a.scrollIntoView){ try{a.scrollIntoView({block:"nearest",inline:"center"});}catch(e){} }
+    });
+    if(scroll){
+      var nav=document.querySelector("nav.tabs");
+      var top=nav.getBoundingClientRect().top+window.pageYOffset;
+      if(window.pageYOffset>top) window.scrollTo(0,top);
+    }
+  }
+  document.addEventListener("click",function(e){
+    var a=e.target.closest("a[data-t],a[data-go]");
+    if(!a) return;
+    e.preventDefault();
+    var id=a.getAttribute("data-t")||a.getAttribute("data-go");
+    try{history.replaceState(null,"","#"+id);}catch(err){}
+    show(id,true);
+  });
+  window.addEventListener("hashchange",function(){show(location.hash.slice(1),true);});
+  show((location.hash||"#plan").slice(1),false);
+})();
+</script>
+<script>
+var F_DATA={"lemon":{"name":"Lime water with honey","cat":"morning","portion":"600 mL warm water + juice of 1 lime + 1 tsp honey","desc":"","size":null,"tags":["honey","sour"],"n":{"kcal":32.3,"pro":0.206,"carb":9.47,"fat":0.031,"fib":0.19,"sug":6.49,"ca":6.58,"fe":0.069,"mg":3.66,"p":6.44,"k":55.1,"na":1.16,"zn":0.051,"cu":0.014,"mn":0.014,"se":0.1,"io":0,"va":0.88,"vc":13.2,"vd":0,"ve":0.097,"vk":0.264,"b1":0.011,"b2":0.009,"b3":0.071,"b5":0.059,"b6":0.018,"b12":0,"fol":4.54,"chol":2.4,"ala":0.004}},"nuts":{"name":"Nut & seed bowl","cat":"morning","portion":"21 almonds, 7 walnut halves, 1 fistful peanuts, 12 cashews, 2 tbsp pumpkin + 2 tbsp sunflower seeds","desc":"","size":null,"tags":["fatpro"],"n":{"kcal":689.0,"pro":24.7,"carb":25.5,"fat":59.6,"fib":9.77,"sug":4.41,"ca":126.0,"fe":4.72,"mg":291.0,"p":722.0,"k":784.0,"na":65.2,"zn":5.02,"cu":1.5,"mn":2.69,"se":20.6,"io":0,"va":0.14,"vc":0.671,"vd":0,"ve":12.4,"vk":7.96,"b1":0.207,"b2":0.465,"b3":7.14,"b5":1.92,"b6":0.432,"b12":0,"fol":111.0,"chol":66.4,"ala":1.34}},"smoothie":{"name":"Green smoothie","cat":"morning","portion":"600 mL (40% of your 1.5 L batch)","desc":"","size":null,"tags":["iron","sour","smoothie"],"n":{"kcal":240.0,"pro":5.16,"carb":58.7,"fat":1.7,"fib":10.3,"sug":46.6,"ca":294.0,"fe":2.36,"mg":73.1,"p":109.0,"k":970.0,"na":73.4,"zn":0.747,"cu":0.325,"mn":1.35,"se":2.27,"io":0,"va":311.0,"vc":169.0,"vd":0,"ve":1.24,"vk":277.0,"b1":0.271,"b2":0.381,"b3":2.41,"b5":1.0,"b6":0.489,"b12":0,"fol":133.0,"chol":24.1,"ala":0.207}},"omelette":{"name":"Shiitake omelette, 2 eggs","cat":"protein","portion":"2 medium eggs + ~10 sliced shiitake, ½ tsp olive oil","desc":"","size":null,"tags":["fatpro","egg"],"n":{"kcal":180.0,"pro":13.3,"carb":7.42,"fat":11.1,"fib":2.5,"sug":2.71,"ca":51.4,"fe":1.96,"mg":30.6,"p":286.0,"k":426.0,"na":328.0,"zn":2.17,"cu":0.206,"mn":0.255,"se":32.7,"io":69.2,"va":141.0,"vc":0,"vd":2.16,"ve":1.25,"vk":1.62,"b1":0.05,"b2":0.619,"b3":3.94,"b5":2.85,"b6":0.443,"b12":0.783,"fol":54.4,"chol":259.0,"ala":0.049}},"moong":{"name":"Moong sprouts","cat":"protein","portion":"1½ cups home-sprouted whole moong (about 68 g dry)","desc":"","size":null,"tags":["fatpro","iron","sprout"],"n":{"kcal":236.0,"pro":16.2,"carb":42.6,"fat":0.782,"fib":11.1,"sug":4.49,"ca":89.8,"fe":4.58,"mg":129.0,"p":250.0,"k":847.0,"na":10.2,"zn":1.82,"cu":0.64,"mn":0.704,"se":5.58,"io":0,"va":4.08,"vc":19.8,"vd":0,"ve":0.347,"vk":6.12,"b1":0.422,"b2":0.158,"b3":1.53,"b5":1.3,"b6":0.26,"b12":0,"fol":425.0,"chol":66.6,"ala":0.018}},"yogurt":{"name":"Greek yogurt drink","cat":"between","portion":"1 cup Stonyfield nonfat Greek + 2 heaped tbsp soaked chia + 2 tbsp ground flax, water to 700 mL","desc":"","size":null,"tags":["calcium","curd"],"n":{"kcal":316.0,"pro":28.1,"carb":23.9,"fat":13.6,"fib":12.4,"sug":5.56,"ca":421.0,"fe":2.89,"mg":164.0,"p":611.0,"k":509.0,"na":191.0,"zn":2.93,"cu":0.44,"mn":1.05,"se":39.4,"io":131.0,"va":2.27,"vc":0.484,"vd":0,"ve":0.191,"vk":0.602,"b1":0.437,"b2":0.696,"b3":3.11,"b5":0.889,"b6":0.209,"b12":1.7,"fol":28.1,"chol":45.3,"ala":7.65}},"banana":{"name":"Banana","cat":"between","portion":"1 medium (118 g)","desc":"","size":null,"tags":["banana"],"n":{"kcal":105.0,"pro":1.29,"carb":27.0,"fat":0.389,"fib":3.07,"sug":14.4,"ca":5.9,"fe":0.307,"mg":31.9,"p":26.0,"k":422.0,"na":1.18,"zn":0.177,"cu":0.092,"mn":0.319,"se":1.18,"io":0,"va":3.54,"vc":10.3,"vd":0,"ve":0.118,"vk":0.59,"b1":0.037,"b2":0.086,"b3":0.785,"b5":0.394,"b6":0.433,"b12":0,"fol":23.6,"chol":11.6,"ala":0.032}},"choc":{"name":"Lindt 100% dark chocolate","cat":"between","portion":"2 small pieces (about 10 g)","desc":"","size":null,"tags":["cocoa"],"n":{"kcal":56.0,"pro":1.2,"carb":2.4,"fat":5.2,"fib":1.6,"sug":0,"ca":8.2,"fe":0.8,"mg":32.7,"p":40.0,"k":83.0,"na":1.0,"zn":0.963,"cu":0.323,"mn":0.417,"se":0.81,"io":0,"va":0,"vc":0,"vd":0,"ve":0.04,"vk":0.97,"b1":0.015,"b2":0.01,"b3":0.136,"b5":0.017,"b6":0.003,"b12":0,"fol":2.8,"chol":4.57,"ala":0.012}},"tea":{"name":"Tea with milk","cat":"between","portion":"1 cup black tea + 2 tbsp 2% milk, no sugar","desc":"","size":null,"tags":["tannin","milk"],"n":{"kcal":17.4,"pro":0.99,"carb":2.15,"fat":0.594,"fib":0,"sug":1.52,"ca":36.0,"fe":0.053,"mg":10.4,"p":30.0,"k":130.0,"na":21.2,"zn":0.191,"cu":0.026,"mn":0.523,"se":0.75,"io":10.8,"va":16.5,"vc":0.06,"vd":0.36,"ve":0.009,"vk":0.06,"b1":0.012,"b2":0.089,"b3":0.028,"b5":0.133,"b6":0.011,"b12":0.159,"fol":13.4,"chol":5.87,"ala":0.01}},"arhar1":{"name":"Arhar dal","cat":"legume","portion":"1 cup","desc":"with tomato, garlic, ginger, ghee, lemon","size":"1 cup","tags":["iron","ghee","meal","legume"],"n":{"kcal":194.0,"pro":9.36,"carb":33.7,"fat":3.15,"fib":9.35,"sug":4.18,"ca":68.3,"fe":1.67,"mg":67.3,"p":171.0,"k":667.0,"na":496.0,"zn":1.29,"cu":0.394,"mn":0.765,"se":4.12,"io":65.2,"va":52.9,"vc":13.7,"vd":0,"ve":0.605,"vk":13.3,"b1":0.216,"b2":0.095,"b3":1.41,"b5":0.502,"b6":0.159,"b12":0.0,"fol":152.0,"chol":47.8,"ala":0.051}},"arhar2":{"name":"Arhar dal","cat":"legume","portion":"2 cups","desc":"with tomato, garlic, ginger, ghee, lemon","size":"2 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":388.0,"pro":18.7,"carb":67.5,"fat":6.3,"fib":18.7,"sug":8.36,"ca":137.0,"fe":3.34,"mg":135.0,"p":343.0,"k":1335.0,"na":991.0,"zn":2.59,"cu":0.789,"mn":1.53,"se":8.25,"io":130.0,"va":106.0,"vc":27.3,"vd":0,"ve":1.21,"vk":26.7,"b1":0.433,"b2":0.189,"b3":2.82,"b5":1.0,"b6":0.318,"b12":0.001,"fol":305.0,"chol":95.6,"ala":0.103}},"arhar3":{"name":"Arhar dal","cat":"legume","portion":"3 cups","desc":"with tomato, garlic, ginger, ghee, lemon","size":"3 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":582.0,"pro":28.1,"carb":101.0,"fat":9.45,"fib":28.1,"sug":12.5,"ca":205.0,"fe":5.01,"mg":202.0,"p":514.0,"k":2002.0,"na":1487.0,"zn":3.88,"cu":1.18,"mn":2.3,"se":12.4,"io":195.0,"va":159.0,"vc":41.0,"vd":0,"ve":1.82,"vk":40.0,"b1":0.649,"b2":0.284,"b3":4.22,"b5":1.51,"b6":0.477,"b12":0.001,"fol":457.0,"chol":143.0,"ala":0.154}},"rajma1":{"name":"Rajma","cat":"legume","portion":"1 cup","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"1 cup","tags":["iron","ghee","meal","legume"],"n":{"kcal":216.0,"pro":12.7,"carb":35.8,"fat":3.38,"fib":11.1,"sug":2.74,"ca":53.4,"fe":4.28,"mg":71.7,"p":217.0,"k":763.0,"na":493.0,"zn":1.63,"cu":0.391,"mn":0.795,"se":2.09,"io":65.2,"va":59.2,"vc":17.3,"vd":0,"ve":0.588,"vk":23.7,"b1":0.254,"b2":0.101,"b3":1.29,"b5":0.41,"b6":0.27,"b12":0.0,"fol":190.0,"chol":48.8,"ala":0.267}},"rajma2":{"name":"Rajma","cat":"legume","portion":"2 cups","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"2 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":431.0,"pro":25.4,"carb":71.6,"fat":6.75,"fib":22.2,"sug":5.48,"ca":107.0,"fe":8.56,"mg":143.0,"p":434.0,"k":1526.0,"na":986.0,"zn":3.26,"cu":0.782,"mn":1.59,"se":4.18,"io":130.0,"va":118.0,"vc":34.7,"vd":0,"ve":1.18,"vk":47.5,"b1":0.508,"b2":0.203,"b3":2.59,"b5":0.821,"b6":0.54,"b12":0.001,"fol":381.0,"chol":97.6,"ala":0.535}},"rajma3":{"name":"Rajma","cat":"legume","portion":"3 cups","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"3 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":647.0,"pro":38.0,"carb":107.0,"fat":10.1,"fib":33.2,"sug":8.21,"ca":160.0,"fe":12.8,"mg":215.0,"p":650.0,"k":2289.0,"na":1478.0,"zn":4.89,"cu":1.17,"mn":2.39,"se":6.27,"io":195.0,"va":178.0,"vc":52.0,"vd":0,"ve":1.76,"vk":71.2,"b1":0.762,"b2":0.304,"b3":3.88,"b5":1.23,"b6":0.81,"b12":0.001,"fol":571.0,"chol":146.0,"ala":0.802}},"chana1":{"name":"Chickpeas (chana)","cat":"legume","portion":"1 cup","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"1 cup","tags":["iron","ghee","meal","legume"],"n":{"kcal":266.0,"pro":12.9,"carb":42.0,"fat":6.2,"fib":11.3,"sug":8.79,"ca":81.7,"fe":4.21,"mg":75.8,"p":252.0,"k":612.0,"na":500.0,"zn":2.25,"cu":0.539,"mn":1.54,"se":5.46,"io":65.2,"va":60.6,"vc":17.5,"vd":0,"ve":1.02,"vk":17.8,"b1":0.195,"b2":0.108,"b3":1.22,"b5":0.5,"b6":0.296,"b12":0.0,"fol":247.0,"chol":65.4,"ala":0.099}},"chana2":{"name":"Chickpeas (chana)","cat":"legume","portion":"2 cups","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"2 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":531.0,"pro":25.9,"carb":84.1,"fat":12.4,"fib":22.7,"sug":17.6,"ca":163.0,"fe":8.43,"mg":152.0,"p":504.0,"k":1224.0,"na":999.0,"zn":4.5,"cu":1.08,"mn":3.08,"se":10.9,"io":130.0,"va":121.0,"vc":35.0,"vd":0,"ve":2.04,"vk":35.6,"b1":0.389,"b2":0.216,"b3":2.45,"b5":0.999,"b6":0.591,"b12":0.001,"fol":494.0,"chol":131.0,"ala":0.197}},"chana3":{"name":"Chickpeas (chana)","cat":"legume","portion":"3 cups","desc":"soaked overnight, tomato gravy, ghee, lemon","size":"3 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":797.0,"pro":38.8,"carb":126.0,"fat":18.6,"fib":34.0,"sug":26.4,"ca":245.0,"fe":12.6,"mg":227.0,"p":756.0,"k":1836.0,"na":1499.0,"zn":6.75,"cu":1.62,"mn":4.63,"se":16.4,"io":195.0,"va":182.0,"vc":52.4,"vd":0,"ve":3.06,"vk":53.4,"b1":0.584,"b2":0.324,"b3":3.67,"b5":1.5,"b6":0.887,"b12":0.001,"fol":741.0,"chol":196.0,"ala":0.296}},"lobia1":{"name":"Black-eyed peas (lobia)","cat":"legume","portion":"1 cup","desc":"soaked, tomato gravy, ghee, lemon","size":"1 cup","tags":["iron","ghee","meal","legume"],"n":{"kcal":201.0,"pro":11.4,"carb":33.1,"fat":3.42,"fib":9.86,"sug":6.76,"ca":48.0,"fe":3.7,"mg":82.5,"p":236.0,"k":594.0,"na":495.0,"zn":1.93,"cu":0.426,"mn":0.792,"se":3.84,"io":65.2,"va":60.6,"vc":16.3,"vd":0,"ve":0.926,"vk":14.7,"b1":0.311,"b2":0.097,"b3":1.18,"b5":0.668,"b6":0.243,"b12":0.0,"fol":296.0,"chol":51.1,"ala":0.153}},"lobia2":{"name":"Black-eyed peas (lobia)","cat":"legume","portion":"2 cups","desc":"soaked, tomato gravy, ghee, lemon","size":"2 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":401.0,"pro":22.8,"carb":66.1,"fat":6.83,"fib":19.7,"sug":13.5,"ca":96.0,"fe":7.4,"mg":165.0,"p":471.0,"k":1189.0,"na":991.0,"zn":3.85,"cu":0.852,"mn":1.58,"se":7.69,"io":130.0,"va":121.0,"vc":32.5,"vd":0,"ve":1.85,"vk":29.4,"b1":0.621,"b2":0.195,"b3":2.36,"b5":1.34,"b6":0.486,"b12":0.001,"fol":591.0,"chol":102.0,"ala":0.305}},"lobia3":{"name":"Black-eyed peas (lobia)","cat":"legume","portion":"3 cups","desc":"soaked, tomato gravy, ghee, lemon","size":"3 cups","tags":["iron","ghee","meal","legume"],"n":{"kcal":602.0,"pro":34.2,"carb":99.2,"fat":10.3,"fib":29.6,"sug":20.3,"ca":144.0,"fe":11.1,"mg":248.0,"p":707.0,"k":1783.0,"na":1486.0,"zn":5.78,"cu":1.28,"mn":2.38,"se":11.5,"io":195.0,"va":182.0,"vc":48.8,"vd":0,"ve":2.78,"vk":44.1,"b1":0.932,"b2":0.292,"b3":3.54,"b5":2.0,"b6":0.729,"b12":0.001,"fol":887.0,"chol":153.0,"ala":0.458}},"cauli1":{"name":"Cauliflower & potato","cat":"veg","portion":"1 cup cooked","desc":"steamed to 80%, then pan-cooked with your spices","size":"1 cup cooked","tags":["meal"],"n":{"kcal":122.0,"pro":2.61,"carb":18.2,"fat":4.83,"fib":2.83,"sug":2.0,"ca":14.2,"fe":0.444,"mg":22.8,"p":54.3,"k":384.0,"na":400.0,"zn":0.341,"cu":0.158,"mn":0.19,"se":0.607,"io":52.1,"va":38.4,"vc":37.6,"vd":0,"ve":0.177,"vk":10.7,"b1":0.109,"b2":0.048,"b3":1.38,"b5":0.721,"b6":0.341,"b12":0.0,"fol":35.1,"chol":35.8,"ala":0.176}},"cauli2":{"name":"Cauliflower & potato","cat":"veg","portion":"2 cups cooked","desc":"steamed to 80%, then pan-cooked with your spices","size":"2 cups cooked","tags":["meal"],"n":{"kcal":243.0,"pro":5.22,"carb":36.5,"fat":9.67,"fib":5.66,"sug":4.0,"ca":28.5,"fe":0.887,"mg":45.5,"p":109.0,"k":768.0,"na":800.0,"zn":0.682,"cu":0.316,"mn":0.381,"se":1.21,"io":104.0,"va":76.8,"vc":75.2,"vd":0,"ve":0.354,"vk":21.3,"b1":0.218,"b2":0.096,"b3":2.75,"b5":1.44,"b6":0.681,"b12":0.001,"fol":70.2,"chol":71.6,"ala":0.353}},"cauli3":{"name":"Cauliflower & potato","cat":"veg","portion":"3 cups cooked","desc":"steamed to 80%, then pan-cooked with your spices","size":"3 cups cooked","tags":["meal"],"n":{"kcal":365.0,"pro":7.84,"carb":54.7,"fat":14.5,"fib":8.49,"sug":6.0,"ca":42.7,"fe":1.33,"mg":68.2,"p":163.0,"k":1152.0,"na":1200.0,"zn":1.02,"cu":0.474,"mn":0.571,"se":1.82,"io":156.0,"va":115.0,"vc":113.0,"vd":0,"ve":0.532,"vk":32.0,"b1":0.326,"b2":0.144,"b3":4.13,"b5":2.16,"b6":1.02,"b12":0.001,"fol":105.0,"chol":107.0,"ala":0.529}},"cabbage1":{"name":"Cabbage & potato","cat":"veg","portion":"1 cup cooked","desc":"cooked like the cauliflower","size":"1 cup cooked","tags":["meal"],"n":{"kcal":125.0,"pro":2.42,"carb":19.8,"fat":4.6,"fib":2.83,"sug":2.8,"ca":40.3,"fe":0.373,"mg":28.4,"p":59.2,"k":443.0,"na":397.0,"zn":0.385,"cu":0.16,"mn":0.262,"se":0.685,"io":52.1,"va":40.8,"vc":38.3,"vd":0,"ve":0.239,"vk":83.6,"b1":0.128,"b2":0.044,"b3":1.31,"b5":0.537,"b6":0.317,"b12":0.0,"fol":30.3,"chol":26.8,"ala":0.083}},"cabbage2":{"name":"Cabbage & potato","cat":"veg","portion":"2 cups cooked","desc":"cooked like the cauliflower","size":"2 cups cooked","tags":["meal"],"n":{"kcal":249.0,"pro":4.85,"carb":39.7,"fat":9.2,"fib":5.66,"sug":5.6,"ca":80.6,"fe":0.745,"mg":56.8,"p":118.0,"k":886.0,"na":794.0,"zn":0.771,"cu":0.319,"mn":0.525,"se":1.37,"io":104.0,"va":81.6,"vc":76.5,"vd":0,"ve":0.478,"vk":167.0,"b1":0.257,"b2":0.089,"b3":2.62,"b5":1.07,"b6":0.635,"b12":0.001,"fol":60.6,"chol":53.5,"ala":0.167}},"cabbage3":{"name":"Cabbage & potato","cat":"veg","portion":"3 cups cooked","desc":"cooked like the cauliflower","size":"3 cups cooked","tags":["meal"],"n":{"kcal":374.0,"pro":7.27,"carb":59.5,"fat":13.8,"fib":8.49,"sug":8.41,"ca":121.0,"fe":1.12,"mg":85.3,"p":178.0,"k":1329.0,"na":1190.0,"zn":1.16,"cu":0.479,"mn":0.787,"se":2.05,"io":156.0,"va":122.0,"vc":115.0,"vd":0,"ve":0.716,"vk":251.0,"b1":0.385,"b2":0.133,"b3":3.93,"b5":1.61,"b6":0.952,"b12":0.001,"fol":90.9,"chol":80.3,"ala":0.25}},"beans1":{"name":"Green beans","cat":"veg","portion":"1 cup cooked","desc":"pan-cooked with your spices","size":"1 cup cooked","tags":["meal"],"n":{"kcal":83.2,"pro":2.38,"carb":9.85,"fat":4.83,"fib":4.0,"sug":4.54,"ca":55.4,"fe":0.816,"mg":22.5,"p":36.4,"k":183.0,"na":389.0,"zn":0.314,"cu":0.072,"mn":0.357,"se":0.251,"io":52.1,"va":77.8,"vc":12.1,"vd":0,"ve":0.701,"vk":60.3,"b1":0.093,"b2":0.121,"b3":0.768,"b5":0.093,"b6":0.07,"b12":0.0,"fol":41.2,"chol":22.1,"ala":0.176}},"beans2":{"name":"Green beans","cat":"veg","portion":"2 cups cooked","desc":"pan-cooked with your spices","size":"2 cups cooked","tags":["meal"],"n":{"kcal":166.0,"pro":4.75,"carb":19.7,"fat":9.65,"fib":8.0,"sug":9.07,"ca":111.0,"fe":1.63,"mg":45.0,"p":72.8,"k":366.0,"na":778.0,"zn":0.628,"cu":0.143,"mn":0.715,"se":0.502,"io":104.0,"va":156.0,"vc":24.2,"vd":0,"ve":1.4,"vk":121.0,"b1":0.185,"b2":0.243,"b3":1.54,"b5":0.186,"b6":0.14,"b12":0.001,"fol":82.5,"chol":44.3,"ala":0.353}},"beans3":{"name":"Green beans","cat":"veg","portion":"3 cups cooked","desc":"pan-cooked with your spices","size":"3 cups cooked","tags":["meal"],"n":{"kcal":250.0,"pro":7.13,"carb":29.5,"fat":14.5,"fib":12.0,"sug":13.6,"ca":166.0,"fe":2.45,"mg":67.5,"p":109.0,"k":548.0,"na":1167.0,"zn":0.942,"cu":0.215,"mn":1.07,"se":0.753,"io":156.0,"va":233.0,"vc":36.4,"vd":0,"ve":2.1,"vk":181.0,"b1":0.278,"b2":0.364,"b3":2.3,"b5":0.279,"b6":0.21,"b12":0.001,"fol":124.0,"chol":66.4,"ala":0.529}},"zucchini1":{"name":"Zucchini","cat":"veg","portion":"1 cup cooked","desc":"pan-cooked with your spices","size":"1 cup cooked","tags":["meal"],"n":{"kcal":66.4,"pro":2.06,"carb":4.84,"fat":5.12,"fib":1.8,"sug":3.08,"ca":32.8,"fe":0.669,"mg":34.2,"p":66.7,"k":476.0,"na":393.0,"zn":0.595,"cu":0.094,"mn":0.312,"se":0.361,"io":52.1,"va":139.0,"vc":23.2,"vd":0,"ve":0.342,"vk":7.95,"b1":0.063,"b2":0.043,"b3":0.918,"b5":0.519,"b6":0.144,"b12":0.0,"fol":50.4,"chol":17.9,"ala":0.234}},"zucchini2":{"name":"Zucchini","cat":"veg","portion":"2 cups cooked","desc":"pan-cooked with your spices","size":"2 cups cooked","tags":["meal"],"n":{"kcal":133.0,"pro":4.13,"carb":9.68,"fat":10.2,"fib":3.6,"sug":6.16,"ca":65.6,"fe":1.34,"mg":68.4,"p":133.0,"k":951.0,"na":786.0,"zn":1.19,"cu":0.188,"mn":0.625,"se":0.722,"io":104.0,"va":277.0,"vc":46.4,"vd":0,"ve":0.684,"vk":15.9,"b1":0.126,"b2":0.087,"b3":1.84,"b5":1.04,"b6":0.288,"b12":0.001,"fol":101.0,"chol":35.8,"ala":0.469}},"zucchini3":{"name":"Zucchini","cat":"veg","portion":"3 cups cooked","desc":"pan-cooked with your spices","size":"3 cups cooked","tags":["meal"],"n":{"kcal":199.0,"pro":6.19,"carb":14.5,"fat":15.4,"fib":5.4,"sug":9.23,"ca":98.5,"fe":2.01,"mg":103.0,"p":200.0,"k":1427.0,"na":1179.0,"zn":1.79,"cu":0.282,"mn":0.937,"se":1.08,"io":156.0,"va":416.0,"vc":69.7,"vd":0,"ve":1.03,"vk":23.8,"b1":0.189,"b2":0.13,"b3":2.75,"b5":1.56,"b6":0.432,"b12":0.001,"fol":151.0,"chol":53.8,"ala":0.703}},"eggplant1":{"name":"Eggplant & potato","cat":"veg","portion":"1 cup cooked","desc":"pan-cooked with your spices","size":"1 cup cooked","tags":["meal"],"n":{"kcal":125.0,"pro":1.89,"carb":20.1,"fat":4.67,"fib":2.65,"sug":2.31,"ca":7.32,"fe":0.37,"mg":22.7,"p":42.0,"k":357.0,"na":391.0,"zn":0.295,"cu":0.176,"mn":0.165,"se":0.285,"io":52.1,"va":38.8,"vc":10.8,"vd":0,"ve":0.339,"vk":3.55,"b1":0.121,"b2":0.026,"b3":1.42,"b5":0.444,"b6":0.276,"b12":0.0,"fol":14.8,"chol":16.2,"ala":0.08}},"eggplant2":{"name":"Eggplant & potato","cat":"veg","portion":"2 cups cooked","desc":"pan-cooked with your spices","size":"2 cups cooked","tags":["meal"],"n":{"kcal":250.0,"pro":3.77,"carb":40.1,"fat":9.34,"fib":5.31,"sug":4.62,"ca":14.6,"fe":0.74,"mg":45.3,"p":83.9,"k":715.0,"na":783.0,"zn":0.591,"cu":0.353,"mn":0.33,"se":0.57,"io":104.0,"va":77.6,"vc":21.6,"vd":0,"ve":0.678,"vk":7.11,"b1":0.241,"b2":0.052,"b3":2.85,"b5":0.887,"b6":0.553,"b12":0.001,"fol":29.6,"chol":32.5,"ala":0.161}},"eggplant3":{"name":"Eggplant & potato","cat":"veg","portion":"3 cups cooked","desc":"pan-cooked with your spices","size":"3 cups cooked","tags":["meal"],"n":{"kcal":374.0,"pro":5.66,"carb":60.2,"fat":14.0,"fib":7.96,"sug":6.93,"ca":22.0,"fe":1.11,"mg":68.0,"p":126.0,"k":1072.0,"na":1174.0,"zn":0.886,"cu":0.529,"mn":0.495,"se":0.855,"io":156.0,"va":116.0,"vc":32.4,"vd":0,"ve":1.02,"vk":10.7,"b1":0.362,"b2":0.077,"b3":4.27,"b5":1.33,"b6":0.829,"b12":0.001,"fol":44.4,"chol":48.7,"ala":0.241}},"roti":{"name":"Roti","cat":"grain","portion":"1 whole-wheat roti (about 6 in, 40 g)","desc":"","size":null,"tags":[],"n":{"kcal":120.0,"pro":3.14,"carb":18.5,"fat":3.68,"fib":3.88,"sug":1.17,"ca":14.4,"fe":0.88,"mg":22.4,"p":63.2,"k":78.4,"na":119.0,"zn":0.616,"cu":0.092,"mn":0.699,"se":10.6,"io":0,"va":0,"vc":0,"vd":0,"ve":0.22,"vk":1.32,"b1":0.18,"b2":0.072,"b3":1.84,"b5":0.224,"b6":0.112,"b12":0,"fol":18.0,"chol":3.12,"ala":0.011}},"paratha":{"name":"Tandoori paratha","cat":"grain","portion":"1 paratha (about 79 g)","desc":"","size":null,"tags":["ghee","meal"],"n":{"kcal":258.0,"pro":5.02,"carb":35.8,"fat":10.4,"fib":7.58,"sug":3.28,"ca":19.8,"fe":1.27,"mg":29.2,"p":94.8,"k":110.0,"na":357.0,"zn":0.648,"cu":0.115,"mn":0.833,"se":5.61,"io":0,"va":1.58,"vc":0,"vd":0,"ve":1.07,"vk":2.69,"b1":0.087,"b2":0.06,"b3":1.45,"b5":0.367,"b6":0.063,"b12":0,"fol":7.9,"chol":4.98,"ala":0.051}},"rice3":{"name":"Rice, 3 tbsp","cat":"grain","portion":"3 tbsp cooked white rice (30 g)","desc":"","size":null,"tags":[],"n":{"kcal":38.5,"pro":0.796,"carb":8.34,"fat":0.083,"fib":0.118,"sug":0.015,"ca":2.96,"fe":0.059,"mg":3.55,"p":12.7,"k":10.4,"na":0.296,"zn":0.145,"cu":0.02,"mn":0.14,"se":2.22,"io":0,"va":0,"vc":0,"vd":0,"ve":0.012,"vk":0,"b1":0.006,"b2":0.004,"b3":0.118,"b5":0.115,"b6":0.028,"b12":0,"fol":0.888,"chol":0.622,"ala":0.004}},"rice1":{"name":"Rice, 1 cup","cat":"grain","portion":"1 cup cooked white rice (158 g)","desc":"","size":null,"tags":[],"n":{"kcal":205.0,"pro":4.25,"carb":44.5,"fat":0.442,"fib":0.632,"sug":0.079,"ca":15.8,"fe":0.316,"mg":19.0,"p":67.9,"k":55.3,"na":1.58,"zn":0.774,"cu":0.109,"mn":0.746,"se":11.8,"io":0,"va":0,"vc":0,"vd":0,"ve":0.063,"vk":0,"b1":0.032,"b2":0.021,"b3":0.632,"b5":0.616,"b6":0.147,"b12":0,"fol":4.74,"chol":3.32,"ala":0.021}},"sour1":{"name":"Sourdough, 1 slice","cat":"grain","portion":"1 slice Publix sourdough (56 g)","desc":"","size":null,"tags":["meal"],"n":{"kcal":150,"pro":5,"carb":30,"fat":0.5,"fib":1,"sug":0,"ca":10,"fe":1.8,"mg":17.9,"p":58.8,"k":60,"na":290,"zn":0.582,"cu":0.085,"mn":0.323,"se":16.0,"io":0,"va":0,"vc":0,"vd":0,"ve":0.118,"vk":0.392,"b1":0.398,"b2":0.239,"b3":2.7,"b5":0.255,"b6":0.06,"b12":0,"fol":95.2,"chol":4.48,"ala":0.035}},"sour2":{"name":"Sourdough, 2 slices","cat":"grain","portion":"2 slices Publix sourdough (112 g)","desc":"","size":null,"tags":["meal"],"n":{"kcal":300,"pro":10,"carb":60,"fat":1.0,"fib":2,"sug":0,"ca":20,"fe":3.6,"mg":35.8,"p":118.0,"k":120,"na":580,"zn":1.16,"cu":0.17,"mn":0.646,"se":32.0,"io":0,"va":0,"vc":0,"vd":0,"ve":0.235,"vk":0.784,"b1":0.795,"b2":0.478,"b3":5.4,"b5":0.51,"b6":0.12,"b12":0,"fol":190.0,"chol":8.96,"ala":0.071}},"french":{"name":"French bread, 6 in","cat":"grain","portion":"6 in of an 18 in Publix baguette (about 113 g)","desc":"","size":null,"tags":["meal"],"n":{"kcal":300,"pro":10,"carb":58,"fat":4,"fib":2,"sug":4,"ca":58.8,"fe":4.42,"mg":36.2,"p":119.0,"k":72,"na":680,"zn":1.18,"cu":0.172,"mn":0.652,"se":32.3,"io":0,"va":0,"vc":0,"vd":0,"ve":0.237,"vk":0.791,"b1":0.802,"b2":0.483,"b3":5.44,"b5":0.514,"b6":0.121,"b12":0,"fol":192.0,"chol":9.04,"ala":0.071}},"butter":{"name":"Butter, 1 tsp","cat":"grain","portion":"1 tsp salted butter (5 g)","desc":"","size":null,"tags":[],"n":{"kcal":35.9,"pro":0.043,"carb":0.003,"fat":4.06,"fib":0,"sug":0.003,"ca":1.2,"fe":0.001,"mg":0.1,"p":1.2,"k":1.2,"na":32.1,"zn":0.004,"cu":0,"mn":0,"se":0.05,"io":0.235,"va":34.2,"vc":0,"vd":0,"ve":0.116,"vk":0.35,"b1":0.0,"b2":0.002,"b3":0.002,"b5":0.006,"b6":0.0,"b12":0.009,"fol":0.15,"chol":0.94,"ala":0.016}},"pasta2":{"name":"Bucatini, 2 oz dry","cat":"grain","portion":"2 oz dry (about 1 cup cooked) + ½ cup marinara","desc":"","size":null,"tags":["meal"],"n":{"kcal":277.0,"pro":9.27,"carb":52.4,"fat":2.99,"fib":4.2,"sug":8.0,"ca":46.3,"fe":2.84,"mg":54.0,"p":153.0,"k":550.0,"na":580.0,"zn":1.07,"cu":0.273,"mn":0.69,"se":37.9,"io":0,"va":40.9,"vc":2.64,"vd":0,"ve":3.23,"vk":18.4,"b1":0.54,"b2":0.309,"b3":9.26,"b5":0.346,"b6":0.309,"b12":0,"fol":240.0,"chol":26.7,"ala":0.122}},"pasta4":{"name":"Bucatini, 4 oz dry","cat":"grain","portion":"4 oz dry (about 2 cups cooked) + 1 cup marinara","desc":"","size":null,"tags":["meal"],"n":{"kcal":551.0,"pro":18.4,"carb":104.0,"fat":5.96,"fib":8.37,"sug":16.0,"ca":92.4,"fe":5.66,"mg":107.0,"p":303.0,"k":1097.0,"na":1160.0,"zn":2.12,"cu":0.543,"mn":1.37,"se":75.1,"io":0,"va":81.8,"vc":5.28,"vd":0,"ve":6.46,"vk":36.8,"b1":1.07,"b2":0.613,"b3":18.5,"b5":0.688,"b6":0.617,"b12":0,"fol":476.0,"chol":53.2,"ala":0.244}},"raw":{"name":"Raw plate","cat":"raw","portion":"½ red onion, 6 in cucumber with skin, 1 medium red bell pepper, 3 in radish","desc":"","size":null,"tags":["vitc","radish"],"n":{"kcal":107.0,"pro":3.68,"carb":23.7,"fat":0.732,"fib":6.03,"sug":13.2,"ca":80.0,"fe":1.59,"mg":61.8,"p":118.0,"k":852.0,"na":32.0,"zn":0.941,"cu":0.239,"mn":0.4,"se":1.69,"io":0,"va":197.0,"vc":184.0,"vd":0,"ve":1.95,"vk":39.2,"b1":0.164,"b2":0.202,"b3":1.62,"b5":1.1,"b6":0.538,"b12":0,"fol":107.0,"chol":29.3,"ala":0.071}},"carrots":{"name":"Steamed carrots & beet","cat":"raw","portion":"4 medium carrots + 1 slice beet, steamed","desc":"","size":null,"tags":["carot"],"n":{"kcal":91.5,"pro":2.17,"carb":21.4,"fat":0.459,"fib":7.4,"sug":9.92,"ca":73.0,"fe":0.98,"mg":28.8,"p":78.5,"k":617.0,"na":153.0,"zn":0.548,"cu":0.058,"mn":0.438,"se":1.79,"io":0,"va":1960.0,"vc":9.18,"vd":0,"ve":2.38,"vk":31.6,"b1":0.159,"b2":0.111,"b3":1.57,"b5":0.57,"b6":0.369,"b12":0,"fol":52.2,"chol":21.8,"ala":0.004}},"avocado":{"name":"Avocado, ½","cat":"raw","portion":"½ medium Hass avocado (68 g)","desc":"","size":null,"tags":["fat","meal"],"n":{"kcal":114.0,"pro":1.33,"carb":5.88,"fat":10.5,"fib":4.62,"sug":0.204,"ca":8.84,"fe":0.415,"mg":19.7,"p":36.7,"k":345.0,"na":5.44,"zn":0.462,"cu":0.116,"mn":0.101,"se":0.272,"io":0,"va":4.76,"vc":5.98,"vd":0,"ve":1.34,"vk":14.3,"b1":0.051,"b2":0.097,"b3":1.3,"b5":0.995,"b6":0.195,"b12":0,"fol":60.5,"chol":9.66,"ala":0.075}}};
+var F_ALIAS={"arhar":"arhar1","rajma":"rajma1","chana":"chana1","lobia":"lobia1","cauli":"cauli1","cabbage":"cabbage1","beans":"beans1","zucchini":"zucchini1","eggplant":"eggplant1","rice":"rice3","pasta":["pasta2","french","butter"],"avotoast":["avocado","sour1"],"carrotbeet":"carrots"};
+(function(){
+"use strict";
+/* ---------- Food catalogue (per serving; USDA FoodData Central estimates) ---------- */
+var N_KEYS=["kcal","pro","carb","fat","fib","sug","ca","fe","mg","p","k","na","zn","cu","mn","se","io","va","vc","vd","ve","vk","b1","b2","b3","b5","b6","b12","fol","chol","ala"];
+var CATS=[
+ {id:"morning",name:"Morning routine",c:"#B7791F"},
+ {id:"protein",name:"Morning protein",c:"#7A3E9D"},
+ {id:"legume",name:"Lentils & legumes",c:"#1F5FA8"},
+ {id:"veg",name:"Cooked vegetables",c:"#C0501A"},
+ {id:"grain",name:"Breads, rice & pasta",c:"#8A5A2B"},
+ {id:"raw",name:"Raw plate & sides",c:"#1E7B4F"},
+ {id:"between",name:"Between meals",c:"#0E7490"}
+];
+/* Food values per serving: USDA SR28/SR Legacy, product labels (Stonyfield, Lindt, Publix) and the USDA-FDA-NIH iodine database. Built from your portions. */
+var F={};Object.keys(F_DATA).forEach(function(id){var d=F_DATA[id];F[id]={name:d.name,desc:d.desc,cat:d.cat,size:d.size,portion:d.portion,serv:d.portion+(d.desc?" · "+d.desc:""),tags:d.tags,n:d.n};N_KEYS.forEach(function(k){if(typeof F[id].n[k]!=="number")F[id].n[k]=0;});});
+function fname(id){var f=F[id];return f?(f.size?f.name+" · "+f.size:f.name):id;}
+function normItems(items){var out=[];(items||[]).forEach(function(x){if(F[x.f]){out.push(x);return;}var a=F_ALIAS[x.f];if(!a)return;(Array.isArray(a)?a:[a]).forEach(function(id){if(F[id])out.push({f:id,q:x.q||1});});});return out;}
+function normSlots(sl){(sl||[]).forEach(function(s){s.items=normItems(s.items);});return sl;}
+function cat(id){for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i];return CATS[0];}
+function has(id,tag){return F[id]&&F[id].tags.indexOf(tag)>=0;}
+
+/* ---------- Nutrient targets: RDA/AI, men 51-70 ---------- */
+var NUT=[
+ {k:"kcal",label:"Calories",u:"kcal",t:null,d:0,g:"Energy and macronutrients"},
+ {k:"pro",label:"Protein",u:"g",t:56,d:0,g:"Energy and macronutrients"},
+ {k:"carb",label:"Carbohydrate",u:"g",t:null,d:0,g:"Energy and macronutrients"},
+ {k:"fat",label:"Fat",u:"g",t:null,d:0,g:"Energy and macronutrients"},
+ {k:"sug",label:"Sugars (natural, honey)",u:"g",t:null,d:0,g:"Energy and macronutrients"},
+ {k:"fib",label:"Fiber",u:"g",t:30,d:0,g:"Energy and macronutrients"},
+ {k:"ala",label:"Omega-3 (ALA)",u:"g",t:1.6,d:1,g:"Energy and macronutrients"},
+ {k:"va",label:"Vitamin A (RAE)",u:"µg",t:900,d:0,g:"Vitamins"},
+ {k:"vc",label:"Vitamin C",u:"mg",t:90,d:0,g:"Vitamins"},
+ {k:"vd",label:"Vitamin D",u:"µg",t:15,d:1,g:"Vitamins"},
+ {k:"ve",label:"Vitamin E",u:"mg",t:15,d:1,g:"Vitamins"},
+ {k:"vk",label:"Vitamin K",u:"µg",t:120,d:0,g:"Vitamins"},
+ {k:"b1",label:"Thiamin (B1)",u:"mg",t:1.2,d:2,g:"Vitamins"},
+ {k:"b2",label:"Riboflavin (B2)",u:"mg",t:1.3,d:2,g:"Vitamins"},
+ {k:"b3",label:"Niacin (B3)",u:"mg",t:16,d:1,g:"Vitamins"},
+ {k:"b5",label:"Pantothenic acid (B5)",u:"mg",t:5,d:1,g:"Vitamins"},
+ {k:"b6",label:"Vitamin B6",u:"mg",t:1.7,d:2,g:"Vitamins"},
+ {k:"b12",label:"Vitamin B12",u:"µg",t:2.4,d:1,g:"Vitamins"},
+ {k:"fol",label:"Folate (DFE)",u:"µg",t:400,d:0,g:"Vitamins"},
+ {k:"chol",label:"Choline",u:"mg",t:550,d:0,g:"Vitamins"},
+ {k:"ca",label:"Calcium",u:"mg",t:1000,d:0,g:"Minerals"},
+ {k:"fe",label:"Iron (vegetarian target)",u:"mg",t:14.4,d:1,g:"Minerals"},
+ {k:"mg",label:"Magnesium",u:"mg",t:420,d:0,g:"Minerals"},
+ {k:"p",label:"Phosphorus",u:"mg",t:700,d:0,g:"Minerals"},
+ {k:"k",label:"Potassium",u:"mg",t:3400,d:0,g:"Minerals"},
+ {k:"zn",label:"Zinc",u:"mg",t:11,d:1,g:"Minerals"},
+ {k:"cu",label:"Copper",u:"mg",t:0.9,d:2,g:"Minerals"},
+ {k:"mn",label:"Manganese",u:"mg",t:2.3,d:1,g:"Minerals"},
+ {k:"se",label:"Selenium",u:"µg",t:55,d:0,g:"Minerals"},
+ {k:"io",label:"Iodine",u:"µg",t:150,d:0,g:"Minerals"},
+ {k:"na",label:"Sodium (limit)",u:"mg",t:2300,d:0,g:"Minerals",lim:true}
+];
+function shortName(d){return d.label.replace(" (vegetarian target)","").replace(" (DFE)","").replace(" (RAE)","").replace(" (limit)","").replace(" (natural, honey)","");}
+
+
+/* ---------- Default week ---------- */
+var SLOTS=[
+ {id:"wake",t:"06:30",label:"On waking"},
+ {id:"first",t:"06:50",label:"Protein and fat first"},
+ {id:"smoothie",t:"07:05",label:"Smoothie"},
+ {id:"yogurt",t:"09:05",label:"Yogurt drink"},
+ {id:"lunch",t:"12:30",label:"Lunch, main meal"},
+ {id:"banana",t:"15:00",label:"Afternoon fruit"},
+ {id:"tea",t:"16:30",label:"Tea break"},
+ {id:"dinner",t:"19:00",label:"Dinner, lighter"}
+];
+// weekday: 1=Mon ... 7=Sun
+var WEEK={
+ 1:{p:"omelette",lunch:["raw","rajma1","cauli1","rice3"],dinner:["arhar1","zucchini1"]},
+ 2:{p:"moong",lunch:["raw","carrots","chana1","beans1","roti"],dinner:["arhar1","eggplant1"]},
+ 3:{p:"omelette",lunch:["raw","lobia1","cabbage1","rice3"],dinner:["arhar1","avocado","sour1"]},
+ 4:{p:"moong",lunch:["raw","carrots","rajma1","beans1","roti"],dinner:["arhar1","cauli1"]},
+ 5:{p:"omelette",lunch:["raw","chana1","eggplant1","rice3"],dinner:["arhar1","avocado","sour1"]},
+ 6:{p:"moong",lunch:["raw","pasta2","french","butter"],dinner:["lobia1","zucchini1","roti"]},
+ 7:{p:"moong",lunch:["raw","arhar1","cabbage1","paratha"],dinner:["avocado","sour1","beans1","carrots"]}
+};
+function defaultSlots(date){
+ var w=WEEK[isoDow(date)];
+ var items={wake:["lemon"],first:["nuts",w.p],smoothie:["smoothie"],yogurt:["yogurt"],lunch:w.lunch,banana:["banana"],tea:["tea","choc"],dinner:w.dinner};
+ return SLOTS.map(function(s){return {id:s.id,t:s.t,label:s.label,items:items[s.id].map(function(f){return {f:f,q:1};})};});
+}
+
+/* ---------- Dates ---------- */
+var DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+var MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function pad(x){return (x<10?"0":"")+x;}
+function key(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function parse(k){var p=k.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function addDays(k,n){var d=parse(k);d.setDate(d.getDate()+n);return key(d);}
+function isoDow(k){var g=parse(k).getDay();return g===0?7:g;}
+function dayName(k){return DAYS[isoDow(k)-1];}
+function shortDate(k){var d=parse(k);return MON[d.getMonth()]+" "+d.getDate();}
+function todayKey(){return key(new Date());}
+function weekStart(k){return addDays(k,1-isoDow(k));}
+function toMin(t){var p=(t||"00:00").split(":");return (+p[0])*60+(+p[1]);}
+function fmtT(t){var m=toMin(t),h=Math.floor(m/60),mm=m%60,ap=h<12?"am":"pm",hh=h%12===0?12:h%12;return hh+":"+pad(mm)+" "+ap;}
+function gap(m){m=Math.abs(m);if(m<60)return m+" min";var h=Math.floor(m/60),r=m%60;return h+" h"+(r?" "+r+" min":"");}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+/* ---------- State ---------- */
+var CFG=window.MP_CONFIG||null;
+var S={week:weekStart(todayKey()),sel:todayKey(),plans:{},mode:"loading",readOnly:false,me:null,names:{},db:null,user:null,unsub:null};
+function changed(k){var p=S.plans[k];return !!(p&&!p.auto);}
+function isPast(k){return k<todayKey();}
+function locked(){return S.readOnly||isPast(S.sel);}
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function slotsFor(k){var p=S.plans[k];return (p&&p.slots)?normSlots(clone(p.slots)):defaultSlots(k);}
+function sortSlots(sl){sl.sort(function(a,b){return toMin(a.t)-toMin(b.t);});return sl;}
+
+/* ---------- Persistence ---------- */
+var LS="mealplan-v2:";
+function lsGet(k){try{var v=localStorage.getItem(LS+k);return v?JSON.parse(v):null;}catch(e){return null;}}
+function lsSet(k,v){try{if(v)localStorage.setItem(LS+k,JSON.stringify(v));else localStorage.removeItem(LS+k);}catch(e){}}
+var pending={},writing={},timers={};
+function save(k){
+ if(CFG&&gsReady()){gsSave(k);return;}
+ if(S.mode!=="db"){lsSet(k,S.plans[k]||null);return;}
+ clearTimeout(timers[k]);timers[k]=setTimeout(function(){delete timers[k];flush(k);},300);
+}
+function flush(k){
+ if(writing[k]){pending[k]=true;return;}
+ writing[k]=true;
+ var ref=S.db.doc("plans/"+k),p=S.plans[k];
+ var pr=p?ref.set({date:k,slots:p.slots,at:p.at,by:p.by||""}):ref.delete();
+ pr.then(done,function(e){
+   if(e&&e.code==="invalid_argument"){S.readOnly=true;toast("This plan is view-only for you. Ask Rahul for Contributor access to change it.");renderAll();}
+   else if(e&&e.code==="unavailable"){setTimeout(function(){writing[k]=false;flush(k);},800+Math.random()*700);return;}
+   else toast("Couldn't save the change. Check your connection and try again.");
+   done();
+ });
+ function done(){writing[k]=false;if(pending[k]){pending[k]=false;flush(k);}}
+}
+function commit(k,slots){
+ if(S.readOnly||isPast(k))return;
+ S.plans[k]={slots:sortSlots(slots),at:new Date().toISOString(),by:(CFG?GS.who:S.me)||""};
+ save(k);renderAll();
+}
+function resetDay(k){if(isPast(k))return;delete S.plans[k];save(k);renderAll();toast(dayName(k)+" is back to the default plan.");}
+
+function loadLocalWeek(){for(var i=0;i<9;i++){var k=addDays(S.week,i),v=lsGet(k);if(v)S.plans[k]=v;}}
+function localMode(){
+ S.mode="local";
+ loadLocalWeek();
+ renderAll();
+}
+function subscribe(){
+ if(S.unsub){try{S.unsub();}catch(e){}S.unsub=null;}
+ var dates=[];for(var i=0;i<9;i++)dates.push(addDays(S.week,i));
+ S.unsub=S.db.collection("plans").where("date","in",dates).onSnapshot(function(snap){
+   dates.forEach(function(d){if(!timers[d]&&!writing[d])delete S.plans[d];});
+   snap.docs.forEach(function(doc){var d=doc.data();if(d&&d.slots&&!timers[doc.id]&&!writing[doc.id])S.plans[doc.id]={slots:d.slots,at:d.at,by:d.by};});
+   S.mode="db";resolveNames();renderAll();
+ },function(e){if(e&&e.code==="revoked"){S.mode="local";renderAll();}else{setTimeout(subscribe,1500);}});
+}
+function resolveNames(){
+ if(!S.user)return;
+ var ids=[];Object.keys(S.plans).forEach(function(k){var b=S.plans[k].by;if(b&&!(b in S.names)&&ids.indexOf(b)<0)ids.push(b);});
+ if(!ids.length)return;
+ S.user.profiles(ids).then(function(ps){ids.forEach(function(id){S.names[id]=(ps&&ps[id]&&ps[id].name)||"";});renderBoard();});
+}
+function init(){
+ renderAll();
+ if(CFG){gsInit();return;}
+ if(!window.claude||typeof window.claude.use!=="function"){localMode();return;}
+ Promise.all([window.claude.use("db"),window.claude.use("user")]).then(function(r){
+   S.db=r[0];S.user=r[1];
+   if(!S.db){localMode();return;}
+   var chain=S.user?Promise.all([S.user.id(),S.user.can("data.write")]):Promise.resolve([null,null]);
+   chain.then(function(x){S.me=x[0]||null;if(x[1]===false)S.readOnly=true;subscribe();});
+ },localMode);
+}
+
+/* ---------- Analysis: warnings and synergies ---------- */
+function flat(slots){var out=[];slots.forEach(function(s){s.items.forEach(function(it,i){if(F[it.f])out.push({f:it.f,q:it.q,t:toMin(s.t),time:s.t,slot:s.id,i:i});});});return out;}
+function analyse(slots){
+ var it=flat(slots),W=[],G=[],bad={};
+ function mark(a){bad[a.slot+":"+a.i]=true;}
+ function nm(a){return fname(a.f)+" ("+fmtT(a.time)+")";}
+ function pairRule(tagA,tagB,limit,title,why,src,kind){
+   it.forEach(function(a){if(!has(a.f,tagA))return;it.forEach(function(b){
+     if(a===b||a.f===b.f||!has(b.f,tagB))return;
+     var d=Math.abs(a.t-b.t);if(d>=limit)return;
+     var id=[tagA,tagB,a.slot,a.i,b.slot,b.i].join("|");if(seen[id])return;seen[id]=1;
+     mark(a);mark(b);
+     W.push({title:title,detail:nm(a)+" and "+nm(b)+" are "+(d?gap(d)+" apart":"at the same time")+". "+why+" Keep them at least "+gap(limit)+" apart.",src:src,kind:kind});
+   });});
+ }
+ var seen={};
+ pairRule("tannin","iron",60,"Tea too close to an iron-rich food","Tea tannins can cut plant iron absorption sharply.","Research: Hurrell 1999; NIH iron fact sheet","res");
+ pairRule("cocoa","iron",60,"Chocolate too close to an iron-rich food","Cocoa polyphenols also reduce plant iron absorption.","Research: Hurrell 1999","res");
+ pairRule("calcium","iron",120,"Yogurt drink too close to an iron-rich food","Calcium competes with plant iron in the same meal.","Research: NIH iron fact sheet","res");
+ pairRule("banana","curd",60,"Banana with yogurt","Classical texts list banana with curd as an incompatible pair (viruddha).","Ayurveda: viruddha ahara","ayur");
+ pairRule("banana","milk",60,"Banana with milky tea","Ayurveda lists banana with milk as incompatible.","Ayurveda: viruddha ahara","ayur");
+ pairRule("banana","smoothie",120,"Banana too close to the smoothie","Banana's browning enzyme (PPO) destroys the berry flavanols in the smoothie.","Research: Ottaviani 2023","res");
+ pairRule("honey","ghee",30,"Honey and ghee together","Ayurveda considers honey and ghee in equal amounts incompatible.","Ayurveda: Charaka Su. 26","ayur");
+ pairRule("milk","sour",30,"Milky tea with sour food","Ayurveda lists milk with sour fruit as incompatible.","Ayurveda: viruddha ahara","ayur");
+ pairRule("milk","radish",30,"Milky tea with radish","Ayurveda lists milk with radish as incompatible.","Ayurveda: viruddha ahara","ayur");
+ // curd at night
+ it.forEach(function(a){if(has(a.f,"curd")&&a.t>=18*60){mark(a);W.push({title:"Yogurt at night",detail:fname(a.f)+" is at "+fmtT(a.time)+". Ashtanga Hridaya advises against curd at night. Move it to the morning or afternoon.",src:"Ayurveda: Ashtanga Hridaya Su. 5",kind:"ayur"});}});
+ // smoothie needs protein/fat first
+ it.forEach(function(a){if(!has(a.f,"smoothie"))return;
+   var ok=it.some(function(b){return has(b.f,"fatpro")&&b.t<=a.t&&a.t-b.t<=30;});
+   if(ok)G.push({title:"Protein and fat before the smoothie",detail:"Eating nuts or eggs or sprouts first gives a gentler blood sugar rise.",src:"Research: Shukla 2015"});
+   else{mark(a);W.push({title:"Smoothie without protein or fat first",detail:"Nothing with protein or fat is in the 30 minutes before the smoothie at "+fmtT(a.time)+". The fruit sugar hits faster on its own. Have the nut bowl, omelette or sprouts 10-30 minutes before.",src:"Research: Shukla 2015",kind:"res"});}
+ });
+ // meal spacing (main meals)
+ var meals=slots.filter(function(s){return s.items.some(function(x){return has(x.f,"meal");});}).map(function(s){return {s:s,t:toMin(s.t)};}).sort(function(a,b){return a.t-b.t;});
+ for(var i=1;i<meals.length;i++){var d=meals[i].t-meals[i-1].t;if(d<180){meals[i].s.items.forEach(function(x,j){if(has(x.f,"meal"))mark({slot:meals[i].s.id,i:j});});W.push({title:"Main meals too close together",detail:"The meals at "+fmtT(meals[i-1].s.t)+" and "+fmtT(meals[i].s.t)+" are "+gap(d)+" apart. Ayurveda says to eat only after the last meal is digested, usually 3+ hours.",src:"Ayurveda: Charaka Vimana 1",kind:"ayur"});}}
+ // synergies
+ var leg=it.filter(function(a){return has(a.f,"legume");});
+ if(leg.length)G.push({title:"Lemon and tomato on the "+(leg.length>1?"dals":F[leg[0].f].name.toLowerCase()),detail:"Lemon's vitamin C helps you absorb the plant iron, and tomato cooked in ghee releases more lycopene.",src:"Research: NIH iron fact sheet; Fielding 2005"});
+ var seenG={};
+ it.forEach(function(a){if(!has(a.f,"vitc"))return;it.forEach(function(b){if((has(b.f,"legume")||has(b.f,"sprout"))&&Math.abs(a.t-b.t)<=30&&!seenG["c"+b.f]){seenG["c"+b.f]=1;G.push({title:"Raw plate with "+fname(b.f).toLowerCase(),detail:"Red bell pepper adds a lot of vitamin C, which helps you absorb more of the iron in the meal.",src:"Research: Hallberg 1989"});}});});
+ it.forEach(function(a){if(!has(a.f,"fat"))return;it.forEach(function(b){if((has(b.f,"vitc")||has(b.f,"carot"))&&Math.abs(a.t-b.t)<=30&&!seenG["f"+b.f]){seenG["f"+b.f]=1;G.push({title:"Avocado with "+fname(b.f).toLowerCase(),detail:"The avocado's fat raises carotenoid absorption from the vegetables several times over.",src:"Research: Unlu 2005"});}});});
+ it.forEach(function(a){if(!has(a.f,"calcium"))return;var sm=it.filter(function(b){return has(b.f,"smoothie")&&a.t-b.t>=120;});if(sm.length&&!seenG.cal){seenG.cal=1;G.push({title:"Yogurt drink 2+ hours after the smoothie",detail:"Keeping calcium away from the iron-rich smoothie protects iron absorption.",src:"Research: NIH iron fact sheet"});}});
+ return {W:W,G:G,bad:bad};
+}
+function totals(slots){var t={};N_KEYS.forEach(function(k){t[k]=0;});flat(slots).forEach(function(a){N_KEYS.forEach(function(k){t[k]+=F[a.f].n[k]*a.q;});});return t;}
+
+/* ---------- Prep ---------- */
+function itemsOf(k){var o={};slotsFor(k).forEach(function(s){s.items.forEach(function(x){if(!o[x.f])o[x.f]=s;var b=x.f.replace(/[123]$/,"");if(!o[b])o[b]=s;});});return o;}
+function prepFor(k){
+ var t1=addDays(k,1),t2=addDays(k,2),A=itemsOf(t1),B=itemsOf(t2),out=[];
+ function when(s){return dayName(t1)+" "+s.label.toLowerCase().split(",")[0];}
+ if(A.rajma)out.push({big:1,f:"rajma",txt:"Soak <b>rajma</b> overnight, 8-12 hours, in plenty of water. For "+when(A.rajma)+"."});
+ if(A.chana)out.push({big:1,f:"chana",txt:"Soak <b>chickpeas</b> overnight, 8-12 hours, in plenty of water. For "+when(A.chana)+"."});
+ if(A.lobia)out.push({big:1,f:"lobia",txt:"Soak <b>black-eyed peas</b> tonight (6-8 hours is enough; overnight is fine). For "+when(A.lobia)+"."});
+ if(B.moong&&!A.moong)out.push({big:1,f:"moong",txt:"Soak <b>whole moong</b> (about ⅓ cup, 68 g dry) tonight. Drain it tomorrow morning and let it sprout for "+dayName(t2)+"."});
+ else if(B.moong)out.push({big:1,f:"moong",txt:"Soak the next batch of <b>whole moong</b> tonight for "+dayName(t2)+"'s sprouts."});
+ if(A.moong)out.push({f:"moong",txt:"Rinse the sprouting moong tonight. It should be ready by morning."});
+ if(A.nuts)out.push({f:"nuts",txt:"Soak 21 almonds and 7 walnut halves. Discard the water in the morning."});
+ if(A.yogurt)out.push({f:"yogurt",txt:"Soak 2 heaped tbsp chia in water, in the fridge, for the yogurt drink."});
+ if(A.omelette)out.push({f:"omelette",txt:"Tomorrow morning: set the shiitake gill-side up in the sun for 30-60 minutes for vitamin D."});
+ return out;
+}
+
+/* ---------- Rendering ---------- */
+var $=function(s,r){return (r||document).querySelector(s);};
+function chipHTML(sl,it,i,bad){
+ var f=F[it.f];if(!f)return "";var c=cat(f.cat).c;
+ return '<button type="button" class="chip'+(bad[sl.id+":"+i]?" clash":"")+'" data-slot="'+sl.id+'" data-i="'+i+'" style="--c:'+c+'" aria-label="'+esc(fname(it.f))+(it.q!==1?", "+it.q+" servings":"")+'. Tap to change.">'+
+  '<span class="cdot"></span><span class="cname">'+esc(fname(it.f))+'</span>'+(it.q!==1?'<span class="cq">×'+it.q+'</span>':"")+(bad[sl.id+":"+i]?'<span class="bang" aria-hidden="true">!</span>':"")+'</button>';
+}
+function renderStrip(){
+ var h="",tk=todayKey();
+ for(var i=0;i<7;i++){var k=addDays(S.week,i),soak=prepFor(k).some(function(p){return p.big;});
+  h+='<button type="button" class="dbtn'+(isPast(k)?" past":"")+(k===S.sel?" on":"")+(k===tk?" today":"")+'" data-day="'+k+'" aria-pressed="'+(k===S.sel)+'"><span class="dn">'+DAYS[i].slice(0,3)+'</span><span class="dd">'+parse(k).getDate()+'</span>'+
+  '<span class="dflags">'+(changed(k)?'<i class="fl-ed" title="Changed from default"></i>':"")+(soak?'<i class="fl-soak" title="Soak tonight"></i>':"")+'</span></button>';}
+ $("#strip").innerHTML=h;
+ var a=parse(S.week),b=parse(addDays(S.week,6));
+ $("#wkLabel").textContent=MON[a.getMonth()]+" "+a.getDate()+" - "+MON[b.getMonth()]+" "+b.getDate();
+}
+function statusLine(k){
+ var p=S.plans[k];
+ if(!p||p.auto)return "Default plan";
+ var t=p.at?new Date(p.at):null,who=p.by&&S.names[p.by]?S.names[p.by]:(CFG&&p.by?p.by:"");
+ var when=t?(t.toLocaleDateString(undefined,{weekday:"short"})+" "+t.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})):"";
+ return "Changed"+(who?" by "+esc(who):"")+(when?" · "+when:"");
+}
+function renderBoard(){
+ var k=S.sel,sl=sortSlots(slotsFor(k)),A=analyse(sl),T=totals(sl),tk=todayKey();
+ var head=(k===tk?"Today, ":"")+dayName(k)+" "+shortDate(k);
+ $("#bTitle").textContent=head;
+ $("#bStatus").innerHTML=statusLine(k)+(isPast(k)?" · Past day, view only":"");
+ $("#bReset").hidden=!changed(k)||locked();
+ var sync=S.mode==="db"?(S.readOnly?"View only":"Shared and synced"):S.mode==="sync"?"Synced with Google Sheet":S.mode==="offline"?"Offline, will sync later":S.mode==="local"?(CFG?"Not connected, this device only":"Saved on this device only"):"Connecting...";
+ $("#bSync").textContent=sync;$("#bSync").className="sync s-"+S.mode+(S.readOnly?" ro":"");
+ // warnings
+ var w="";
+ if(A.W.length){w+='<div class="warns" role="alert"><h4>'+(A.W.length>1?A.W.length+" timing clashes to fix":"1 timing clash to fix")+'</h4><ul>'+
+   A.W.map(function(x){return '<li><b>'+esc(x.title)+'.</b> '+esc(x.detail)+' <span class="src s-'+x.kind+'">'+esc(x.src)+'</span></li>';}).join("")+'</ul></div>';}
+ $("#bWarn").innerHTML=w;
+ // slots
+ var h="";
+ sl.forEach(function(s){
+  var kc=0;s.items.forEach(function(x){if(F[x.f])kc+=F[x.f].n.kcal*x.q;});
+  h+='<section class="slot" data-slot="'+s.id+'"><div class="stime"><button type="button" class="tbtn" data-edit-time="'+s.id+'" aria-label="Change time, now '+fmtT(s.t)+'">'+fmtT(s.t)+'</button><span class="slabel">'+esc(s.label)+'</span>'+(s.items.length?'<span class="skc">'+Math.round(kc)+' kcal</span>':(locked()?"":'<button type="button" class="sdel" data-del-slot="'+s.id+'">Remove time</button>'))+'</div>'+
+   '<div class="sbody">'+s.items.map(function(it,i){return chipHTML(s,it,i,A.bad);}).join("")+(locked()?"":'<span class="dhint">'+(s.items.length?"Drop to add":"Drop food here")+'</span>')+'</div></section>';
+ });
+ $("#slots").innerHTML=h;
+ // prep
+ var pr=prepFor(k);
+ $("#bPrep").innerHTML=pr.length?'<h4>Tonight, for '+dayName(addDays(k,1))+'</h4><ul>'+pr.map(function(p){return '<li class="'+(p.big?"big":"")+'" style="--c:'+cat((F[p.f]||F[p.f+"1"]).cat).c+'">'+p.txt+'</li>';}).join("")+'</ul>':"";
+ // synergy
+ $("#bGood").innerHTML=A.G.length?'<h4>Working well today</h4><ul>'+A.G.map(function(g){return '<li><b>'+esc(g.title)+'.</b> '+esc(g.detail)+' <span class="src s-res">'+esc(g.src)+'</span></li>';}).join("")+'</ul>':"";
+ // mini nutrients
+ var keys=["pro","fib","ca","fe","ve","vd"];
+ $("#bNut").innerHTML='<div class="kc"><b>'+Math.round(T.kcal).toLocaleString()+'</b> kcal</div>'+keys.map(function(kk){var d=NUT.filter(function(x){return x.k===kk;})[0],v=T[kk],p=Math.round(v/d.t*100);
+   return '<div class="mn '+(p>=100?"ok":"lo")+'"><span class="ml">'+shortName(d)+'</span><span class="mbar"><i style="width:'+Math.min(100,p)+'%"></i></span><span class="mp">'+p+'%</span></div>';}).join("")+'<a href="#nutrients" data-go="nutrients" class="more">All nutrients for '+dayName(k)+'</a>';
+ document.body.classList.toggle("ro",locked());
+ renderHero(T,A);
+}
+function renderHero(T,A){
+ var gaps=NUT.filter(function(d){return d.t&&!d.lim&&T[d.k]<d.t;});
+ var lab=S.sel===todayKey()?"today":dayName(S.sel);
+ $("#hPro").textContent="~"+Math.round(T.pro)+" g";$("#hProL").textContent="protein "+lab;
+ $("#hFib").textContent="~"+Math.round(T.fib)+" g";$("#hFibL").textContent="fiber "+lab;
+ $("#hKc").textContent="~"+(Math.round(T.kcal/10)*10).toLocaleString();$("#hKcL").textContent="calories "+lab;
+ $("#hGap").textContent=gaps.length+(gaps.length===1?" gap":" gaps");$("#hGapL").textContent=gaps.length?gaps.map(shortName).join(", "):"none below target";
+}
+function renderMenu(){
+ var q=($("#mSearch").value||"").trim().toLowerCase(),h="";
+ CATS.forEach(function(c){
+  var ids=Object.keys(F).filter(function(id){return F[id].cat===c.id&&(!q||fname(id).toLowerCase().indexOf(q)>=0||F[id].serv.toLowerCase().indexOf(q)>=0);});
+  if(!ids.length)return;
+  h+='<div class="mcat" style="--c:'+c.c+'"><h4>'+c.name+'</h4><div class="mitems">'+ids.map(function(id){var f=F[id];
+   return '<button type="button" class="food" data-food="'+id+'" style="--c:'+c.c+'"><span class="fname">'+esc(fname(id))+'</span><span class="fport">'+esc(f.size?(f.desc||""):f.portion)+'</span><span class="fmeta">'+Math.round(f.n.kcal)+' kcal · '+(Math.round(f.n.pro*10)/10)+' g protein</span></button>';}).join("")+'</div></div>';
+ });
+ $("#menuList").innerHTML=h||'<p class="empty">Nothing matches "'+esc(q)+'". Try "dal" or "toast".</p>';
+}
+function renderWeek(){
+ var h="";
+ for(var i=0;i<7;i++){var k=addDays(S.week,i),sl=sortSlots(slotsFor(k)),lunch=null,dinner=null;
+  var main=sl.filter(function(s){return s.items.some(function(x){return has(x.f,"meal");});});
+  lunch=main[0];dinner=main[main.length-1];if(dinner===lunch)dinner=null;
+  var morning=sl.filter(function(s){return toMin(s.t)<11*60;}).reduce(function(a,s){return a.concat(s.items.map(function(x){return x.f;}));},[]).filter(function(f){return F[f]&&F[f].cat==="protein";});
+  function list(s){return s?s.items.map(function(x){var f=F[x.f];return f?'<span class="wi" style="--c:'+cat(f.cat).c+'">'+esc(fname(x.f))+'</span>':"";}).join(""):'<span class="wi none">-</span>';}
+  var A=analyse(sl);
+  h+='<button type="button" class="wday'+(isPast(k)?" past":"")+(k===S.sel?" on":"")+(k===todayKey()?" today":"")+'" data-day="'+k+'"><span class="wh">'+DAYS[i]+' <small>'+shortDate(k)+'</small>'+(changed(k)?'<em class="wed">changed</em>':"")+(A.W.length?'<em class="wwarn">'+A.W.length+' warning'+(A.W.length>1?"s":"")+'</em>':"")+'</span>'+
+   '<span class="wrow"><small>Morning</small>'+(morning.length?morning.map(function(f){return '<span class="wi" style="--c:'+cat("protein").c+'">'+esc(fname(f))+'</span>';}).join(""):'<span class="wi none">-</span>')+'</span>'+
+   '<span class="wrow"><small>'+(lunch?fmtT(lunch.t):"Lunch")+'</small>'+list(lunch)+'</span><span class="wrow"><small>'+(dinner?fmtT(dinner.t):"Dinner")+'</small>'+list(dinner)+'</span></button>';
+ }
+ $("#weekGrid").innerHTML=h;
+}
+function pctOf(d,v){return Math.round(v/d.t*100);}
+function renderNutrients(){
+ var k=S.sel,sl=slotsFor(k),T=totals(sl),it=flat(sl),grp="";
+ $("#nutDay").textContent=(k===todayKey()?"Today, ":"")+dayName(k)+" "+shortDate(k);
+ $("#nutStatus").textContent=changed(k)?"This day has been changed from the default plan.":"This day is on the default plan.";
+ var rows=NUT.map(function(d){
+   var h="";if(d.g!==grp){grp=d.g;h='<tr class="grow"><th colspan="5">'+grp+'</th></tr>';}
+   var v=T[d.k],agg={};it.forEach(function(a){var x=F[a.f].n[d.k]*a.q;if(x>0)agg[a.f]=(agg[a.f]||0)+x;});
+   var top=Object.keys(agg).sort(function(a,b){return agg[b]-agg[a];}).slice(0,2).map(function(f){return esc(fname(f));}).join(", ");
+   var amt=(d.d?v.toFixed(d.d):Math.round(v).toLocaleString())+" "+d.u;
+   if(!d.t)return h+'<tr class="neutral"><td>'+d.label+'</td><td class="n">~'+amt+'</td><td class="om">No single target</td><td class="n">-</td><td class="om">'+top+'</td></tr>';
+   var p=pctOf(d,v),ok=d.lim?p<=100:p>=100;
+   return h+'<tr class="'+(ok?"goodrow":"lowrow")+'"><td>'+d.label+'</td><td class="n">~'+amt+'</td><td><div class="meter"><div class="bar"><i style="width:'+Math.min(100,p)+'%"></i></div><span class="pct">'+p+'%</span></div></td><td class="n">'+(d.lim?"under ":"")+d.t.toLocaleString()+' '+d.u+'</td><td class="om">'+(top||"None in this day's plan")+'</td></tr>';
+ }).join("");
+ $("#nutRows").innerHTML=rows;
+ var low=NUT.filter(function(d){return d.t&&!d.lim&&T[d.k]<d.t;}),over=NUT.filter(function(d){return d.lim&&T[d.k]>d.t;});
+ $("#nutLow").innerHTML=(low.length?'<p><strong>Below target on this day:</strong> '+low.map(function(d){return shortName(d)+" ("+pctOf(d,T[d.k])+"%)";}).join(", ")+'.</p>':"<p><strong>Every vitamin and mineral with a target is covered on this day.</strong></p>")+(over.length?'<p><strong>Over the limit:</strong> sodium is '+Math.round(T.na).toLocaleString()+' mg, above the 2,300 mg daily limit.</p>':"");
+}
+function renderPrepTab(){
+ var k=todayKey(),pr=prepFor(k);
+ $("#prepTonight").innerHTML='<h3 style="margin-top:0">Tonight ('+dayName(k)+'), for '+dayName(addDays(k,1))+'</h3>'+(pr.length?'<ul>'+pr.map(function(p){return '<li>'+p.txt+'</li>';}).join("")+'</ul>':"<p>Nothing to soak tonight.</p>")+'<p class="om">This list follows the shared plan, so it changes when anyone changes tomorrow.</p>';
+}
+function renderAll(){renderStrip();renderBoard();renderWeek();renderNutrients();renderPrepTab();renderHistory();}
+
+/* ---------- Editing ---------- */
+function addItem(slotId,food,time){
+ if(locked())return;
+ var k=S.sel,sl=slotsFor(k),s=null;
+ if(slotId==="__new"){s={id:"x"+Date.now().toString(36),t:time||"12:00",label:"Added time",items:[]};sl.push(s);}
+ else s=sl.filter(function(x){return x.id===slotId;})[0];
+ if(!s)return;s.items.push({f:food,q:1});commit(k,sl);flash(s.id);clashCheck(s.id,s.items.length-1,food);
+}
+function clashCheck(slotId,i,food){var sl=sortSlots(slotsFor(S.sel)),A=analyse(sl),idx=-1;sl.forEach(function(x){if(x.id===slotId)idx=x.items.length-1;});if(A.bad[slotId+":"+(i<0?idx:i)]){setTimeout(function(){toast(fname(food)+" clashes with something nearby. See the red note at the top of the day.",true);},40);}}
+function moveItem(fromSlot,i,toSlot){
+ var k=S.sel,sl=slotsFor(k),a=sl.filter(function(x){return x.id===fromSlot;})[0],b=sl.filter(function(x){return x.id===toSlot;})[0];
+ if(!a||!b||!a.items[i])return;var it=a.items.splice(i,1)[0];b.items.push(it);commit(k,sl);flash(b.id);clashCheck(b.id,b.items.length-1,it.f);
+}
+function removeItem(slotId,i){var k=S.sel,sl=slotsFor(k),a=sl.filter(function(x){return x.id===slotId;})[0];if(!a)return;var it=a.items.splice(i,1)[0];commit(k,sl);if(it)toast(fname(it.f)+" removed.");}
+function setQty(slotId,i,q){var k=S.sel,sl=slotsFor(k),a=sl.filter(function(x){return x.id===slotId;})[0];if(!a||!a.items[i])return;a.items[i].q=q;commit(k,sl);}
+function setTime(slotId,t){var k=S.sel,sl=slotsFor(k),a=sl.filter(function(x){return x.id===slotId;})[0];if(!a||!t)return;a.t=t;commit(k,sl);}
+function delSlot(slotId){var k=S.sel,sl=slotsFor(k).filter(function(x){return x.id!==slotId||x.items.length;});commit(k,sl);}
+function flash(id){requestAnimationFrame(function(){var el=document.querySelector('.slot[data-slot="'+id+'"]');if(el){el.classList.add("flash");setTimeout(function(){el.classList.remove("flash");},700);}});}
+
+/* ---------- Sheets (tap alternatives) ---------- */
+var sheet=null;
+function openSheet(html,label){
+ closeSheet();sheet=document.createElement("div");sheet.className="sheetwrap";
+ sheet.innerHTML='<div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(label)+'">'+html+'</div>';
+ document.body.appendChild(sheet);
+ sheet.addEventListener("click",function(e){if(e.target===sheet)closeSheet();});
+ var f=sheet.querySelector("button,input");if(f)f.focus();
+}
+function closeSheet(){if(sheet){sheet.remove();sheet=null;}}
+function slotButtons(attr,exclude){
+ return sortSlots(slotsFor(S.sel)).filter(function(s){return s.id!==exclude;}).map(function(s){return '<button type="button" class="pick" '+attr+'="'+s.id+'"><b>'+fmtT(s.t)+'</b> '+esc(s.label)+'</button>';}).join("");
+}
+function pickerFor(food){
+ var f=F[food];
+ openSheet('<h3>Add '+esc(fname(food))+'</h3><p class="om">'+esc(f.serv)+'</p><p class="sh">When on '+dayName(S.sel)+'?</p><div class="picks">'+slotButtons("data-add-to")+'</div>'+
+  '<div class="newt"><label>Or at a new time <input type="time" id="newT" value="'+pad((new Date()).getHours())+':00"></label><button type="button" class="btn" data-add-new>Add at this time</button></div><button type="button" class="btn ghost" data-close>Cancel</button>',"Add "+f.name);
+ sheet.dataset.food=food;
+}
+function editorFor(slotId,i){
+ var s=slotsFor(S.sel).filter(function(x){return x.id===slotId;})[0];if(!s)return;var it=s.items[i],f=F[it.f];
+ openSheet('<h3 style="--c:'+cat(f.cat).c+'" class="edh">'+esc(fname(it.f))+'</h3><p class="om">'+esc(f.serv)+' · '+Math.round(f.n.kcal)+' kcal, '+(Math.round(f.n.pro*10)/10)+' g protein per serving</p>'+
+  (locked()?"":'<div class="qrow"><span>Servings</span><button type="button" class="qb" data-q="-0.5" aria-label="Less">−</button><b id="qv">'+it.q+'</b><button type="button" class="qb" data-q="0.5" aria-label="More">+</button></div>'+
+  '<p class="sh">Move to</p><div class="picks">'+slotButtons("data-move-to",slotId)+'</div><button type="button" class="btn danger" data-remove>Remove from '+dayName(S.sel)+'</button>')+'<button type="button" class="btn ghost" data-close>Done</button>',f.name);
+ sheet.dataset.slot=slotId;sheet.dataset.i=i;
+}
+document.addEventListener("click",function(e){
+ var t=e.target;
+ if(dragState&&dragState.justDropped){return;}
+ var b;
+ if((b=t.closest("[data-day]"))){S.sel=b.getAttribute("data-day");renderAll();if(b.classList.contains("wday")){var bd=$("#board");if(bd)bd.scrollIntoView({behavior:"smooth",block:"start"});}return;}
+ if(t.closest("#wkPrev")){S.week=addDays(S.week,-7);S.sel=S.week;if(S.db)subscribe();else if(S.mode==="local")loadLocalWeek();if(CFG&&gsReady())gsPoll();renderAll();return;}
+ if(t.closest("#wkNext")){S.week=addDays(S.week,7);S.sel=S.week;if(S.db)subscribe();else if(S.mode==="local")loadLocalWeek();if(CFG&&gsReady())gsPoll();renderAll();return;}
+ if(t.closest("#wkToday")){S.week=weekStart(todayKey());S.sel=todayKey();if(S.db)subscribe();else if(S.mode==="local")loadLocalWeek();if(CFG&&gsReady())gsPoll();renderAll();return;}
+ if(t.closest("#bReset")){openSheet('<h3>Reset '+dayName(S.sel)+' to the default plan?</h3><p>This clears the changes made to '+dayName(S.sel)+' '+shortDate(S.sel)+' for both of you.</p><button type="button" class="btn danger" data-confirm-reset>Reset to default</button><button type="button" class="btn ghost" data-close>Cancel</button>',"Reset day");return;}
+ if(t.closest("[data-confirm-reset]")){closeSheet();resetDay(S.sel);return;}
+ if((b=t.closest(".food"))){if(locked()){toast(isPast(S.sel)?"Past days are view-only.":"This plan is view-only for you.");return;}pickerFor(b.getAttribute("data-food"));return;}
+ if((b=t.closest(".chip"))){editorFor(b.getAttribute("data-slot"),+b.getAttribute("data-i"));return;}
+ if((b=t.closest("[data-edit-time]"))){if(locked())return;editTime(b);return;}
+ if((b=t.closest("[data-del-slot]"))){delSlot(b.getAttribute("data-del-slot"));return;}
+ if(t.closest("#addSlot")){if(locked())return;openSheet('<h3>Add a time</h3><div class="newt"><label>Time <input type="time" id="slotT" value="'+pad((new Date()).getHours())+':00"></label><button type="button" class="btn" data-make-slot>Add time</button></div><button type="button" class="btn ghost" data-close>Cancel</button>',"Add a time");return;}
+ if(t.closest("[data-make-slot]")){var v=$("#slotT").value;if(v){var sl=slotsFor(S.sel);sl.push({id:"x"+Date.now().toString(36),t:v,label:"Added time",items:[]});commit(S.sel,sl);}closeSheet();return;}
+ if((b=t.closest("[data-add-to]"))){addItem(b.getAttribute("data-add-to"),sheet.dataset.food);toast(fname(sheet.dataset.food)+" added.");closeSheet();return;}
+ if(t.closest("[data-add-new]")){var tv=$("#newT").value;addItem("__new",sheet.dataset.food,tv);toast(fname(sheet.dataset.food)+" added at "+fmtT(tv)+".");closeSheet();return;}
+ if((b=t.closest("[data-move-to]"))){moveItem(sheet.dataset.slot,+sheet.dataset.i,b.getAttribute("data-move-to"));closeSheet();return;}
+ if(t.closest("[data-remove]")){removeItem(sheet.dataset.slot,+sheet.dataset.i);closeSheet();return;}
+ if((b=t.closest("[data-q]"))){var s=slotsFor(S.sel).filter(function(x){return x.id===sheet.dataset.slot;})[0],cur=s.items[+sheet.dataset.i].q,nq=Math.max(0.5,Math.min(4,cur+parseFloat(b.getAttribute("data-q"))));setQty(sheet.dataset.slot,+sheet.dataset.i,nq);$("#qv").textContent=nq;return;}
+ if(t.closest("[data-close]")){closeSheet();return;}
+ if(CFG&&t.closest("#bSync")){askSetup();return;}
+ if(t.closest("[data-save-setup]")){var kv=($("#setKey").value||"").trim(),wv=($("#setWho").value||"").trim();if(!kv||!wv){toast("Enter both the passcode and your name.",true);return;}lsRaw("key",kv);lsRaw("who",wv);GS.key=kv;GS.who=wv;closeSheet();gsLoadAll(true);return;}
+ if((b=t.closest("[data-hist]"))){var r=document.getElementById("hd-"+b.getAttribute("data-hist"));if(r){r.hidden=!r.hidden;b.setAttribute("aria-expanded",String(!r.hidden));}return;}
+ if(t.closest("#histMore")){HIST_LIMIT+=60;renderHistory();return;}
+ if(t.closest("#menuToggle")){document.body.classList.toggle("menu-open");return;}
+ if(t.closest("#menuClose")){document.body.classList.remove("menu-open");return;}
+});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeSheet();document.body.classList.remove("menu-open");}});
+function editTime(btn){
+ var id=btn.getAttribute("data-edit-time"),s=slotsFor(S.sel).filter(function(x){return x.id===id;})[0];
+ var inp=document.createElement("input");inp.type="time";inp.value=s.t;inp.className="tinput";inp.setAttribute("aria-label","Time");
+ btn.replaceWith(inp);inp.focus();
+ var done=false;function fin(){if(done)return;done=true;if(inp.value&&inp.value!==s.t)setTime(id,inp.value);else renderBoard();}
+ inp.addEventListener("blur",function(){setTimeout(fin,120);});inp.addEventListener("keydown",function(e){if(e.key==="Enter")fin();});
+}
+
+/* ---------- Drag and drop (mouse, pen and touch) ---------- */
+var dragState=null;
+function startPoint(e){
+ if(locked())return;
+ var src=e.target.closest(".food,.chip");if(!src||e.button>0)return;
+ var touch=e.pointerType!=="mouse";
+ var st={src:src,x:e.clientX,y:e.clientY,touch:touch,active:false,id:e.pointerId,timer:null};
+ if(src.classList.contains("food"))st.food=src.getAttribute("data-food");
+ else{st.slot=src.getAttribute("data-slot");st.i=+src.getAttribute("data-i");var sl=slotsFor(S.sel).filter(function(x){return x.id===st.slot;})[0];st.food=sl&&sl.items[st.i]?sl.items[st.i].f:null;}
+ if(!st.food)return;
+ if(!touch)e.preventDefault();
+ dragState=st;
+ if(touch)st.timer=setTimeout(function(){begin(st);},220);
+}
+function begin(st){
+ if(dragState!==st||st.active)return;st.active=true;
+ var f=F[st.food],g=document.createElement("div");g.className="dragghost";g.style.setProperty("--c",cat(f.cat).c);g.textContent=fname(st.food);
+ document.body.appendChild(g);st.ghost=g;place(st.x,st.y);
+ document.body.classList.add("dragging");if(st.slot)document.body.classList.add("dragging-chip");
+ st.src.classList.add("lifted");
+ if(navigator.vibrate&&st.touch)try{navigator.vibrate(12);}catch(e){}
+ loop();
+}
+function place(x,y){var st=dragState;if(!st||!st.ghost)return;st.ghost.style.transform="translate("+(x-20)+"px,"+(y-28)+"px)";st.x=x;st.y=y;
+ st.ghost.style.visibility="hidden";var el=document.elementFromPoint(x,y);st.ghost.style.visibility="";
+ var slot=el&&el.closest(".slot"),trash=el&&el.closest("#trash");
+ document.querySelectorAll(".slot.over").forEach(function(s){if(s!==slot)s.classList.remove("over");});
+ if(slot)slot.classList.add("over");st.over=slot?slot.getAttribute("data-slot"):(trash?"__trash":null);
+ var tr=$("#trash");if(tr)tr.classList.toggle("over",!!trash);
+}
+function loop(){var st=dragState;if(!st||!st.active)return;var m=70,h=window.innerHeight,dy=0;
+ if(st.y<m+50)dy=-Math.ceil((m+50-st.y)/6);else if(st.y>h-m)dy=Math.ceil((st.y-(h-m))/6);
+ if(dy){window.scrollBy(0,dy);place(st.x,st.y);}requestAnimationFrame(loop);}
+document.addEventListener("pointerdown",startPoint);
+document.addEventListener("pointermove",function(e){var st=dragState;if(!st||e.pointerId!==st.id)return;
+ var dx=e.clientX-st.x,dy=e.clientY-st.y,dist=Math.sqrt(dx*dx+dy*dy);
+ if(!st.active){if(st.touch){if(dist>8){clearTimeout(st.timer);dragState=null;}return;}if(dist>5)begin(st);else return;}
+ e.preventDefault();place(e.clientX,e.clientY);});
+document.addEventListener("touchmove",function(e){if(dragState&&dragState.active)e.preventDefault();},{passive:false});
+function end(e,cancel){var st=dragState;if(!st||(e&&e.pointerId!==st.id))return;clearTimeout(st.timer);
+ if(st.active){
+  if(!cancel&&st.over){
+   if(st.over==="__trash"){if(st.slot)removeItem(st.slot,st.i);}
+   else if(st.slot){if(st.over!==st.slot)moveItem(st.slot,st.i,st.over);}
+   else{addItem(st.over,st.food);toast(fname(st.food)+" added at "+fmtT(slotsFor(S.sel).filter(function(x){return x.id===st.over;})[0].t)+".");}
+  }
+  if(st.ghost)st.ghost.remove();st.src.classList.remove("lifted");
+  document.querySelectorAll(".slot.over").forEach(function(s){s.classList.remove("over");});
+  document.body.classList.remove("dragging","dragging-chip");
+  st.justDropped=true;setTimeout(function(){if(dragState===st)dragState=null;},60);
+ }else dragState=null;
+}
+document.addEventListener("pointerup",function(e){end(e,false);});
+document.addEventListener("pointercancel",function(e){end(e,true);});
+document.addEventListener("contextmenu",function(e){if(e.target.closest(".food,.chip"))e.preventDefault();});
+document.addEventListener("dragstart",function(e){if(e.target.closest&&e.target.closest(".food,.chip"))e.preventDefault();});
+
+
+/* ---------- Google Sheet backend (GitHub Pages copy only; off unless MP_CONFIG is set) ---------- */
+var GS={url:"",key:"",who:"",dirty:{},timer:null,poll:null,busy:false};
+function lsRaw(k,v){try{if(v===undefined)return localStorage.getItem(LS+k)||"";if(v===null)localStorage.removeItem(LS+k);else localStorage.setItem(LS+k,v);}catch(e){return "";}}
+function gsReady(){return !!(GS.url&&GS.key&&GS.who);}
+function gsCache(){lsSet("all",S.plans);lsSet("dirty",GS.dirty);}
+function gsGet(params){params.key=GS.key;var q=Object.keys(params).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(params[k]);}).join("&");
+ return fetch(GS.url+(GS.url.indexOf("?")<0?"?":"&")+q,{redirect:"follow"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};return j;});}
+function gsPost(body){body.key=GS.key;return fetch(GS.url,{method:"POST",body:JSON.stringify(body),redirect:"follow"}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw j||{};return j;});}
+function nutCols(slots){var T=totals(normSlots(clone(slots))),out=[];NUT.forEach(function(d){var v=T[d.k];out.push([shortName(d)+" ("+d.u+")",+(d.d?v.toFixed(d.d):Math.round(v))]);if(d.t)out.push([shortName(d)+(d.lim?" % of limit":" % RDA"),Math.round(v/d.t*100)]);});return out;}
+function summaryOf(slots){return sortSlots(normSlots(clone(slots))).filter(function(s){return s.items.length;}).map(function(s){return fmtT(s.t)+": "+s.items.map(function(x){return fname(x.f)+(x.q!==1?" x"+x.q:"");}).join(", ");}).join(" | ");}
+function gsInit(){
+ GS.url=String(CFG.sheetUrl||"").trim();if(GS.url.indexOf("PASTE")===0)GS.url="";
+ GS.key=lsRaw("key");GS.who=lsRaw("who");
+ var all=lsGet("all");if(all&&typeof all==="object")S.plans=all;
+ GS.dirty=lsGet("dirty")||{};
+ // bring over anything saved on this device before the sheet was connected
+ try{for(var i=0;i<localStorage.length;i++){var lk=localStorage.key(i);var m=lk&&lk.indexOf(LS)===0&&lk.slice(LS.length).match(/^\d{4}-\d\d-\d\d$/);if(m){var d=m[0];if(!S.plans[d]){S.plans[d]=lsGet(d);GS.dirty[d]=1;}}}}catch(e){}
+ if(!GS.url){S.mode="local";renderAll();return;}
+ if(!GS.key||!GS.who){S.mode="local";renderAll();askSetup();return;}
+ S.mode="sync";renderAll();gsLoadAll(false);
+}
+function askSetup(msg){
+ openSheet('<h3>Connect this device</h3>'+(msg?'<p class="setmsg">'+esc(msg)+'</p>':'')+'<p class="om">Enter the family passcode from the Google Sheet setup, and who uses this device. Both are saved in this browser.</p>'+
+  '<div class="setf"><label>Family passcode <input id="setKey" type="password" autocomplete="off" value="'+esc(GS.key)+'"></label><label>Your name <input id="setWho" type="text" placeholder="e.g. Rahul" value="'+esc(GS.who)+'"></label></div>'+
+  '<button type="button" class="btn" data-save-setup>Connect</button><button type="button" class="btn ghost" data-close>Not now</button>',"Connect this device");
+}
+function mergeServer(rows,range){
+ var seen={};
+ rows.forEach(function(r){seen[r.date]=1;if(GS.dirty[r.date]||timers[r.date]||writing[r.date])return;S.plans[r.date]={slots:r.slots,at:r.at,by:r.by,auto:!!r.auto};});
+ Object.keys(S.plans).forEach(function(k){if(seen[k]||GS.dirty[k]||timers[k]||writing[k])return;if(!range||(k>=range[0]&&k<=range[1]))delete S.plans[k];});
+}
+function gsLoadAll(first){
+ gsGet({action:"all"}).then(function(j){
+   mergeServer(j.plans||[],null);S.mode="sync";fillGaps();gsCache();renderAll();gsFlush();startPolling();
+   if(first)toast("Connected. This device now shares the plan.");
+ },function(e){
+   if(e&&e.error==="bad_key"){GS.key="";lsRaw("key",null);S.mode="local";renderAll();askSetup("That passcode didn't match the one in the Google Sheet script. Check it and try again.");return;}
+   S.mode="offline";renderAll();startPolling();
+ });
+}
+function gsPoll(){
+ if(!gsReady()||GS.busy)return;GS.busy=true;
+ var a=addDays(S.week,-1),b=addDays(S.week,8),tk=todayKey();if(tk<a)a=tk;if(tk>b)b=tk;
+ gsGet({action:"list",from:a,to:b}).then(function(j){GS.busy=false;mergeServer(j.plans||[],[a,b]);if(S.mode!=="sync"){S.mode="sync";}fillGaps();gsCache();renderAll();gsFlush();},
+  function(e){GS.busy=false;if(e&&e.error==="bad_key"){GS.key="";lsRaw("key",null);S.mode="local";renderAll();askSetup("The family passcode has changed. Enter the new one.");return;}S.mode="offline";renderBoard();});
+}
+function startPolling(){
+ if(GS.poll)return;
+ GS.poll=setInterval(function(){if(document.visibilityState==="visible")gsPoll();},30000);
+ document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")gsPoll();});
+ window.addEventListener("online",gsPoll);
+}
+function gsSave(k){GS.dirty[k]=1;gsCache();clearTimeout(timers[k]);timers[k]=setTimeout(function(){delete timers[k];gsFlush();},300);}
+function gsFlush(){
+ var ks=Object.keys(GS.dirty).filter(function(k){return !writing[k];});if(!ks.length||!gsReady())return;
+ var k=ks[0],p=S.plans[k];writing[k]=true;
+ var body=p?{action:"set",date:k,slots:p.slots,at:p.at,by:p.by||GS.who,auto:!!p.auto,summary:summaryOf(p.slots),ncols:nutCols(p.slots)}:{action:"delete",date:k};
+ gsPost(body).then(function(){writing[k]=false;delete GS.dirty[k];gsCache();if(S.mode!=="sync"){S.mode="sync";renderBoard();}gsFlush();},
+  function(e){writing[k]=false;if(e&&e.error==="bad_key"){askSetup("The family passcode didn't match. Your change is kept on this device and will sync once you reconnect.");}S.mode="offline";renderBoard();});
+}
+// Keep a dated record of every day, so History shows what the plan was even on days nobody changed.
+function fillGaps(){
+ var tk=todayKey(),keys=Object.keys(S.plans).filter(function(k){return /^\d{4}-\d\d-\d\d$/.test(k)&&k<=tk;}).sort();
+ var start=keys.length?addDays(keys[keys.length-1],1):tk,floor=addDays(tk,-60);if(start<floor)start=floor;
+ for(var d=start;d<=tk;d=addDays(d,1)){if(!S.plans[d]){S.plans[d]={slots:defaultSlots(d),at:new Date().toISOString(),by:GS.who,auto:true};GS.dirty[d]=1;}}
+}
+
+/* ---------- History ---------- */
+var HIST_LIMIT=60;
+var HCOLS=["va","vc","vd","ve","vk","b1","b2","b3","b5","b6","b12","fol","chol","ca","fe","mg","p","k","zn","cu","mn","se","io","na"];
+function nutDef(k){return NUT.filter(function(x){return x.k===k;})[0];}
+function pctClass(p){return p>=100?"hg":p>=70?"hm":"hl";}
+function shortLab(k){return {va:"Vit A",vc:"Vit C",vd:"Vit D",ve:"Vit E",vk:"Vit K",b1:"B1",b2:"B2",b3:"B3",b5:"B5",b6:"B6",b12:"B12",fol:"Folate",chol:"Choline",ca:"Calcium",fe:"Iron*",mg:"Magnesium",p:"Phosphorus",k:"Potassium",zn:"Zinc",cu:"Copper",mn:"Manganese",se:"Selenium",io:"Iodine",na:"Sodium†"}[k];}
+function renderHistory(){
+ var body=$("#histRows");if(!body)return;
+ var tk=todayKey(),days=Object.keys(S.plans).filter(function(k){return /^\d{4}-\d\d-\d\d$/.test(k)&&k<tk&&S.plans[k]&&S.plans[k].slots;}).sort().reverse();
+ $("#histHead").innerHTML='<tr><th class="hday">Day</th><th class="n">kcal</th><th class="n">Protein</th>'+HCOLS.map(function(k){return '<th class="n">'+shortLab(k)+'</th>';}).join("")+'</tr>';
+ if(!days.length){body.innerHTML='<tr><td colspan="'+(HCOLS.length+3)+'" class="om">No past days yet. Each day is recorded automatically once it has passed, so this fills in from tomorrow.</td></tr>';$("#histSum").innerHTML="";$("#histMore").hidden=true;return;}
+ function rowFor(k){var T=totals(normSlots(clone(S.plans[k].slots)));return {k:k,T:T};}
+ var all=days.map(rowFor);
+ function avg(list){var o={};N_KEYS.forEach(function(n){o[n]=0;});list.forEach(function(r){N_KEYS.forEach(function(n){o[n]+=r.T[n];});});N_KEYS.forEach(function(n){o[n]/=list.length||1;});return o;}
+ function cells(T){return '<td class="n">'+Math.round(T.kcal).toLocaleString()+'</td><td class="n '+pctClass(T.pro/56*100)+'">'+Math.round(T.pro)+' g</td>'+HCOLS.map(function(k){var d=nutDef(k),p=Math.round(T[k]/d.t*100);return '<td class="n '+(d.lim?(p<=100?"hg":"hl"):pctClass(p))+'">'+p+'%</td>';}).join("");}
+ var c7=all.filter(function(r){return r.k>=addDays(tk,-7);}),c30=all.filter(function(r){return r.k>=addDays(tk,-30);});
+ var h="";
+ if(c7.length)h+='<tr class="havg"><td class="hday"><b>Last 7 days</b><small>average of '+c7.length+' day'+(c7.length>1?"s":"")+'</small></td>'+cells(avg(c7))+'</tr>';
+ if(c30.length>c7.length)h+='<tr class="havg"><td class="hday"><b>Last 30 days</b><small>average of '+c30.length+' days</small></td>'+cells(avg(c30))+'</tr>';
+ all.slice(0,HIST_LIMIT).forEach(function(r){
+  var p=S.plans[r.k],sl=sortSlots(normSlots(clone(p.slots)));
+  h+='<tr><td class="hday"><button type="button" class="hbtn" data-hist="'+r.k+'" aria-expanded="false"><b>'+DAYS[isoDow(r.k)-1].slice(0,3)+' '+shortDate(r.k)+'</b><small>'+(p.auto?"default plan":"changed"+(p.by?" by "+esc(p.by):""))+'</small></button></td>'+cells(r.T)+'</tr>'+
+   '<tr class="hdet" id="hd-'+r.k+'" hidden><td colspan="'+(HCOLS.length+3)+'"><div class="hfoods">'+sl.filter(function(s){return s.items.length;}).map(function(s){return '<div><b>'+fmtT(s.t)+'</b> '+s.items.map(function(x){var f=F[x.f];return f?'<span class="wi" style="--c:'+cat(f.cat).c+'">'+esc(fname(x.f))+(x.q!==1?" ×"+x.q:"")+'</span>':"";}).join("")+'</div>';}).join("")+
+   '<a href="#plan" data-go="plan" data-day="'+r.k+'">Open this day in Today\'s plan</a></div></td></tr>';
+ });
+ body.innerHTML=h;
+ $("#histMore").hidden=all.length<=HIST_LIMIT;
+ // which nutrients fall short most often
+ var counts=HCOLS.filter(function(k){return !nutDef(k).lim;}).map(function(k){var d=nutDef(k),n=all.filter(function(r){return r.T[k]<d.t;}).length;return {k:k,n:n};}).filter(function(x){return x.n;}).sort(function(a,b){return b.n-a.n;});
+ $("#histSum").innerHTML='<p><strong>'+all.length+' past day'+(all.length>1?"s":"")+' recorded.</strong> '+(counts.length?'Most often below 100%: '+counts.slice(0,4).map(function(x){return shortName(nutDef(x.k))+' ('+x.n+' of '+all.length+' days)';}).join(", ")+'.':'Every tracked vitamin and mineral met its target on every recorded day.')+'</p>';
+}
+
+/* ---------- Toast ---------- */
+var tt=null;function toast(m,bad){var el=$("#toast");el.textContent=m;el.classList.toggle("bad",!!bad);el.classList.add("on");clearTimeout(tt);tt=setTimeout(function(){el.classList.remove("on");},bad?4200:2600);}
+
+$("#mSearch").addEventListener("input",renderMenu);
+renderMenu();
+init();
+})();
+
+</script>
+</body>
+</html>
