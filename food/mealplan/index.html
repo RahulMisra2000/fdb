@@ -451,11 +451,16 @@ tr.grow th{background:var(--bg); text-align:left; font-family:var(--serif); font
 #bSync{cursor:pointer}
 
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#17304A">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <header class="hero">
   <div class="wrap">
-    <p class="for">Personal nutrition plan · October 2026</p>
+    <p class="for">Personal nutrition plan for Rahul and his son · Boca Raton, FL · October 2026</p>
     <h1>Your Daily Meal Plan</h1>
     <p class="sub">The whole day, from lemon water to dinner, in an order that improves absorption and steadies blood sugar. One shared plan you can both change. Checked against nutrition research and classical Ayurveda.</p>
     <div class="stats">
@@ -1087,7 +1092,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp
 
 /* ---------- State ---------- */
 var CFG=window.MP_CONFIG||null;
-var APP_VERSION="2026-10-06";
+var APP_VERSION="2026-10-06b";
 var S={week:weekStart(todayKey()),sel:todayKey(),plans:{},mode:"loading",readOnly:false,me:null,names:{},db:null,user:null,unsub:null};
 function changed(k){var p=S.plans[k];return !!(p&&!p.auto);}
 function isPast(k){return k<todayKey();}
@@ -1602,5 +1607,6 @@ init();
 })();
 
 </script>
+<script>if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
