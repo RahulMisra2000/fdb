@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14111a">
+<title>Sadhana</title>
+<style>
+/* Layout: one calm column. Start screen = title, one Begin card, one settings card, two folded lists.
+   Dark on purpose: it is used with eyes closed in a quiet room, and the phone stays awake. */
+:root{
+  --bg:#14111a; --surface:#1c1824; --surface2:#262031; --line:#2f2a3b;
+  --fg:#ede7db; --muted:#a29bb0; --faint:#6f687d;
+  --accent:#e2a644; --accent-ink:#1b1306; --ok:#8fc0a0; --warn:#e3926f;
+  --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--bg); color:var(--fg); font:16px/1.5 var(--body);
+  padding-inline:20px;
+  padding-block:max(24px,env(safe-area-inset-top)) max(32px,env(safe-area-inset-bottom));
+  -webkit-tap-highlight-color:transparent;
+}
+main{max-width:520px;margin:0 auto}
+[hidden]{display:none!important}
+button{font-family:inherit}
+
+/* ---------- start screen ---------- */
+.mast{display:flex;align-items:center;gap:16px;margin:4px 0 28px}
+.mark{flex:none;width:46px;height:46px}
+h1{font:600 2.3rem/1 var(--display);letter-spacing:.01em;margin:0}
+.sub{color:var(--muted);margin:6px 0 0;font-size:.95rem}
+
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:18px}
+.hero .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.kicker{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.facts{color:var(--fg);font-size:.95rem;font-variant-numeric:tabular-nums}
+
+.btn{
+  font:600 1.05rem var(--body); color:var(--fg); background:var(--surface);
+  border:1px solid var(--line); border-radius:12px; padding:14px 16px; min-height:56px;
+  cursor:pointer; touch-action:manipulation;
+}
+.btn:focus-visible,.wordpick button:focus-visible,.linkbtn:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.wide{width:100%}
+.hero .btn{min-height:60px;font-size:1.15rem;letter-spacing:.02em}
+
+.label{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:30px 0 10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+
+.row{display:flex;align-items:center;gap:16px;padding:16px 18px;min-height:68px;position:relative;cursor:pointer}
+.row + .row,.card > div + .row,.card > .row + div{border-top:1px solid var(--line)}
+.row .txt{flex:1;min-width:0;display:grid;gap:3px}
+.row b{font-weight:600}
+.row small{color:var(--muted);font-size:.86rem;line-height:1.4}
+.row input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.sw{flex:none;width:52px;height:32px;border-radius:16px;background:var(--surface2);border:1px solid var(--line);position:relative;transition:background .18s,border-color .18s}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:transform .18s,background .18s}
+input:checked + .sw{background:var(--accent);border-color:var(--accent)}
+input:checked + .sw::after{transform:translateX(20px);background:var(--accent-ink)}
+input:focus-visible + .sw{outline:3px solid var(--accent);outline-offset:3px}
+.row.disabled{opacity:.4;pointer-events:none}
+.chip{display:inline-block;font-size:.78rem;color:var(--accent);font-weight:600;letter-spacing:.02em}
+.chip.bad{color:var(--warn)}
+
+.wordpick{padding:2px 18px 18px;display:grid;gap:8px}
+.wordpick .wpl{color:var(--muted);font-size:.86rem}
+.wordpick .seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wordpick button{min-height:46px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--fg);font:600 1rem var(--body);cursor:pointer}
+.wordpick button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+.note{margin:12px 2px 0;color:var(--warn);font-size:.9rem;line-height:1.4}
+.tools{margin:6px 0 0}
+.linkbtn{background:none;border:0;color:var(--accent);font:inherit;font-size:.95rem;padding:10px 2px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.meta{color:var(--muted);margin:0 2px;font-size:.9rem}
+#voiceResult:empty{display:none}
+
+.fold{border-bottom:1px solid var(--line)}
+.fold:first-of-type{margin-top:26px;border-top:1px solid var(--line)}
+summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 2px;cursor:pointer;font-weight:600;min-height:60px}
+summary::-webkit-details-marker{display:none}
+summary .sum{font-weight:400;color:var(--muted);font-size:.9rem;margin-left:auto;text-align:right}
+summary::after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-2px);transition:transform .18s}
+details[open] > summary::after{transform:rotate(-135deg) translateY(-2px)}
+.fold .body{padding:0 2px 18px}
+
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.steps li:first-child{border-top:0}
+.steps .n{color:var(--faint);font-variant-numeric:tabular-nums;width:1.8em;flex:none}
+.steps .nm{flex:1;min-width:0}
+.steps .tm{color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.steps .open .tm{color:var(--accent)}
+
+.scroll{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:500;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.pat{display:grid;margin:0 0 16px}
+.pat .row2{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.pat .row2 b{font-weight:600}
+.pat .vals{color:var(--muted);font-size:.88rem;font-variant-numeric:tabular-nums}
+.spark{flex:none;max-width:120px}
+.empty{color:var(--muted);margin:0}
+
+/* ---------- session ---------- */
+.session{display:flex;flex-direction:column;gap:14px;min-height:calc(100dvh - 56px)}
+.count{color:var(--muted);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+.segs{display:flex;gap:4px;margin-top:8px}
+.seg{flex:1;height:5px;background:var(--line);border-radius:3px}
+.seg.done{background:#7a5d27}
+.seg.now{background:var(--accent)}
+h2.stepname{font:600 clamp(2rem,9vw,2.8rem)/1.1 var(--display);margin:6px 0 0;text-wrap:balance}
+.ringwrap{position:relative;width:min(70vw,260px);aspect-ratio:1;margin:6px auto;max-width:100%}
+.ring{width:100%;height:100%;display:block}
+.track{fill:none;stroke:var(--line);stroke-width:8}
+.arc{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round}
+.clock{position:absolute;inset:0;display:grid;place-items:center;font:500 clamp(2.4rem,13vw,3.4rem)/1 var(--body);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.hint{text-align:center;color:var(--muted);margin:0;min-height:3em}
+.bigbtn{width:100%;min-height:150px;font-size:2rem;font-family:var(--display)}
+.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:auto}
+.controls .btn{padding-inline:8px}
+.mic{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem}
+.dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--faint);display:inline-block}
+.dot.ok{background:var(--ok)}
+
+/* ---------- summary ---------- */
+.big{font:600 2.2rem/1.1 var(--display);margin:6px 0 4px}
+.bar{display:flex;gap:10px;margin-top:22px}
+@media (prefers-reduced-motion:no-preference){.arc{transition:stroke-dashoffset .25s linear}}
+</style>
+</head>
+<body>
+<main>
+
+<section id="home">
+  <header class="mast">
+    <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="19" fill="none" stroke="var(--line)" stroke-width="3"/>
+      <path d="M24 5 A19 19 0 1 1 5 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="24" cy="24" r="3.5" fill="var(--accent)"/>
+    </svg>
+    <div>
+      <h1>Sadhana</h1>
+      <p class="sub">Shambhavi Mahamudra Kriya</p>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="top">
+      <span class="kicker">Today's practice</span>
+      <span class="facts" id="heroFacts"></span>
+    </div>
+    <button id="begin" class="btn primary wide" type="button">Begin</button>
+  </div>
+
+  <h2 class="label">Settings</h2>
+  <div class="card">
+    <label class="row" id="rowVoice" for="swVoice">
+      <span class="txt"><b>Hands-free voice</b><small id="voiceSub"></small></span>
+      <input type="checkbox" id="swVoice" role="switch"><span class="sw"></span>
+    </label>
+    <label class="row" id="rowQuiet" for="swQuiet">
+      <span class="txt"><b>Quiet listening</b><small id="quietSub"></small><span class="chip" id="quietState" hidden></span></span>
+      <input type="checkbox" id="swQuiet" role="switch"><span class="sw"></span>
+    </label>
+    <div class="wordpick" id="wordPick" hidden>
+      <span class="wpl">Your word, to start and to finish a step</span>
+      <div class="seg3" role="group" aria-label="Your word">
+        <button type="button" data-w="go">Go</button>
+        <button type="button" data-w="stop">Stop</button>
+        <button type="button" data-w="yes">Yes</button>
+      </div>
+    </div>
+    <label class="row" for="swPractice">
+      <span class="txt"><b>Practice run</b><small>Timed steps last 6 seconds. Nothing is saved.</small></span>
+      <input type="checkbox" id="swPractice" role="switch"><span class="sw"></span>
+    </label>
+  </div>
+  <p class="note" id="note" hidden></p>
+  <div class="tools"><button id="testVoice" class="linkbtn" type="button">Test the voice</button></div>
+  <p class="meta" id="voiceResult"></p>
+
+  <details class="fold">
+    <summary>The practice <span class="sum" id="planSum"></span></summary>
+    <div class="body"><ol class="steps" id="steps"></ol></div>
+  </details>
+  <details class="fold" id="foldHistory">
+    <summary>History <span class="sum" id="histSum"></span></summary>
+    <div class="body" id="history"></div>
+  </details>
+</section>
+
+<section id="session" hidden>
+  <div class="session">
+    <div>
+      <div class="count" id="count"></div>
+      <div class="segs" id="segs"></div>
+    </div>
+    <h2 class="stepname" id="stepName"></h2>
+    <div class="ringwrap">
+      <svg class="ring" viewBox="0 0 240 240" aria-hidden="true">
+        <circle class="track" cx="120" cy="120" r="108"/>
+        <circle class="arc" id="arc" cx="120" cy="120" r="108" transform="rotate(-90 120 120)"/>
+      </svg>
+      <div class="clock" id="clock" aria-live="off">0:00</div>
+    </div>
+    <p class="hint" id="hint"></p>
+    <button id="bigBtn" class="btn primary bigbtn" type="button" hidden>Over</button>
+    <div class="controls">
+      <button id="pause" class="btn" type="button">Pause</button>
+      <button id="skip" class="btn" type="button">Skip</button>
+      <button id="stop" class="btn" type="button">End</button>
+    </div>
+    <div class="mic"><span class="dot" id="micDot"></span><span id="micText">Mic off</span></div>
+  </div>
+</section>
+
+<section id="summary" hidden>
+  <h1 id="sumTitle">Done</h1>
+  <p class="sub" id="sumSub"></p>
+  <div class="scroll"><table id="sumTable"></table></div>
+  <div class="bar"><button id="back" class="btn primary wide" type="button">Back to start</button></div>
+</section>
+
+</main>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Your practice. Edit this list to change it. ----------
+   type 'timed' runs for `seconds`. type 'open' waits until you say your word.
+   Optional `say` changes how the voice pronounces a name. */
+const STEPS = [
+  {name:'Mantra',               type:'timed', seconds:60},
+  {name:'Butterfly Pose',       type:'timed', seconds:120},
+  {name:'Right Leg Cradle Pose',type:'timed', seconds:120},
+  {name:'Left Leg Cradle Pose', type:'timed', seconds:120},
+  {name:'Cat Pose',             type:'open'},
+  {name:'Break',                type:'timed', seconds:120},
+  {name:'Sukha Kriya',          type:'timed', seconds:420},
+  {name:'AUM Chanting',         type:'open'},
+  {name:'Fluttering of Breath', type:'timed', seconds:180},
+  {name:'Bandas',               type:'open'},
+  {name:'Watching Breath',      type:'timed', seconds:300}
+];
+const START_WORDS = /\b(start|begin|ready)\b/;               // Chrome listening
+const DONE_WORDS  = /\b(over|done|next|finish|finished|ova)\b/;
+const WORDS = ['go','stop','yes'];                            // quiet listening: words the offline model knows
+const MIN_OPEN_MS = 4000;    // ignore the word in the first few seconds of an open step
+const TEST_SECONDS = 6;
+const STORE_KEY = 'sadhana.sessions.v1';
+const SET_KEY = 'sadhana.settings.v1';
+const TF_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js';
+const SC_URL = 'https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.5.4/dist/speech-commands.min.js';
+
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const say = s => s.say || s.name;
+const fmt = sec => { sec = Math.max(0, Math.round(sec)); return Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0'); };
+const C = 2*Math.PI*108;
+
+const S = { run:0, idx:-1, paused:false, running:false, test:false, finish:null, log:[], startedAt:0 };
+let micBlocked = false;
+
+/* ---------- settings ---------- */
+function loadSettings(){ try { return JSON.parse(localStorage.getItem(SET_KEY)) || {}; } catch(e){ return {}; } }
+const Settings = Object.assign({voice:true, quiet:false, word:'go'}, loadSettings(), {practice:false});
+if (!WORDS.includes(Settings.word)) Settings.word = 'go';
+function saveSettings(){ try { localStorage.setItem(SET_KEY, JSON.stringify({voice:Settings.voice, quiet:Settings.quiet, word:Settings.word})); } catch(e){} }
+const quietOn = () => Settings.voice && Settings.quiet;
+const startWord = () => quietOn() ? Settings.word : 'start';
+const endWord = () => quietOn() ? Settings.word : 'over';
+
+/* ---------- storage ---------- */
+function loadSessions(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e){ return []; } }
+function saveSession(s){ try { const all = loadSessions(); all.push(s); localStorage.setItem(STORE_KEY, JSON.stringify(all.slice(-400))); } catch(e){} }
+
+/* ---------- sound: bell ---------- */
+let ac = null;
+function ensureAudio(){
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch(e){}
+}
+function bell(){
+  if (!ac) return sleep(300);
+  const t = ac.currentTime, out = ac.createGain();
+  out.gain.value = 0.28; out.connect(ac.destination);
+  [[1,1,4.0],[2.0,0.45,3.0],[2.76,0.3,2.2],[5.4,0.12,1.2]].forEach(([m,g,d]) => {
+    const o = ac.createOscillator(), e = ac.createGain();
+    o.type = 'sine'; o.frequency.value = 330*m;
+    e.gain.setValueAtTime(0.0001, t);
+    e.gain.exponentialRampToValueAtTime(g, t+0.015);
+    e.gain.exponentialRampToValueAtTime(0.0001, t+d);
+    o.connect(e); e.connect(out); o.start(t); o.stop(t+d+0.05);
+  });
+  return sleep(1600);
+}
+
+/* ---------- sound: voice ---------- */
+let voice = null;
+function pickVoice(){
+  if (!('speechSynthesis' in window)) return;
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v => /^en[-_]US/i.test(v.lang) && v.localService)
+       || vs.find(v => /^en[-_]US/i.test(v.lang))
+       || vs.find(v => /^en/i.test(v.lang)) || null;
+}
+if ('speechSynthesis' in window){ speechSynthesis.onvoiceschanged = pickVoice; pickVoice(); }
+
+function speak(text){
+  return new Promise(res => {
+    if (!('speechSynthesis' in window)) return res();
+    try { if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); } catch(e){}
+    const u = new SpeechSynthesisUtterance(text);
+    if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
+    u.rate = 0.88; u.pitch = 0.95; u.volume = 1;
+    let done = false;
+    const fin = () => { if (!done){ done = true; clearTimeout(tm); res(); } };
+    u.onend = fin; u.onerror = fin;
+    const tm = setTimeout(fin, 2000 + text.length*130);   // some phones never fire onend
+    speechSynthesis.speak(u);
+  });
+}
+
+/* Says one short sentence and reports on screen what the phone did. */
+function testVoice(){
+  const out = $('voiceResult');
+  if (!('speechSynthesis' in window)){ out.textContent = 'This browser has no speech output. Open the page in Chrome.'; return; }
+  ensureAudio(); pickVoice();
+  const n = speechSynthesis.getVoices().length;
+  const info = n + ' voices found' + (voice ? ' (using ' + voice.name + ', ' + voice.lang + ').' : ', none picked. The phone default will be tried.');
+  out.textContent = info + ' Speaking now...';
+  let started = false;
+  const u = new SpeechSynthesisUtterance('This is a test of the Sadhana voice.');
+  if (voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
+  u.rate = 0.88;
+  u.onstart = () => { started = true; };
+  u.onend = () => { out.textContent = info + ' Finished speaking. If you heard nothing, the phone voice engine is silent.'; };
+  u.onerror = ev => { out.textContent = info + ' Error: ' + (ev.error || 'unknown') + '.'; };
+  try { speechSynthesis.cancel(); speechSynthesis.speak(u); } catch(e){ out.textContent = info + ' Error: ' + e.message; return; }
+  setTimeout(() => { if (!started && /Speaking now/.test(out.textContent)) out.textContent = info + ' The phone never started speaking. Check Settings, search "text-to-speech", and make sure an engine and an English voice are installed.'; }, 4000);
+}
+
+/* ---------- listening ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function voiceUsable(){
+  if (!Settings.voice || micBlocked || !window.isSecureContext) return false;
+  if (Settings.quiet) return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && Quiet.state !== 'error';
+  return !!SR;
+}
+function setMic(on){
+  $('micDot').className = 'dot' + (on ? ' ok' : '');
+  $('micText').textContent = on ? (Settings.quiet ? 'Listening quietly' : 'Listening') : (voiceUsable() ? 'Mic off' : 'Voice off, use the buttons');
+}
+function onMicBlocked(){
+  micBlocked = true; setMic(false);
+  if (S.running) $('hint').textContent = 'The microphone is blocked. Tap the big button instead.';
+  renderNote();
+}
+function onQuietFail(){
+  Quiet.state = 'error'; setMic(false); setQuietStatus('Needs internet once', true);
+  if (S.running) $('hint').textContent = 'The offline listener did not start. Tap the big button instead.';
+  renderNote();
+}
+
+/* Option A: Chrome's own speech recognition. It beeps each time it restarts. */
+const Chrome = {
+  active:false, handler:null, rec:null, timer:null, lastErr:'',
+  start(handler){ this.stop(); this.handler = handler; this.active = true; this.spawn(); },
+  stop(){
+    this.active = false; this.handler = null; clearTimeout(this.timer);
+    const r = this.rec; this.rec = null;
+    if (r){ r.onresult = r.onerror = r.onend = null; try { r.abort(); } catch(e){} }
+  },
+  spawn(){
+    if (!this.active || !SR) return;
+    const r = new SR();
+    r.lang = 'en-US'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 3;
+    r.onresult = ev => {
+      if (!this.active || !this.handler) return;
+      let text = '';
+      for (let i = ev.resultIndex; i < ev.results.length; i++)
+        for (let a = 0; a < ev.results[i].length; a++) text += ' ' + ev.results[i][a].transcript;
+      this.handler(text.toLowerCase());
+    };
+    r.onerror = ev => {
+      this.lastErr = ev.error;
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed'){ this.stop(); onMicBlocked(); }
+    };
+    r.onend = () => {
+      if (this.rec !== r) return;
+      this.rec = null; setMic(false);
+      if (this.active) this.timer = setTimeout(() => this.spawn(), this.lastErr === 'network' ? 2500 : 300);
+    };
+    try { r.start(); this.rec = r; setMic(true); }
+    catch(e){ this.timer = setTimeout(() => this.spawn(), 700); }
+  }
+};
+
+/* Option B: a small word detector that runs inside the page. No beeps.
+   It only knows a fixed list of words (go, stop, yes, numbers, directions). */
+function loadScript(src){
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    const t = setTimeout(() => rej(new Error('timeout')), 30000);
+    s.onload = () => { clearTimeout(t); res(); };
+    s.onerror = () => { clearTimeout(t); rej(new Error('load failed')); };
+    document.head.appendChild(s);
+  });
+}
+function setQuietStatus(msg, bad){
+  const el = $('quietState');
+  el.textContent = msg || ''; el.className = 'chip' + (bad ? ' bad' : '');
+  el.hidden = !(msg && quietOn());
+}
+const Quiet = {
+  rec:null, labels:[], state:'idle', promise:null, token:0, q:Promise.resolve(),
+  load(){
+    if (this.state === 'ready') return Promise.resolve(true);
+    if (this.promise) return this.promise;
+    this.state = 'loading'; setQuietStatus('Downloading the word detector...');
+    this.promise = (async () => {
+      try {
+        if (!window.tf) await loadScript(TF_URL);
+        if (!window.speechCommands) await loadScript(SC_URL);
+        const r = window.speechCommands.create('BROWSER_FFT');
+        await r.ensureModelLoaded();
+        this.rec = r; this.labels = r.wordLabels(); this.state = 'ready';
+        setQuietStatus('Ready'); renderNote(); return true;
+      } catch(e){
+        this.state = 'error'; this.promise = null;
+        setQuietStatus('Needs internet once', true); renderNote(); return false;
+      }
+    })();
+    return this.promise;
+  },
+  retry(){ if (this.state === 'error'){ this.state = 'idle'; this.promise = null; } },
+  start(onHeard){
+    const my = ++this.token;
+    this.q = this.q.then(async () => {
+      if (my !== this.token) return;
+      const ok = await this.load();
+      if (!ok){ if (my === this.token) onQuietFail(); return; }
+      if (my !== this.token) return;
+      try {
+        if (this.rec.isListening()) await this.rec.stopListening();
+        await this.rec.listen(res => {
+          if (my !== this.token) return;
+          const sc = res.scores; let bi = 0;
+          for (let i = 1; i < sc.length; i++) if (sc[i] > sc[bi]) bi = i;
+          if (this.labels[bi] === Settings.word) onHeard();
+        }, {probabilityThreshold:0.85, invokeCallbackOnNoiseAndUnknown:false, overlapFactor:0.5, includeSpectrogram:false});
+        setMic(true);
+      } catch(e){
+        const n = (e && ((e.name || '') + ' ' + (e.message || ''))) || '';
+        if (/NotAllowed|Permission|denied/i.test(n)) onMicBlocked(); else onQuietFail();
+      }
+    }).catch(() => {});
+  },
+  stop(){
+    this.token++;
+    setMic(false);
+    if (!this.rec) return;
+    this.q = this.q.then(async () => {
+      try { if (this.rec.isListening()) await this.rec.stopListening(); } catch(e){}
+    }).catch(() => {});
+  }
+};
+
+/* One door for the rest of the app. kind is 'start' or 'done'. */
+const Listener = {
+  start(kind, cb){
+    this.stop();
+    if (!voiceUsable()) return;
+    if (Settings.quiet) Quiet.start(cb);
+    else Chrome.start(t => { if ((kind === 'start' ? START_WORDS : DONE_WORDS).test(t)) cb(); });
+  },
+  stop(){ Chrome.stop(); Quiet.stop(); }
+};
+
+/* ---------- screen wake lock ---------- */
+let wl = null;
+async function lockScreen(){
+  try {
+    if ('wakeLock' in navigator && !wl){
+      wl = await navigator.wakeLock.request('screen');
+      wl.addEventListener('release', () => { wl = null; });
+    }
+  } catch(e){}
+}
+function releaseLock(){ try { wl && wl.release(); } catch(e){} wl = null; }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.running) lockScreen(); });
+
+/* ---------- start screen ---------- */
+function showView(name){
+  ['home','session','summary'].forEach(v => { $(v).hidden = (v !== name); });
+  window.scrollTo(0,0);
+}
+
+function renderNote(){
+  let msg = '';
+  if (Settings.voice){
+    if (!window.isSecureContext) msg = 'Voice needs the https version of this page. For now you will tap.';
+    else if (micBlocked) msg = 'The microphone is blocked for this page. You will tap.';
+    else if (Settings.quiet && Quiet.state === 'error') msg = 'The offline listener needs internet once to download. You will tap until it loads.';
+    else if (!Settings.quiet && !SR) msg = 'This browser cannot listen. Use Chrome, or turn on Quiet listening.';
+  }
+  if (!msg && !('speechSynthesis' in window)) msg = 'This browser cannot speak the step names.';
+  if (!msg && !('wakeLock' in navigator)) msg = 'The screen may turn off during practice. Set a long screen timeout in Android settings.';
+  $('note').textContent = msg; $('note').hidden = !msg;
+}
+
+function syncSettings(){
+  $('swVoice').checked = Settings.voice;
+  $('swQuiet').checked = Settings.quiet;
+  $('swQuiet').disabled = !Settings.voice;
+  $('rowQuiet').classList.toggle('disabled', !Settings.voice);
+  $('swPractice').checked = Settings.practice;
+  $('voiceSub').textContent = Settings.voice ? 'Say a word to start and to finish the open-ended steps.' : 'Off. You tap the big button instead.';
+  $('quietSub').textContent = Settings.quiet ? 'No beeps. Needs a short download the first time.' : 'Off. Chrome listens and beeps every few seconds.';
+  $('wordPick').hidden = !quietOn();
+  [...$('wordPick').querySelectorAll('button')].forEach(b => b.setAttribute('aria-pressed', String(b.dataset.w === Settings.word)));
+  if (!quietOn()) setQuietStatus('');
+  else if (Quiet.state === 'ready') setQuietStatus('Ready');
+  else if (Quiet.state === 'error') setQuietStatus('Needs internet once', true);
+  else if (Quiet.state === 'loading') setQuietStatus('Downloading the word detector...');
+  renderNote();
+}
+
+function renderPlan(){
+  const timed = STEPS.filter(s => s.type === 'timed').reduce((a,s) => a + s.seconds, 0);
+  const open = STEPS.filter(s => s.type === 'open').length;
+  const facts = STEPS.length + ' steps · ' + Math.round(timed/60) + ' min timed + ' + open + ' open';
+  $('heroFacts').textContent = facts;
+  $('planSum').textContent = STEPS.length + ' steps';
+  $('steps').innerHTML = STEPS.map((s,i) =>
+    '<li class="' + s.type + '"><span class="n">' + (i+1) + '</span><span class="nm">' + s.name + '</span><span class="tm">' +
+    (s.type === 'timed' ? fmt(s.seconds) : 'open') + '</span></li>').join('');
+}
+
+function spark(vals){
+  if (vals.length < 2) return '';
+  const w = 120, h = 28, p = 3, mx = Math.max(...vals), mn = Math.min(...vals), span = (mx-mn) || 1;
+  const pts = vals.map((v,i) => [p + i*(w-2*p)/(vals.length-1), h - p - (v-mn)/span*(h-2*p)]);
+  const d = pts.map((q,i) => (i?'L':'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
+  const e = pts[pts.length-1];
+  return '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="' + h + '" aria-hidden="true">' +
+    '<path d="' + d + '" fill="none" stroke="var(--muted)" stroke-width="1.5"/>' +
+    '<circle cx="' + e[0] + '" cy="' + e[1] + '" r="3" fill="var(--accent)"/></svg>';
+}
+
+function renderHistory(){
+  const all = loadSessions().filter(s => !s.test);
+  const box = $('history');
+  if (!all.length){
+    $('histSum').textContent = 'None yet';
+    box.innerHTML = '<p class="empty">After your first full practice, the time you take on each open-ended step shows up here, with a trend.</p>';
+    return;
+  }
+  const lastS = all[all.length-1];
+  $('histSum').textContent = 'Last ' + fmt(lastS.totalSec) + ' · ' + all.length + (all.length === 1 ? ' session' : ' sessions');
+  const openNames = STEPS.filter(s => s.type === 'open').map(s => s.name);
+  const stat = name => {
+    const v = [];
+    all.forEach(s => { const st = (s.steps||[]).find(x => x.name === name && !x.skipped); if (st) v.push(st.actual); });
+    return v;
+  };
+  let html = '<div class="pat">';
+  openNames.forEach(n => {
+    const v = stat(n); if (!v.length) return;
+    const last7 = v.slice(-7), avg = last7.reduce((a,b)=>a+b,0)/last7.length;
+    html += '<div class="row2"><div><b>' + n + '</b><div class="vals">last ' + fmt(v[v.length-1]) + ' · average ' + fmt(avg) + ' (' + last7.length + ' sessions)</div></div>' + spark(v.slice(-14)) + '</div>';
+  });
+  html += '</div>';
+  const rows = all.slice(-8).reverse();
+  html += '<div class="scroll"><table><tr><th>Date</th><th>Total</th>' + openNames.map(n => '<th>' + n + '</th>').join('') + '</tr>';
+  rows.forEach(s => {
+    const d = new Date(s.id);
+    const ds = d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}) + (s.complete ? '' : ' (partial)');
+    html += '<tr><td>' + ds + '</td><td>' + fmt(s.totalSec) + '</td>' + openNames.map(n => {
+      const st = (s.steps||[]).find(x => x.name === n);
+      return '<td>' + (st && !st.skipped ? fmt(st.actual) : '–') + '</td>';
+    }).join('') + '</tr>';
+  });
+  html += '</table></div><button id="csv" class="linkbtn" type="button">Export history as CSV</button>';
+  box.innerHTML = html;
+  $('csv').onclick = exportCsv;
+}
+
+function exportCsv(){
+  const all = loadSessions().filter(s => !s.test);
+  const head = ['date','total_seconds','complete'].concat(STEPS.map(s => s.name + ' (seconds)'));
+  const lines = [head.join(',')];
+  all.forEach(s => {
+    const cells = [new Date(s.id).toISOString(), s.totalSec, s.complete ? 'yes' : 'no'];
+    STEPS.forEach(st => { const x = (s.steps||[]).find(y => y.name === st.name); cells.push(x ? x.actual : ''); });
+    lines.push(cells.join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'sadhana-history.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ---------- session screen ---------- */
+function buildSegs(){ $('segs').innerHTML = STEPS.map(() => '<div class="seg"></div>').join(''); }
+function markSegs(i){ [...$('segs').children].forEach((el,k) => { el.className = 'seg' + (k < i ? ' done' : (k === i ? ' now' : '')); }); }
+function setArc(frac){ $('arc').style.strokeDasharray = C; $('arc').style.strokeDashoffset = C*(1 - Math.min(1, Math.max(0, frac))); }
+function setBig(label, show){ const b = $('bigBtn'); b.textContent = label; b.hidden = !show; }
+function openHint(){ return voiceUsable() ? 'Say "' + endWord() + '" when you finish.' : 'Tap Over when you finish.'; }
+
+function renderArmed(){
+  $('count').textContent = 'Ready';
+  $('stepName').textContent = 'Sit comfortably';
+  $('clock').textContent = '0:00';
+  setArc(0); markSegs(-1);
+  $('hint').textContent = voiceUsable() ? 'Say "' + startWord() + '" when you are ready.' : 'Tap Start when you are ready.';
+  setBig('Start', true);
+  $('pause').disabled = true; $('skip').disabled = true;
+}
+function renderStep(i){
+  const s = STEPS[i];
+  $('count').textContent = 'Step ' + (i+1) + ' of ' + STEPS.length;
+  $('stepName').textContent = s.name;
+  markSegs(i);
+  $('pause').disabled = false; $('skip').disabled = false;
+  if (s.type === 'timed'){
+    $('clock').textContent = fmt(S.test ? TEST_SECONDS : s.seconds); setArc(0);
+    $('hint').textContent = 'Timed. The bell tells you when to move on.';
+    setBig('', false);
+  } else {
+    $('clock').textContent = '0:00'; setArc(0);
+    $('hint').textContent = openHint();
+    setBig('Over', true);
+  }
+}
+
+/* ---------- waiting ---------- */
+function waitTimed(sec){
+  return new Promise(resolve => {
+    let remain = sec*1000, last = Date.now(), active = 0;
+    const tick = () => {
+      const now = Date.now(), dt = now - last; last = now;
+      if (!S.paused){ remain -= dt; active += dt; }
+      $('clock').textContent = fmt(Math.ceil(Math.max(0, remain)/1000));
+      setArc(1 - Math.max(0, remain)/(sec*1000));
+      if (remain <= 0) end('done');
+    };
+    const end = why => { clearInterval(iv); S.finish = null; resolve({why, active}); };
+    const iv = setInterval(tick, 200);
+    S.finish = end;
+  });
+}
+function waitOpen(){
+  return new Promise(resolve => {
+    let last = Date.now(), active = 0;
+    const tick = () => {
+      const now = Date.now(), dt = now - last; last = now;
+      if (!S.paused) active += dt;
+      $('clock').textContent = fmt(Math.floor(active/1000));
+      setArc((active % 60000)/60000);
+    };
+    const end = why => { clearInterval(iv); Listener.stop(); S.finish = null; resolve({why, active}); };
+    const iv = setInterval(tick, 250);
+    S.finish = end;
+    Listener.start('done', () => { if (!S.paused && active >= MIN_OPEN_MS) end('voice'); });
+  });
+}
+
+/* ---------- the run ---------- */
+async function run(testMode){
+  const id = ++S.run;
+  S.running = true; S.test = testMode; S.paused = false; S.log = []; S.idx = -1;
+  $('pause').textContent = 'Pause';
+  buildSegs(); renderArmed(); showView('session'); setMic(false);
+  await lockScreen();
+
+  const armed = new Promise(res => { S.finish = w => { S.finish = null; Listener.stop(); res(w); }; });
+  speak(voiceUsable() ? 'Say ' + startWord() + ' when you are ready.' : 'Tap start when you are ready.').then(() => {
+    if (id === S.run && S.finish) Listener.start('start', () => { if (S.finish) S.finish('voice'); });
+  });
+  await armed;
+  if (id !== S.run) return;
+
+  S.startedAt = Date.now();
+  for (let i = 0; i < STEPS.length; i++){
+    if (id !== S.run) return;
+    const s = STEPS[i]; S.idx = i;
+    renderStep(i);
+    await bell(); if (id !== S.run) return;
+    await speak(i > 0 ? say(STEPS[i-1]) + ' over. Start ' + say(s) + '.' : 'Start ' + say(s) + '.');
+    if (id !== S.run) return;
+    const planned = s.type === 'timed' ? (S.test ? TEST_SECONDS : s.seconds) : 0;
+    const r = s.type === 'timed' ? await waitTimed(planned) : await waitOpen();
+    if (id !== S.run) return;
+    S.log.push({name:s.name, type:s.type, planned, actual:Math.round(r.active/1000), skipped:r.why === 'skip'});
+  }
+  await bell(); if (id !== S.run) return;
+  await speak(say(STEPS[STEPS.length-1]) + ' over. Sadhana complete.');
+  if (id !== S.run) return;
+  endSession(true);
+}
+
+function endSession(complete){
+  S.run++; S.running = false;
+  if (S.finish) S.finish('cancel');
+  Listener.stop();
+  try { speechSynthesis.cancel(); } catch(e){}
+  releaseLock();
+  const total = S.startedAt ? Math.round((Date.now() - S.startedAt)/1000) : 0;
+  if (S.log.length && !S.test) saveSession({id:Date.now(), totalSec:total, complete:!!complete, test:false, steps:S.log});
+  showSummary(complete, total);
+}
+
+function showSummary(complete, total){
+  $('sumTitle').textContent = complete ? 'Sadhana complete' : 'Session ended early';
+  $('sumSub').textContent = (S.test ? 'Practice run, not saved. ' : '') + 'Total time ' + fmt(total) + '.';
+  $('sumTable').innerHTML = '<tr><th>Step</th><th>Planned</th><th>Actual</th></tr>' + S.log.map(x =>
+    '<tr><td>' + x.name + (x.skipped ? ' (skipped)' : '') + '</td><td>' + (x.type === 'timed' ? fmt(x.planned) : 'open') + '</td><td>' + fmt(x.actual) + '</td></tr>').join('');
+  showView('summary');
+}
+
+/* ---------- controls ---------- */
+$('begin').onclick = () => {
+  ensureAudio();
+  if (quietOn()) Quiet.load();     // start the download now, listening waits for it
+  run(Settings.practice);
+};
+$('testVoice').onclick = testVoice;
+$('swVoice').onchange = e => { Settings.voice = e.target.checked; saveSettings(); syncSettings(); };
+$('swQuiet').onchange = e => {
+  Settings.quiet = e.target.checked; saveSettings();
+  if (Settings.quiet){ Quiet.retry(); Quiet.load(); }
+  syncSettings();
+};
+$('swPractice').onchange = e => { Settings.practice = e.target.checked; };
+$('wordPick').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  Settings.word = b.dataset.w; saveSettings(); syncSettings();
+});
+
+$('bigBtn').onclick = () => { if (S.finish) S.finish('tap'); };
+$('skip').onclick = () => { if (S.running && S.idx >= 0 && S.finish) S.finish('skip'); };
+$('pause').onclick = () => {
+  if (!S.running || S.idx < 0) return;
+  S.paused = !S.paused;
+  $('pause').textContent = S.paused ? 'Resume' : 'Pause';
+  if (S.paused) $('hint').textContent = 'Paused.';
+  else renderHintForStep();
+};
+function renderHintForStep(){
+  const s = STEPS[S.idx]; if (!s) return;
+  $('hint').textContent = s.type === 'timed' ? 'Timed. The bell tells you when to move on.' : openHint();
+}
+let stopArmed = false, stopTimer = null;
+$('stop').onclick = () => {
+  if (!stopArmed){
+    stopArmed = true; $('stop').textContent = 'Tap again';
+    stopTimer = setTimeout(() => { stopArmed = false; $('stop').textContent = 'End'; }, 3000);
+    return;
+  }
+  clearTimeout(stopTimer); stopArmed = false; $('stop').textContent = 'End';
+  endSession(false);
+};
+$('back').onclick = () => { renderHistory(); showView('home'); };
+
+renderPlan(); renderHistory(); syncSettings();
+if (quietOn()) Quiet.load();   // saved setting: get the detector ready before Begin
+})();
+</script>
+</body>
+</html>
