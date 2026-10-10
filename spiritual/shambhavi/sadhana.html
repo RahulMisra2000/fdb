@@ -121,7 +121,11 @@ h2.stepname{font:600 clamp(2rem,9vw,2.8rem)/1.1 var(--display);margin:6px 0 0;te
 .arc{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round}
 .clock{position:absolute;inset:0;display:grid;place-items:center;font:500 clamp(2.4rem,13vw,3.4rem)/1 var(--body);font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .hint{text-align:center;color:var(--muted);margin:0;min-height:3em}
-.bigbtn{width:100%;min-height:150px;font-size:2rem;font-family:var(--display)}
+.bigbtn{width:100%;min-height:300px;flex:1 1 300px;font-size:4rem;font-family:var(--display);border-radius:20px}
+.session.compact .ringwrap{width:min(34vw,130px)}
+.session.compact .clock{font-size:clamp(1.3rem,7vw,1.8rem)}
+.session.compact .track,.session.compact .arc{stroke-width:10}
+.session.compact .hint{min-height:0}
 .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:auto}
 .controls .btn{padding-inline:8px}
 .mic{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem}
@@ -617,7 +621,10 @@ function setArc(frac){ $('arc').style.strokeDasharray = C; $('arc').style.stroke
 function setBig(label, show){ const b = $('bigBtn'); b.textContent = label; b.hidden = !show; }
 function openHint(){ return voiceUsable() ? 'Say "' + endWord() + '" when you finish.' : 'Tap Over when you finish.'; }
 
+function setCompact(on){ const el = $('session').firstElementChild; if (el) el.classList.toggle('compact', on); }
+
 function renderArmed(){
+  setCompact(true);
   $('count').textContent = 'Ready';
   $('stepName').textContent = 'Sit comfortably';
   $('clock').textContent = '0:00';
@@ -628,6 +635,7 @@ function renderArmed(){
 }
 function renderStep(i){
   const s = STEPS[i];
+  setCompact(s.type !== 'timed');
   $('count').textContent = 'Step ' + (i+1) + ' of ' + STEPS.length;
   $('stepName').textContent = s.name;
   markSegs(i);
