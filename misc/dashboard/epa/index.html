@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>US EPA Environmental Data Intelligence Portal</title>
+  <title>US EPA Environmental Data Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,7 +17,6 @@
       
       --color-bg-base: #f0f4f8;
       --color-surface: #ffffff;
-      --color-surface-hover: #f8fafc;
       --color-border: #dbe2ea;
       --color-border-subtle: #edf2f7;
 
@@ -49,7 +48,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Official Government Ribbon */
+    /* Government Trust Banner */
     .gov-banner {
       background-color: #f0f0f0;
       border-bottom: 1px solid #e6e6e6;
@@ -75,7 +74,7 @@
       background: linear-gradient(to bottom, #b22234 0%, #b22234 40%, #ffffff 40%, #ffffff 60%, #3c3b6e 60%, #3c3b6e 100%);
     }
 
-    /* Portal Layout */
+    /* Layout */
     .dashboard-container {
       max-width: 1440px;
       margin: 0 auto;
@@ -142,86 +141,7 @@
       max-width: 780px;
     }
 
-    /* Interactive Search & Master Filter Controls */
-    .master-search-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: 20px 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .master-search-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-secondary);
-    }
-
-    .master-input-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .master-input-group {
-      flex: 1;
-      min-width: 240px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .master-input-group label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 10px 14px;
-      font-size: 0.875rem;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background-color: #f8fafc;
-      color: var(--color-text-main);
-      outline: none;
-      transition: all 0.15s ease-in-out;
-      font-family: inherit;
-    }
-
-    .input-field:focus {
-      border-color: var(--color-primary);
-      background-color: #ffffff;
-      box-shadow: 0 0 0 3px rgba(0, 113, 188, 0.15);
-    }
-
-    .btn-primary {
-      background: var(--color-primary);
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s ease-in-out;
-      align-self: flex-end;
-      height: 42px;
-      white-space: nowrap;
-    }
-
-    .btn-primary:hover {
-      background: var(--color-primary-dark);
-    }
-
-    /* Live Embedded Results Area */
+    /* Embedded In-Page Viewport */
     .results-viewer {
       background: var(--color-surface);
       border: 2px solid var(--color-primary);
@@ -286,7 +206,7 @@
 
     .results-frame-container {
       width: 100%;
-      height: 600px;
+      height: 650px;
       position: relative;
       background: #ffffff;
     }
@@ -298,10 +218,68 @@
       display: block;
     }
 
-    /* Grid Layout for Individual Widget Cards */
+    /* Filter Toolbar */
+    .toolbar-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-btn {
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text-main);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .filter-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .filter-btn.active {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary-dark);
+    }
+
+    .meta-stat {
+      font-size: 0.8125rem;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--color-text-secondary);
+    }
+
+    /* Responsive Grid */
     .widgets-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
       gap: 20px;
     }
 
@@ -367,9 +345,8 @@
     .cat-compliance { background: #ecfdf5; color: #065f46; }
     .cat-general { background: #f1f5f9; color: #475569; }
 
-    /* Interactive Card Form Body */
     .card-body {
-      padding: 16px 18px;
+      padding: 18px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -377,66 +354,30 @@
       gap: 16px;
     }
 
-    .widget-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .form-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-group label {
-      font-size: 0.75rem;
-      font-weight: 600;
+    .card-desc {
+      font-size: 0.85rem;
       color: var(--color-text-secondary);
+      line-height: 1.45;
     }
 
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 8px 10px;
-      font-size: 0.8125rem;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background-color: #f8fafc;
-      font-family: inherit;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      background-color: #ffffff;
-    }
-
-    .btn-execute {
+    .btn-launch {
       background: #f1f5f9;
       color: var(--color-primary-dark);
       border: 1px solid var(--color-border);
-      padding: 8px 14px;
+      padding: 10px 16px;
       border-radius: var(--radius-sm);
-      font-size: 0.8125rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       transition: all 0.15s ease-in-out;
-      margin-top: 4px;
+      width: 100%;
     }
 
-    .btn-execute:hover {
+    .btn-launch:hover {
       background: var(--color-primary);
       color: #ffffff;
       border-color: var(--color-primary-dark);
@@ -462,7 +403,6 @@
       color: var(--color-text-tertiary);
     }
 
-    /* Responsive Breakpoints */
     @media (max-width: 640px) {
       .dashboard-container {
         padding: 12px 12px 32px;
@@ -470,18 +410,21 @@
       .app-header {
         padding: 20px 16px;
       }
+      .toolbar-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
       .widgets-grid {
         grid-template-columns: 1fr;
       }
       .results-frame-container {
-        height: 480px;
+        height: 500px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Official Government Ribbon -->
   <aside class="gov-banner" aria-label="Official government portal indicator">
     <div class="gov-banner-content">
       <span class="flag-icon" aria-hidden="true"></span>
@@ -491,7 +434,6 @@
 
   <div class="dashboard-container">
     
-    <!-- Portal Header -->
     <header class="app-header">
       <div class="header-badge-row">
         <span class="agency-tag">US EPA • Envirofacts Intelligence</span>
@@ -500,61 +442,43 @@
         </span>
       </div>
       <h1>Environmental Data & Compliance Portal</h1>
-      <p>Submit query parameters directly inside the cards below. The underlying EPA search services execute and render the interactive result manifests inside the page viewport above.</p>
+      <p>Select any EPA service below. The official search interface will load directly inside this page above the grid, where you can enter your ZIP code, city, or facility details and view the results.</p>
     </header>
 
-    <!-- Master Global Search Dispatcher -->
-    <section class="master-search-card">
-      <div class="master-search-title">Universal Search & Multi-Widget Dispatcher</div>
-      <div class="master-input-row">
-        <div class="master-input-group">
-          <label for="globalZip">ZIP Code</label>
-          <input type="text" id="globalZip" class="input-field" placeholder="e.g. 33434" maxlength="5">
-        </div>
-        <div class="master-input-group">
-          <label for="globalCity">City</label>
-          <input type="text" id="globalCity" class="input-field" placeholder="e.g. Boca Raton">
-        </div>
-        <div class="master-input-group">
-          <label for="globalState">State</label>
-          <input type="text" id="globalState" class="input-field" placeholder="e.g. FL" maxlength="2">
-        </div>
-        <div class="master-input-group">
-          <label for="globalTargetService">Target System</label>
-          <select id="globalTargetService" class="input-field">
-            <option value="uv">UV Index Forecast</option>
-            <option value="multisystem">Universal Multisystem Search</option>
-            <option value="echo">ECHO Facility Compliance</option>
-            <option value="sdwis">Safe Drinking Water (SDWIS)</option>
-            <option value="superfund">Superfund Cleanup Sites</option>
-            <option value="rcra">RCRA Hazardous Waste</option>
-            <option value="tri">Toxics Release Inventory (TRI)</option>
-            <option value="cleanups">Cleanups In My Community</option>
-          </select>
-        </div>
-        <button class="btn-primary" onclick="executeGlobalSearch()">Run In Page</button>
-      </div>
-    </section>
-
-    <!-- In-Page Results Screen -->
+    <!-- In-Page Embedded Execution Viewport -->
     <section class="results-viewer" id="resultsViewer">
       <div class="results-header">
         <div class="results-title-group">
-          <span class="results-badge">Live Result</span>
-          <span class="results-title" id="resultsTitle">EPA Envirofacts Live Feed</span>
+          <span class="results-badge">Live System</span>
+          <span class="results-title" id="resultsTitle">EPA Envirofacts Live Interface</span>
         </div>
         <button class="btn-close" onclick="closeResults()">Close Viewport ✕</button>
       </div>
       <div class="results-frame-container">
-        <iframe id="resultsFrame" name="resultsFrame" title="EPA Live Results Engine"></iframe>
+        <iframe id="resultsFrame" name="resultsFrame" title="EPA In-Page Execution Frame"></iframe>
       </div>
     </section>
 
-    <!-- Interactive Query Widgets Grid -->
-    <main class="widgets-grid">
+    <!-- Category Filter Controls -->
+    <nav class="toolbar-card" aria-label="Filter widgets by topic">
+      <div class="filter-group">
+        <span class="filter-label">Category:</span>
+        <button class="filter-btn active" onclick="filterWidgets('all', this)">All Feeds</button>
+        <button class="filter-btn" onclick="filterWidgets('air', this)">Air</button>
+        <button class="filter-btn" onclick="filterWidgets('water', this)">Water</button>
+        <button class="filter-btn" onclick="filterWidgets('waste', this)">Waste</button>
+        <button class="filter-btn" onclick="filterWidgets('toxics', this)">Toxics</button>
+        <button class="filter-btn" onclick="filterWidgets('radiation', this)">Radiation</button>
+        <button class="filter-btn" onclick="filterWidgets('compliance', this)">Compliance</button>
+      </div>
+      <div class="meta-stat" id="counterDisplay">Displaying 12 of 12 Services</div>
+    </nav>
+
+    <!-- Service Selection Grid -->
+    <main class="widgets-grid" id="widgetGrid">
 
       <!-- 1. UV Index -->
-      <article class="card">
+      <article class="card" data-category="air">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">UV Index Forecast</h2>
@@ -563,22 +487,17 @@
           <span class="badge-category cat-air">Air</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/uv/search" method="get" target="resultsFrame" onsubmit="prepareExecution('UV Index Forecast')">
-            <div class="form-group">
-              <label for="uv_zip">ZIP Code</label>
-              <input type="text" id="uv_zip" name="zipcode" placeholder="e.g. 33434" required>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Check the daily and multi-day ultraviolet radiation forecast and exposure levels by location.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/uv/search', 'UV Index Forecast')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: NOAA Forecast</span>
-          <span>4-Day Solar Window</span>
+          <span>Target: UV Registry</span>
+          <span>NOAA Forecast Grid</span>
         </footer>
       </article>
 
       <!-- 2. Universal Multisystem Search -->
-      <article class="card">
+      <article class="card" data-category="general">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Universal Multisystem</h2>
@@ -587,52 +506,36 @@
           <span class="badge-category cat-general">General</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/multisystem/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Universal Multisystem Search')">
-            <div class="form-group">
-              <label for="multi_zip">ZIP Code, City, or County</label>
-              <input type="text" id="multi_zip" name="search_value" placeholder="e.g. 33434 or Palm Beach" required>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Comprehensive cross-program search covering air, water, toxics, and waste data simultaneously.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/multisystem/search', 'Universal Multisystem Search')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: Cross-Program</span>
-          <span>Air, Water, Waste, Toxics</span>
+          <span>Target: Multi-Registry</span>
+          <span>Aggregate Query</span>
         </footer>
       </article>
 
       <!-- 3. Drinking Water (SDWIS) -->
-      <article class="card">
+      <article class="card" data-category="water">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Safe Drinking Water</h2>
-            <span class="card-acronym">SDWIS System</span>
+            <span class="card-acronym">SDWIS Public Registry</span>
           </div>
           <span class="badge-category cat-water">Water</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/sdwis/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Drinking Water (SDWIS)')">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="sdwis_city">City</label>
-                <input type="text" id="sdwis_city" name="city" placeholder="e.g. Boca Raton">
-              </div>
-              <div class="form-group" style="max-width: 80px;">
-                <label for="sdwis_state">State</label>
-                <input type="text" id="sdwis_state" name="state" placeholder="FL" maxlength="2">
-              </div>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Look up public water system compliance records, monitoring data, and reported violations.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/sdwis/search', 'Safe Drinking Water (SDWIS)')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: SDWIS Public</span>
-          <span>Violations & Monitoring</span>
+          <span>Target: SDWIS Database</span>
+          <span>Water Quality Logs</span>
         </footer>
       </article>
 
       <!-- 4. Superfund Sites -->
-      <article class="card">
+      <article class="card" data-category="waste">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Superfund (CERCLIS)</h2>
@@ -641,28 +544,17 @@
           <span class="badge-category cat-waste">Waste</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/cerclis/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Superfund Sites')">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="cerclis_zip">ZIP Code</label>
-                <input type="text" id="cerclis_zip" name="zipcode" placeholder="e.g. 33434">
-              </div>
-              <div class="form-group">
-                <label for="cerclis_city">City</label>
-                <input type="text" id="cerclis_city" name="city" placeholder="e.g. Delray Beach">
-              </div>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Locate contaminated hazardous waste sites and monitor cleanup milestones across jurisdictions.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/cerclis/search', 'Superfund Remediation Sites')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: Remediation Logs</span>
-          <span>NPL Remedial Actions</span>
+          <span>Target: CERCLIS Records</span>
+          <span>Active Superfund Sites</span>
         </footer>
       </article>
 
       <!-- 5. RCRA Hazardous Waste -->
-      <article class="card">
+      <article class="card" data-category="waste">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Hazardous Waste (RCRA)</h2>
@@ -671,28 +563,17 @@
           <span class="badge-category cat-waste">Waste</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/rcrainfo/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Hazardous Waste (RCRA)')">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="rcra_city">City</label>
-                <input type="text" id="rcra_city" name="city" placeholder="e.g. Miami">
-              </div>
-              <div class="form-group" style="max-width: 80px;">
-                <label for="rcra_state">State</label>
-                <input type="text" id="rcra_state" name="state" placeholder="FL" maxlength="2">
-              </div>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Search handlers, transporters, and treatment/storage facilities managing regulated hazardous wastes.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/rcrainfo/search', 'RCRA Hazardous Waste Handlers')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: RCRA Handlers</span>
+          <span>Target: RCRAInfo Registry</span>
           <span>LQG / SQG Filings</span>
         </footer>
       </article>
 
       <!-- 6. Toxics Release Inventory (TRI) -->
-      <article class="card">
+      <article class="card" data-category="toxics">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Toxics Release Inventory</h2>
@@ -701,58 +582,36 @@
           <span class="badge-category cat-toxics">Toxics</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/tri/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Toxics Release Inventory')">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="tri_zip">ZIP Code</label>
-                <input type="text" id="tri_zip" name="zipcode" placeholder="e.g. 33434">
-              </div>
-              <div class="form-group">
-                <label for="tri_city">City</label>
-                <input type="text" id="tri_city" name="city" placeholder="e.g. Tampa">
-              </div>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Review toxic chemical releases and waste management activities reported by industrial facilities.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/tri/search', 'Toxics Release Inventory (TRI)')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: TRI Discharges</span>
-          <span>Chemical Manifests</span>
+          <span>Target: TRI Chemical Log</span>
+          <span>Annual Industrial Reports</span>
         </footer>
       </article>
 
-      <!-- 7. ECHO Facility Compliance -->
-      <article class="card">
+      <!-- 7. ECHO Compliance -->
+      <article class="card" data-category="compliance">
         <header class="card-header">
           <div class="card-title-wrap">
-            <h2 class="card-title">ECHO Compliance Audit</h2>
-            <span class="card-acronym">OECA Records</span>
+            <h2 class="card-title">ECHO Compliance History</h2>
+            <span class="card-acronym">OECA Enforcement Data</span>
           </div>
           <span class="badge-category cat-compliance">Compliance</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://echo.epa.gov/facilities/facility-search/results" method="get" target="resultsFrame" onsubmit="prepareExecution('ECHO Compliance History')">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="echo_zip">ZIP Code</label>
-                <input type="text" id="echo_zip" name="p_zp" placeholder="e.g. 33434">
-              </div>
-              <div class="form-group">
-                <label for="echo_city">City</label>
-                <input type="text" id="echo_city" name="p_cty" placeholder="e.g. Orlando">
-              </div>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Audit environmental compliance, inspection records, formal enforcement actions, and penalties.</p>
+          <button class="btn-launch" onclick="loadService('https://echo.epa.gov/facilities/facility-search', 'ECHO Compliance Registry')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: Enforcement Records</span>
-          <span>Inspections & Penalties</span>
+          <span>Target: Enforcement Database</span>
+          <span>Facility Inspection Logs</span>
         </footer>
       </article>
 
-      <!-- 8. Cleanups In My Community (CIMC) -->
-      <article class="card">
+      <!-- 8. Cleanups In My Community -->
+      <article class="card" data-category="waste">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">Community Cleanups</h2>
@@ -761,22 +620,17 @@
           <span class="badge-category cat-waste">Waste</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/cimc/search" method="get" target="resultsFrame" onsubmit="prepareExecution('Cleanups In My Community')">
-            <div class="form-group">
-              <label for="cimc_loc">Location (ZIP or City, State)</label>
-              <input type="text" id="cimc_loc" name="location" placeholder="e.g. 33434 or Delray Beach, FL" required>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Locate and map Brownfields grants, RCRA corrective actions, and community land revitalization sites.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/cimc/search', 'Cleanups In My Community')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: CIMC Mapping</span>
-          <span>Grant & Cleanup Logs</span>
+          <span>Target: CIMC Engine</span>
+          <span>Community Grants & Sites</span>
         </footer>
       </article>
 
       <!-- 9. RadNet Ambient Monitoring -->
-      <article class="card">
+      <article class="card" data-category="radiation">
         <header class="card-header">
           <div class="card-title-wrap">
             <h2 class="card-title">RadNet Surveillance</h2>
@@ -785,36 +639,90 @@
           <span class="badge-category cat-radiation">Radiation</span>
         </header>
         <div class="card-body">
-          <form class="widget-form" action="https://enviro.epa.gov/envirofacts/radnet/search" method="get" target="resultsFrame" onsubmit="prepareExecution('RadNet Ambient Surveillance')">
-            <div class="form-group">
-              <label for="radnet_state">State (2-Letter Code)</label>
-              <input type="text" id="radnet_state" name="state" placeholder="e.g. FL" maxlength="2" required>
-            </div>
-            <button type="submit" class="btn-execute">Execute Query ↗</button>
-          </form>
+          <p class="card-desc">Access real-time telemetry, air monitoring station outputs, and radionuclide lab analysis data.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/radnet/search', 'RadNet Ambient Monitoring')">Execute In Page ↗</button>
         </div>
         <footer class="card-footer">
-          <span>Target: Real-Time Air Grid</span>
-          <span>Gamma Gross Count Telemetry</span>
+          <span>Target: Ambient RadNet</span>
+          <span>Gross Gamma Telemetry</span>
+        </footer>
+      </article>
+
+      <!-- 10. Greenhouse Gas (GHG) -->
+      <article class="card" data-category="air">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Greenhouse Gas (GHG)</h2>
+            <span class="card-acronym">GHGRP Reporting</span>
+          </div>
+          <span class="badge-category cat-air">Air</span>
+        </header>
+        <div class="card-body">
+          <p class="card-desc">Examine direct greenhouse gas emissions data reported by large facilities across the United States.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/ghg/search', 'Greenhouse Gas Reporting')">Execute In Page ↗</button>
+        </div>
+        <footer class="card-footer">
+          <span>Target: GHGRP Registry</span>
+          <span>Direct Facility Emitters</span>
+        </footer>
+      </article>
+
+      <!-- 11. ICIS-AIR Emissions -->
+      <article class="card" data-category="air">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Air Facility System</h2>
+            <span class="card-acronym">ICIS-AIR / AFS</span>
+          </div>
+          <span class="badge-category cat-air">Air</span>
+        </header>
+        <div class="card-body">
+          <p class="card-desc">Review air pollution compliance, stationary source emissions, and Clean Air Act permit tracking data.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/icis-air/search', 'Air Facility System (ICIS-AIR)')">Execute In Page ↗</button>
+        </div>
+        <footer class="card-footer">
+          <span>Target: ICIS-AIR Database</span>
+          <span>Stationary Air Sources</span>
+        </footer>
+      </article>
+
+      <!-- 12. Wastewater Permits (PCS) -->
+      <article class="card" data-category="water">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Wastewater Permits</h2>
+            <span class="card-acronym">PCS / ICIS-NPDES</span>
+          </div>
+          <span class="badge-category cat-water">Water</span>
+        </header>
+        <div class="card-body">
+          <p class="card-desc">Query National Pollutant Discharge Elimination System (NPDES) permits and surface water discharge limits.</p>
+          <button class="btn-launch" onclick="loadService('https://enviro.epa.gov/envirofacts/pcs-icis/search', 'NPDES Discharge Permits')">Execute In Page ↗</button>
+        </div>
+        <footer class="card-footer">
+          <span>Target: NPDES Registry</span>
+          <span>Surface Water Discharges</span>
         </footer>
       </article>
 
     </main>
 
     <footer class="page-footer">
-      <p>Data provided by the United States Environmental Protection Agency (US EPA) Envirofacts REST services and public widgets repository.</p>
+      <p>Data directly connected to official United States Environmental Protection Agency (US EPA) Envirofacts public database services.</p>
     </footer>
   </div>
 
   <script>
-    function prepareExecution(title) {
+    function loadService(url, serviceTitle) {
       const viewer = document.getElementById('resultsViewer');
       const titleEl = document.getElementById('resultsTitle');
-      
-      titleEl.textContent = `${title} — Real-Time Results`;
+      const frame = document.getElementById('resultsFrame');
+
+      titleEl.textContent = `${serviceTitle} — Live Query Interface`;
+      frame.src = url;
       viewer.classList.add('active');
-      
-      // Smoothly bring the active viewport into display
+
+      // Scroll smoothly to the viewport so the user can immediately input city/zip
       viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -824,57 +732,25 @@
       document.getElementById('resultsFrame').src = 'about:blank';
     }
 
-    function executeGlobalSearch() {
-      const zip = document.getElementById('globalZip').value.trim();
-      const city = document.getElementById('globalCity').value.trim();
-      const state = document.getElementById('globalState').value.trim();
-      const service = document.getElementById('globalTargetService').value;
+    function filterWidgets(category, buttonEl) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      buttonEl.classList.add('active');
 
-      if (!zip && !city && !state) {
-        alert('Please specify a ZIP code, City, or State to execute a query.');
-        return;
-      }
+      const cards = document.querySelectorAll('#widgetGrid .card');
+      let visibleCount = 0;
 
-      let url = '';
-      let serviceTitle = '';
+      cards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'all' || cardCategory === category) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
 
-      switch(service) {
-        case 'uv':
-          url = `https://enviro.epa.gov/envirofacts/uv/search?zipcode=${encodeURIComponent(zip || city)}`;
-          serviceTitle = 'UV Index Forecast';
-          break;
-        case 'multisystem':
-          url = `https://enviro.epa.gov/envirofacts/multisystem/search?search_value=${encodeURIComponent(zip || city)}`;
-          serviceTitle = 'Universal Multisystem Search';
-          break;
-        case 'echo':
-          url = `https://echo.epa.gov/facilities/facility-search/results?p_zp=${encodeURIComponent(zip)}&p_cty=${encodeURIComponent(city)}&p_st=${encodeURIComponent(state)}`;
-          serviceTitle = 'ECHO Compliance Registry';
-          break;
-        case 'sdwis':
-          url = `https://enviro.epa.gov/envirofacts/sdwis/search?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}`;
-          serviceTitle = 'Safe Drinking Water Information System';
-          break;
-        case 'superfund':
-          url = `https://enviro.epa.gov/envirofacts/cerclis/search?zipcode=${encodeURIComponent(zip)}&city=${encodeURIComponent(city)}`;
-          serviceTitle = 'Superfund Cleanup Locations';
-          break;
-        case 'rcra':
-          url = `https://enviro.epa.gov/envirofacts/rcrainfo/search?city=${encodeURIComponent(city)}&state=${encodeURIComponent(state)}`;
-          serviceTitle = 'RCRA Hazardous Waste Handlers';
-          break;
-        case 'tri':
-          url = `https://enviro.epa.gov/envirofacts/tri/search?zipcode=${encodeURIComponent(zip)}&city=${encodeURIComponent(city)}`;
-          serviceTitle = 'Toxics Release Inventory';
-          break;
-        case 'cleanups':
-          url = `https://enviro.epa.gov/cimc/search?location=${encodeURIComponent(zip || (city + ', ' + state))}`;
-          serviceTitle = 'Cleanups In My Community';
-          break;
-      }
-
-      prepareExecution(serviceTitle);
-      document.getElementById('resultsFrame').src = url;
+      document.getElementById('counterDisplay').textContent = 
+        `Displaying ${visibleCount} of ${cards.length} Services`;
     }
   </script>
 </body>
