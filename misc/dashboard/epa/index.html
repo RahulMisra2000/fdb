@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US EPA Environmental Data Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* U.S. Web Design System (USWDS) / Modern Civic Palette */
+      --color-primary-darker: #0c2d4a;
+      --color-primary-dark: #16446c;
+      --color-primary: #0071bc;
+      --color-primary-light: #d9e8f6;
+      --color-accent-warm: #d9381e;
+      
+      --color-bg-base: #f0f4f8;
+      --color-surface: #ffffff;
+      --color-surface-hover: #f8fafc;
+      --color-border: #dbe2ea;
+      --color-border-subtle: #edf2f7;
+
+      --color-text-main: #1b1b1b;
+      --color-text-secondary: #565c65;
+      --color-text-tertiary: #71767a;
+
+      /* Elevation */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+      /* Radii */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--color-bg-base);
+      color: var(--color-text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Official Government Banner */
+    .gov-banner {
+      background-color: #f0f0f0;
+      border-bottom: 1px solid #e6e6e6;
+      font-size: 0.75rem;
+      padding: 6px 16px;
+      color: var(--color-text-secondary);
+    }
+
+    .gov-banner-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flag-icon {
+      width: 16px;
+      height: 11px;
+      display: inline-block;
+      vertical-align: middle;
+      border: 1px solid #d0d0d0;
+      border-radius: 1px;
+      background: linear-gradient(to bottom, #b22234 0%, #b22234 40%, #ffffff 40%, #ffffff 60%, #3c3b6e 60%, #3c3b6e 100%);
+    }
+
+    /* Main Container */
+    .dashboard-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+
+    /* Navigation / Header */
+    .app-header {
+      background: linear-gradient(135deg, var(--color-primary-darker) 0%, var(--color-primary-dark) 100%);
+      color: #ffffff;
+      padding: 36px 32px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .agency-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      color: #ffffff;
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #90cdf4;
+      font-weight: 500;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #48bb78;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(72, 187, 120, 0.3);
+    }
+
+    .app-header h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .app-header p {
+      color: #cbd5e1;
+      font-size: clamp(0.875rem, 1.8vw, 1rem);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    /* Filter Controls Bar */
+    .toolbar-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .filter-btn {
+      background: #f1f5f9;
+      border: 1px solid transparent;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text-main);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .filter-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .filter-btn.active {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary-dark);
+    }
+
+    .meta-stat {
+      font-size: 0.8125rem;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--color-text-secondary);
+    }
+
+    /* Responsive Grid System */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+
+    /* Uniform Widget Cards */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: #cbd5e1;
+    }
+
+    .card-header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--color-border-subtle);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-main);
+      line-height: 1.3;
+    }
+
+    .card-acronym {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--color-text-tertiary);
+      font-weight: 500;
+    }
+
+    .badge-category {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .cat-air { background: #e0f2fe; color: #0369a1; }
+    .cat-water { background: #e0f7fa; color: #00695c; }
+    .cat-waste { background: #fef3c7; color: #92400e; }
+    .cat-toxics { background: #fee2e2; color: #991b1b; }
+    .cat-radiation { background: #f3e8ff; color: #6b21a8; }
+    .cat-compliance { background: #ecfdf5; color: #065f46; }
+    .cat-general { background: #f1f5f9; color: #475569; }
+
+    /* Centered Scrollable Iframe Viewport */
+    .card-viewport {
+      flex: 1;
+      padding: 16px 12px;
+      background-color: var(--color-surface);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: auto;
+      min-height: 200px;
+    }
+
+    .card-viewport iframe {
+      border: 0;
+      display: block;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 4px;
+    }
+
+    /* Footer Metadata */
+    .card-footer {
+      padding: 10px 18px;
+      background: #fafbfc;
+      border-top: 1px solid var(--color-border-subtle);
+      font-size: 0.75rem;
+      color: var(--color-text-tertiary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Footer Global Note */
+    .page-footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-text-tertiary);
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 640px) {
+      .dashboard-container {
+        padding: 12px 12px 32px;
+      }
+      .app-header {
+        padding: 24px 18px;
+        border-radius: var(--radius-md);
+      }
+      .toolbar-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .filter-group {
+        width: 100%;
+      }
+      .widgets-grid {
+        grid-template-columns: 1fr;
+      }
+      .card-viewport {
+        padding: 12px 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Official Federal Trust Banner -->
+  <aside class="gov-banner" aria-label="Official government website indicator">
+    <div class="gov-banner-content">
+      <span class="flag-icon" aria-hidden="true"></span>
+      <span>An official operational portal styled for Environmental Protection Agency (EPA) data feeds</span>
+    </div>
+  </aside>
+
+  <div class="dashboard-container">
+    
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-badge-row">
+        <span class="agency-tag">US EPA • Envirofacts Database</span>
+        <span class="live-status">
+          <span class="status-dot"></span> Active Systems Connected
+        </span>
+      </div>
+      <h1>Environmental Compliance & Monitoring Intelligence</h1>
+      <p>Direct live data query endpoints for real-time facility compliance, hazardous waste manifests, clean air emissions, radiation surveillance, and watershed permits across U.S. jurisdictions.</p>
+    </header>
+
+    <!-- Interactive Filtering Toolbar -->
+    <nav class="toolbar-card" aria-label="Filter widgets by topic">
+      <div class="filter-group">
+        <span class="filter-label">Category:</span>
+        <button class="filter-btn active" onclick="filterWidgets('all', this)">All Feeds</button>
+        <button class="filter-btn" onclick="filterWidgets('air', this)">Air</button>
+        <button class="filter-btn" onclick="filterWidgets('water', this)">Water</button>
+        <button class="filter-btn" onclick="filterWidgets('waste', this)">Waste</button>
+        <button class="filter-btn" onclick="filterWidgets('toxics', this)">Toxics</button>
+        <button class="filter-btn" onclick="filterWidgets('radiation', this)">Radiation</button>
+        <button class="filter-btn" onclick="filterWidgets('compliance', this)">Compliance</button>
+      </div>
+      <div class="meta-stat" id="counterDisplay">Displaying 14 of 14 Widgets</div>
+    </nav>
+
+    <!-- Responsive Component Grid -->
+    <main class="widgets-grid" id="widgetGrid">
+
+      <!-- 1. UV Index -->
+      <article class="card" data-category="air">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">UV Index Forecast</h2>
+            <span class="card-acronym">EPA / NOAA NWS</span>
+          </div>
+          <span class="badge-category cat-air">Air</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-uvindex.html" 
+            id="uv" 
+            width="225" 
+            height="150" 
+            scrolling="no" 
+            title="UV Index Query Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: ZIP / City, State</span>
+          <span>Daily Index</span>
+        </footer>
+      </article>
+
+      <!-- 2. Greenhouse Gas -->
+      <article class="card" data-category="air">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Greenhouse Gas (GHG)</h2>
+            <span class="card-acronym">GHGRP Reporting</span>
+          </div>
+          <span class="badge-category cat-air">Air</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-ghg.html" 
+            id="greenhouse" 
+            width="225" 
+            height="150" 
+            scrolling="no" 
+            title="Greenhouse Gas Data Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>Direct Emitters</span>
+        </footer>
+      </article>
+
+      <!-- 3. ICIS-AIR -->
+      <article class="card" data-category="air">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Air Facility System</h2>
+            <span class="card-acronym">ICIS-AIR / AFS</span>
+          </div>
+          <span class="badge-category cat-air">Air</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-afs.html" 
+            id="AFS" 
+            width="225" 
+            height="200" 
+            scrolling="no" 
+            title="Air Facility System Search Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>Stationary Sources</span>
+        </footer>
+      </article>
+
+      <!-- 4. Drinking Water (SDWIS) -->
+      <article class="card" data-category="water">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Safe Drinking Water</h2>
+            <span class="card-acronym">SDWIS Public Registry</span>
+          </div>
+          <span class="badge-category cat-water">Water</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-sdwis.html" 
+            id="sdwis" 
+            width="225" 
+            height="240" 
+            scrolling="no" 
+            title="Safe Drinking Water Information System Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: ZIP / City, State</span>
+          <span>System Violations</span>
+        </footer>
+      </article>
+
+      <!-- 5. Discharge Permits (PCS/ICIS) -->
+      <article class="card" data-category="water">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Wastewater Permits</h2>
+            <span class="card-acronym">PCS / ICIS-NPDES</span>
+          </div>
+          <span class="badge-category cat-water">Water</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-pcsicis.html" 
+            id="PCS" 
+            width="225" 
+            height="240" 
+            scrolling="no" 
+            title="Permit Compliance System Discharge Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>NPDES Discharges</span>
+        </footer>
+      </article>
+
+      <!-- 6. Superfund Sites -->
+      <article class="card" data-category="waste">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Superfund National Priority</h2>
+            <span class="card-acronym">CERCLIS Cleanup Sites</span>
+          </div>
+          <span class="badge-category cat-waste">Waste</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-superfund.html" 
+            id="superfund" 
+            width="225" 
+            height="150" 
+            scrolling="no" 
+            title="Superfund Hazardous Waste Site Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>Remediation Status</span>
+        </footer>
+      </article>
+
+      <!-- 7. RCRA Hazardous Waste -->
+      <article class="card" data-category="waste">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Hazardous Waste Tracking</h2>
+            <span class="card-acronym">RCRAInfo System</span>
+          </div>
+          <span class="badge-category cat-waste">Waste</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-rcra.html" 
+            id="rcra" 
+            width="225" 
+            height="170" 
+            scrolling="no" 
+            title="Resource Conservation and Recovery Act Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>Generators & Handlers</span>
+        </footer>
+      </article>
+
+      <!-- 8. Biennial Reporting System -->
+      <article class="card" data-category="waste">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Biennial Reporting</h2>
+            <span class="card-acronym">BRS Generator Registry</span>
+          </div>
+          <span class="badge-category cat-waste">Waste</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="url?id=1sites/production/files/widgets/ef-brs.html" 
+            id="brs" 
+            width="225" 
+            height="240" 
+            scrolling="no" 
+            title="Biennial Reporting System Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>LQG Data</span>
+        </footer>
+      </article>
+
+      <!-- 9. Cleanups in My Community -->
+      <article class="card" data-category="waste">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Community Cleanups</h2>
+            <span class="card-acronym">Brownfields / CIMC</span>
+          </div>
+          <span class="badge-category cat-waste">Waste</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-cleanups.html" 
+            id="cleanups" 
+            width="225" 
+            height="250" 
+            scrolling="no" 
+            title="Cleanups in My Community Search Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: ZIP / City, State</span>
+          <span>Interactive Mapping</span>
+        </footer>
+      </article>
+
+      <!-- 10. Toxics Release Inventory (TRI) -->
+      <article class="card" data-category="toxics">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Toxic Chemical Releases</h2>
+            <span class="card-acronym">TRI Standard Lookup</span>
+          </div>
+          <span class="badge-category cat-toxics">Toxics</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-tri.html" 
+            id="tri" 
+            width="225" 
+            height="230" 
+            scrolling="no" 
+            title="Toxics Release Inventory Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Geographic Area</span>
+          <span>Chemical Manifests</span>
+        </footer>
+      </article>
+
+      <!-- 11. TRI Explorer -->
+      <article class="card" data-category="toxics">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">TRI Explorer Multi-Tier</h2>
+            <span class="card-acronym">On/Off-Site Waste Transfer</span>
+          </div>
+          <span class="badge-category cat-toxics">Toxics</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-triexplorer.html" 
+            id="triexplorer" 
+            width="225" 
+            height="230" 
+            scrolling="no" 
+            title="TRI Explorer Search Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: County / City / State</span>
+          <span>Multi-parameter Filter</span>
+        </footer>
+      </article>
+
+      <!-- 12. RadNet Radiation -->
+      <article class="card" data-category="radiation">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">RadNet Surveillance</h2>
+            <span class="card-acronym">Ambient Radiation Grid</span>
+          </div>
+          <span class="badge-category cat-radiation">Radiation</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://enviro.epa.gov/envirofacts/radnet/search" 
+            id="radnet" 
+            width="225" 
+            height="320" 
+            scrolling="no" 
+            title="RadNet Ambient Radiation Monitoring Search">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: Station / Nuclide</span>
+          <span>Real-time Telemetry</span>
+        </footer>
+      </article>
+
+      <!-- 13. ECHO Compliance -->
+      <article class="card" data-category="compliance">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">ECHO Compliance History</h2>
+            <span class="card-acronym">Enforcement History</span>
+          </div>
+          <span class="badge-category cat-compliance">Compliance</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-echo.html" 
+            id="echo" 
+            width="225" 
+            height="230" 
+            scrolling="no" 
+            title="Enforcement and Compliance History Online Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: ZIP / City, State</span>
+          <span>Audit & Penalty Logs</span>
+        </footer>
+      </article>
+
+      <!-- 14. Multisystem Universal Search -->
+      <article class="card" data-category="general">
+        <header class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Universal Multisystem</h2>
+            <span class="card-acronym">Envirofacts Aggregator</span>
+          </div>
+          <span class="badge-category cat-general">General</span>
+        </header>
+        <div class="card-viewport">
+          <iframe 
+            src="https://www.epa.gov/sites/production/files/widgets/ef-multisystem.html" 
+            id="quickStart" 
+            width="225" 
+            height="170" 
+            scrolling="no" 
+            title="Envirofacts Multisystem Search Widget">
+          </iframe>
+        </div>
+        <footer class="card-footer">
+          <span>Search: All Jurisdictions</span>
+          <span>Aggregated Cross-Feed</span>
+        </footer>
+      </article>
+
+    </main>
+
+    <footer class="page-footer">
+      <p>Data provided by the United States Environmental Protection Agency (US EPA) Envirofacts REST services and public widgets repository.</p>
+    </footer>
+  </div>
+
+  <script>
+    function filterWidgets(category, buttonEl) {
+      // Toggle button active state
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      buttonEl.classList.add('active');
+
+      const cards = document.querySelectorAll('#widgetGrid .card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (category === 'all' || cardCategory === category) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update counter
+      document.getElementById('counterDisplay').textContent = 
+        `Displaying ${visibleCount} of ${cards.length} Widgets`;
+    }
+  </script>
+</body>
+</html>
